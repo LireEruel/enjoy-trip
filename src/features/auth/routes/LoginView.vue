@@ -75,7 +75,7 @@ const turnToLogin = () => {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import url("https://fonts.googleapis.com/css?family=Quattrocento+Sans&display=swap");
 
 $gray: #b5b5b5;

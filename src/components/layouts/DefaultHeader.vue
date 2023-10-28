@@ -1,10 +1,3 @@
-<script setup lang="ts">
-import { ref } from "vue";
-import { RouterLink } from "vue-router";
-
-const menuKey = ref<string[]>([window.location.pathname]);
-</script>
-
 <template>
   <a-layout id="components-layout">
     <a-layout-header
@@ -16,7 +9,7 @@ const menuKey = ref<string[]>([window.location.pathname]);
 
       <div class="nav-right">
         <!-- 로그인 -->
-        <a-button class="login-button"> 로그인 </a-button>
+        <a-button class="login-button" @click="goLogin"> 로그인 </a-button>
         <span class="app-bar-padding" />
       </div>
       <a-menu
@@ -36,6 +29,19 @@ const menuKey = ref<string[]>([window.location.pathname]);
     </a-layout-header>
   </a-layout>
 </template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+import { RouterLink } from "vue-router";
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+const goLogin = () => {
+  router.push("login");
+};
+
+const menuKey = ref<string[]>([window.location.pathname]);
+</script>
 
 <style lang="scss" scoped>
 #components-layout {
