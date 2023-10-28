@@ -18,7 +18,9 @@
   justify-content: center;
   text-align: center;
   height: 26px;
-  margin: 5px 0;
+  padding: 5px 0;
+  z-index: 5;
+  background-color: white;
 }
 .footer-logo {
   width: 105px;
