@@ -1,6 +1,6 @@
 <template>
   <section id="auth" ref="root">
-    <form id="sign-up">
+    <a-form id="sign-up">
       <h2>Sign Up</h2>
       <label>Username</label>
       <input type="text" placeholder="username" />
@@ -13,7 +13,7 @@
         Already have an account?
         <span @click="turnToLogin">Log in</span>
       </div>
-    </form>
+    </a-form>
 
     <form id="login">
       <h2>Log In</h2>
@@ -59,8 +59,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, reactive } from "vue";
+import { AuthUser } from "..";
+
 const root = ref(null as HTMLElement | null);
+
+const formState = reactive<AuthUser>({
+  userId: "",
+  userPass: "",
+  userName: "",
+  emailId: "",
+  emailDomain: "",
+});
 
 const turnToSignUp = () => {
   if (root != null) {
@@ -78,23 +88,18 @@ const turnToLogin = () => {
 <style lang="scss" scoped>
 @import url("https://fonts.googleapis.com/css?family=Quattrocento+Sans&display=swap");
 
-$gray: #b5b5b5;
-
-body {
-  margin: 0;
-  font-family: "Quattrocento Sans";
-  overflow: hidden;
-}
-
-h2 {
-  font-weight: bolder;
-}
-
 #auth {
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-direction: row;
+  $gray: #b5b5b5;
+  font-family: "Quattrocento Sans";
+  overflow: hidden;
+
+  h2 {
+    font-weight: bolder;
+  }
 
   &.sign-up #slider {
     left: 50vw;

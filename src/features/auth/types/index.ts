@@ -1,10 +1,9 @@
 export type AuthUser = {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  bio: string;
-  role: "ADMIN" | "USER";
+  userId: String;
+  userPass: String;
+  userName: String;
+  emailId: String;
+  emailDomain: String;
 };
 
 export type UserResponse = {
