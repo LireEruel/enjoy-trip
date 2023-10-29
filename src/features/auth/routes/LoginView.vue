@@ -2,19 +2,20 @@
   <section id="auth" ref="root">
     <a-form
       id="sign-up"
-      :model="formState"
+      :model="signUpFormState"
       name="basic"
       autocomplete="off"
       layout="vertical"
-      @finish="onFinish"
+      @finish="onSubmitSignUpFrom"
       @finishFailed="onFinishFailed"
     >
+      <h2>Sign up</h2>
       <a-form-item
         label="Id"
         name="userId"
         :rules="[{ required: true, message: 'Please input your userId!' }]"
       >
-        <a-input v-model:value="formState.userId" />
+        <a-input v-model:value="signUpFormState.userId" />
       </a-form-item>
 
       <a-form-item
@@ -22,7 +23,7 @@
         name="userName"
         :rules="[{ required: true, message: 'Please input your name!' }]"
       >
-        <a-input v-model:value="formState.userName" />
+        <a-input v-model:value="signUpFormState.userName" />
       </a-form-item>
 
       <a-form-item
@@ -30,7 +31,7 @@
         name="userPass"
         :rules="[{ required: true, message: 'Please input your password!' }]"
       >
-        <a-input-password v-model:value="formState.userPass" />
+        <a-input-password v-model:value="signUpFormState.userPass" />
       </a-form-item>
 
       <a-form-item
@@ -38,7 +39,7 @@
         name="userPassComfirm"
         :rules="[{ required: true, message: 'Please input your password!' }]"
       >
-        <a-input-password v-model:value="formState.userPassComfirm" />
+        <a-input-password v-model:value="signUpFormState.userPassComfirm" />
       </a-form-item>
 
       <a-form-item
@@ -52,29 +53,64 @@
           },
         ]"
       >
-        <a-input v-model:value="formState.email" />
+        <a-input v-model:value="signUpFormState.email" />
       </a-form-item>
-
-      <button>Sign up</button>
-
-      <div class="toggle">
-        Already have an account?
-        <span @click="turnToLogin">Log in</span>
-      </div>
+      <a-form-item>
+        <a-button
+          :loading="onLoadingApi"
+          type="primary"
+          html-type="submit"
+          class="submit-btn"
+          >Sign up</a-button
+        >
+        <div class="toggle">
+          Already have an account?
+          <span @click="turnToLogin">Log in</span>
+        </div>
+      </a-form-item>
     </a-form>
 
-    <form id="login">
+    <a-form
+      :model="loginFormState"
+      @finish="onSubmitLoginForm"
+      @finishFailed="onFinishFailed"
+      name="loginForm"
+      autocomplete="off"
+      layout="vertical"
+    >
       <h2>Log In</h2>
-      <label>Username</label>
-      <input type="text" placeholder="username" />
-      <Label>Password</Label>
-      <input type="password" placeholder="password" />
-      <button>Log In</button>
-      <div class="toggle">
-        Have you been here before?
-        <span @click="turnToSignUp">Sign up</span>
-      </div>
-    </form>
+      <a-form-item
+        label="Username"
+        name="username"
+        :rules="[{ required: true, message: 'Please input your username!' }]"
+      >
+        <a-input v-model:value="loginFormState.userId" />
+      </a-form-item>
+
+      <a-form-item
+        label="Password"
+        name="password"
+        :rules="[{ required: true, message: 'Please input your password!' }]"
+      >
+        <a-input-password v-model:value="loginFormState.userPass" />
+      </a-form-item>
+
+      <a-form-item name="remember">
+        <a-checkbox v-model:checked="loginFormState.remember"
+          >로그인 상태 유지하기</a-checkbox
+        >
+      </a-form-item>
+
+      <a-form-item>
+        <a-button type="primary" html-type="submit" class="submit-btn"
+          >Submit</a-button
+        >
+        <div class="toggle">
+          혹시 처음이신가요?
+          <span @click="turnToSignUp">회원 가입</span>
+        </div>
+      </a-form-item>
+    </a-form>
 
     <div id="slider">
       <div id="login-text">
@@ -108,8 +144,13 @@
 
 <script setup lang="ts">
 import { ref, reactive } from "vue";
+import { JoinUser, LoginUser } from "..";
+import { requestSignUp } from "../api/signup";
+import { loginWithIdAndPassword } from "../api/login";
+import Swal from "sweetalert2";
 
 const root = ref(null as HTMLElement | null);
+const onLoadingApi = ref(false);
 
 type SigunUpType = {
   userId: String;
@@ -119,12 +160,24 @@ type SigunUpType = {
   email: String;
 };
 
-const formState = reactive<SigunUpType>({
+type LoginType = {
+  userId: String;
+  userPass: String;
+  remember: Boolean;
+};
+
+const signUpFormState = reactive<SigunUpType>({
   userId: "",
   userPass: "",
   userPassComfirm: "",
   userName: "",
   email: "",
+});
+
+const loginFormState = reactive<LoginType>({
+  userId: "",
+  userPass: "",
+  remember: false,
 });
 
 const turnToSignUp = () => {
@@ -133,12 +186,48 @@ const turnToSignUp = () => {
   }
 };
 
-const onFinish = (values: any) => {
-  console.log("Success:", values);
+const onSubmitLoginForm = async (values: LoginUser) => {
+  onLoadingApi.value = true;
+  const submitData: LoginUser = {
+    userId: values.userId,
+    userPass: values.userPass,
+  };
+  try {
+    await loginWithIdAndPassword(submitData);
+    Swal.fire("Success!", "Welcome our service!", "success").then(() => {
+      turnToLogin();
+    });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    onLoadingApi.value = false;
+  }
 };
 
-const onFinishFailed = (errorInfo: any) => {
-  console.log("Failed:", errorInfo);
+const onSubmitSignUpFrom = async (values: SigunUpType) => {
+  const splitedEmail = values.email.split("@");
+  onLoadingApi.value = true;
+  const submitData: JoinUser = {
+    userId: values.userId,
+    userPass: values.userPass,
+    userName: values.userName,
+    emailId: splitedEmail[0],
+    emailDomain: splitedEmail[1],
+  };
+  try {
+    await requestSignUp(submitData);
+    Swal.fire("Success!", "Welcome our service!", "success").then(() => {
+      turnToLogin();
+    });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    onLoadingApi.value = false;
+  }
+};
+
+const onFinishFailed = () => {
+  Swal.fire("Failed!", "입력 형식을 다시 살펴봐주세요!", "warning");
 };
 
 const turnToLogin = () => {
@@ -148,7 +237,7 @@ const turnToLogin = () => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import url("https://fonts.googleapis.com/css?family=Quattrocento+Sans&display=swap");
 
 #auth {
@@ -156,7 +245,6 @@ const turnToLogin = () => {
   height: 100vh;
   display: flex;
   flex-direction: row;
-  $gray: #b5b5b5;
   font-family: "Quattrocento Sans";
   overflow: hidden;
 
@@ -176,41 +264,13 @@ const turnToLogin = () => {
     flex-direction: column;
     justify-content: center;
     background-color: #f2f2f7;
-    label {
-      margin-bottom: 5px;
-    }
-    button,
-    input {
-      padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      font-size: 1.25rem;
-      outline: none;
+
+    .ant-input {
+      padding: 0.5rem;
     }
 
-    input {
-      border: 1px solid $gray;
-      transition: 125ms ease;
-      &:focus {
-        border-color: blue;
-        box-shadow: 0 0 0 2pt rgba(blue, 0.3);
-      }
-    }
-
-    button {
-      color: white;
-      border: none;
-      margin-top: 20px;
-      background: rgba(blue, 0.7);
-      box-shadow: 0 3px 15px 5px rgba(black, 0.2);
-      cursor: pointer;
-      font-family: "Quattrocento Sans";
-      transition: 75ms ease;
-
-      &:active {
-        background: blue;
-        transform: scale(0.95);
-      }
+    .submit-btn {
+      width: 100%;
     }
   }
 }
@@ -264,7 +324,8 @@ const turnToLogin = () => {
 }
 
 .toggle {
-  text-align: center;
+  margin-top: 1rem;
+  text-align: right;
   color: #757575;
   span {
     color: blue;

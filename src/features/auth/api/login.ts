@@ -1,13 +1,6 @@
 import commonAxios from "lib/commonAxios";
-import type { UserResponse } from "../types";
+import type { LoginUser } from "../types";
 
-export type LoginCredentialsDTO = {
-    userId : string,
-    userPass : string
-};
-
-export const loginWithEmailAndPassword = (
-  data: LoginCredentialsDTO
-): Promise<UserResponse> => {
+export const loginWithIdAndPassword = (data: LoginUser) => {
   return commonAxios.post("/auth/login", data);
 };

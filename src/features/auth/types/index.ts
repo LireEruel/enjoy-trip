@@ -1,4 +1,4 @@
-export type AuthUser = {
+export type JoinUser = {
   userId: String;
   userPass: String;
   userName: String;
@@ -6,7 +6,7 @@ export type AuthUser = {
   emailDomain: String;
 };
 
-export type UserResponse = {
-  jwt: string;
-  user: AuthUser;
+export type LoginUser = {
+  userId: String;
+  userPass: String;
 };
