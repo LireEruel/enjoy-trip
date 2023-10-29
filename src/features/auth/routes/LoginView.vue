@@ -1,14 +1,62 @@
 <template>
   <section id="auth" ref="root">
-    <a-form id="sign-up">
-      <h2>Sign Up</h2>
-      <label>Username</label>
-      <input type="text" placeholder="username" />
-      <label>Password</label>
-      <input type="password" placeholder="password" />
-      <label>Confirm Password</label>
-      <input type="password" placeholder="confirm password" />
-      <button>Sign Up</button>
+    <a-form
+      id="sign-up"
+      :model="formState"
+      name="basic"
+      autocomplete="off"
+      layout="vertical"
+      @finish="onFinish"
+      @finishFailed="onFinishFailed"
+    >
+      <a-form-item
+        label="Id"
+        name="userId"
+        :rules="[{ required: true, message: 'Please input your userId!' }]"
+      >
+        <a-input v-model:value="formState.userId" />
+      </a-form-item>
+
+      <a-form-item
+        label="Username"
+        name="userName"
+        :rules="[{ required: true, message: 'Please input your name!' }]"
+      >
+        <a-input v-model:value="formState.userName" />
+      </a-form-item>
+
+      <a-form-item
+        label="Password"
+        name="userPass"
+        :rules="[{ required: true, message: 'Please input your password!' }]"
+      >
+        <a-input-password v-model:value="formState.userPass" />
+      </a-form-item>
+
+      <a-form-item
+        label="Password Confirm"
+        name="userPassComfirm"
+        :rules="[{ required: true, message: 'Please input your password!' }]"
+      >
+        <a-input-password v-model:value="formState.userPassComfirm" />
+      </a-form-item>
+
+      <a-form-item
+        label="Email"
+        name="email"
+        :rules="[
+          {
+            required: true,
+            type: 'email',
+            message: 'Please input your email!',
+          },
+        ]"
+      >
+        <a-input v-model:value="formState.email" />
+      </a-form-item>
+
+      <button>Sign up</button>
+
       <div class="toggle">
         Already have an account?
         <span @click="turnToLogin">Log in</span>
@@ -60,22 +108,37 @@
 
 <script setup lang="ts">
 import { ref, reactive } from "vue";
-import { AuthUser } from "..";
 
 const root = ref(null as HTMLElement | null);
 
-const formState = reactive<AuthUser>({
+type SigunUpType = {
+  userId: String;
+  userPass: String;
+  userPassComfirm: String;
+  userName: String;
+  email: String;
+};
+
+const formState = reactive<SigunUpType>({
   userId: "",
   userPass: "",
+  userPassComfirm: "",
   userName: "",
-  emailId: "",
-  emailDomain: "",
+  email: "",
 });
 
 const turnToSignUp = () => {
   if (root != null) {
     root.value?.classList.add("sign-up");
   }
+};
+
+const onFinish = (values: any) => {
+  console.log("Success:", values);
+};
+
+const onFinishFailed = (errorInfo: any) => {
+  console.log("Failed:", errorInfo);
 };
 
 const turnToLogin = () => {
