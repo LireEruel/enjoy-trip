@@ -20,10 +20,10 @@
         :style="{ lineHeight: '64px' }"
       >
         <a-menu-item key="/">
-          <RouterLink to="/"> MenuItem </RouterLink></a-menu-item
-        >
+          <router-link to="/notice"> 공지사항 </router-link>
+        </a-menu-item>
         <a-menu-item key="/#">
-          <RouterLink to="/#"> MenuItem2 </RouterLink>
+          <router-link to="/#"> MenuItem2 </router-link>
         </a-menu-item>
       </a-menu>
     </a-layout-header>
