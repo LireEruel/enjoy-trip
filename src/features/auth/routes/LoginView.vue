@@ -80,8 +80,8 @@
     >
       <h2>Log In</h2>
       <a-form-item
-        label="Username"
-        name="username"
+        label="Id"
+        name="userId"
         :rules="[{ required: true, message: 'Please input your username!' }]"
       >
         <a-input v-model:value="loginFormState.userId" />
@@ -89,7 +89,7 @@
 
       <a-form-item
         label="Password"
-        name="password"
+        name="userPass"
         :rules="[{ required: true, message: 'Please input your password!' }]"
       >
         <a-input-password v-model:value="loginFormState.userPass" />
@@ -194,10 +194,9 @@ const onSubmitLoginForm = async (values: LoginUser) => {
     userPass: values.userPass,
   };
   try {
-    await loginWithIdAndPassword(submitData);
-    Swal.fire("Success!", "Welcome our service!", "success").then(() => {
-      turnToLogin();
-      router.push("home");
+    //await loginWithIdAndPassword(submitData);
+    Swal.fire("Success!", "로그인 성공", "success").then(() => {
+      router.push("/");
     });
   } catch (e) {
     console.error(e);

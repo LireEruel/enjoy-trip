@@ -9,7 +9,7 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      name: "hello",
+      name: "home",
       components: {
         header: DefaultHeader,
         body: HelloWorld,
@@ -23,8 +23,8 @@ const router = createRouter({
         header: DefaultHeader,
         body: LoginViewVue,
         footer: DefaultFooter,
-      }
-    }
+      },
+    },
   ],
 });
 
