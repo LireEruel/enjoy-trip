@@ -148,7 +148,8 @@ import { JoinUser, LoginUser } from "..";
 import { requestSignUp } from "../api/signup";
 import { loginWithIdAndPassword } from "../api/login";
 import Swal from "sweetalert2";
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 const root = ref(null as HTMLElement | null);
 const onLoadingApi = ref(false);
 
@@ -196,6 +197,7 @@ const onSubmitLoginForm = async (values: LoginUser) => {
     await loginWithIdAndPassword(submitData);
     Swal.fire("Success!", "Welcome our service!", "success").then(() => {
       turnToLogin();
+      router.push("home");
     });
   } catch (e) {
     console.error(e);
