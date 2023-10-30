@@ -6,7 +6,14 @@
         <p>커플 플래닝의 업데이트 정보 등 다양한 소식을 알려드립니다.</p>
       </div>
     </section>
-    <section class="option-section"></section>
+    <section class="option-section">
+      <a-input-search
+        v-model:value="searchText"
+        placeholder="input search text"
+        style="width: 200px"
+        @search="getNoticeList"
+      />
+    </section>
 
     <section class="notice-list">
       <div class="table-container">
@@ -22,10 +29,27 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
+import { onMounted, ref } from "vue";
+import { requestGetNoticeList } from "../api/list";
 
-const dataSource = reactive<Array<Notice>>([]);
-const onLoadingNoticeList = reactive<Boolean>(false);
+const dataSource = ref<Array<Notice>>([]);
+const onLoadingNoticeList = ref<Boolean>(false);
+const searchText = ref<String>("");
+const pageNum = ref(1);
+const getNoticeList = async () => {
+  onLoadingNoticeList.value = true;
+  try {
+    const res = await requestGetNoticeList(pageNum.value, searchText.value);
+    console.log(res);
+  } catch (error) {
+  } finally {
+    onLoadingNoticeList.value = false;
+  }
+};
+
+onMounted(async () => {
+  await getNoticeList();
+});
 const columns = [
   {
     title: "번호",
@@ -65,11 +89,16 @@ const columns = [
     }
     padding-left: 15%;
   }
+  .option-section {
+    display: flex;
+    justify-content: end;
+    padding-right: 15%;
+    margin: 2em 0;
+  }
   .notice-list {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 3em;
     .table-container {
       width: 70%;
     }
