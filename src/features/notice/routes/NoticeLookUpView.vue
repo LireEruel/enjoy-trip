@@ -1,12 +1,20 @@
 <template>
   <div id="notice-lookup-view">
     <section class="top-section">
-      <div>
-        <h2>공지사항</h2>
-        <p>커플 플래닝의 업데이트 정보 등 다양한 소식을 알려드립니다.</p>
+      <div class="title-wrap">
+        <img
+          src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Milky%20Way.png"
+          alt="Milky Way"
+        />
+        <div>
+          <h2>공지사항</h2>
+
+          <p>커플 플래닝의 업데이트 정보 등 다양한 소식을 알려드립니다.</p>
+        </div>
       </div>
     </section>
     <section class="option-section">
+      <a-button type="primary">공지사항 작성</a-button>
       <a-input-search
         v-model:value="searchText"
         placeholder="input search text"
@@ -79,10 +87,21 @@ const columns = [
     height: 30%;
     display: flex;
     align-items: center;
-    h2 {
-      font-size: 2.5em;
-      margin: 0 0 1rem 0;
+    .title-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      h2 {
+        font-size: 2.5em;
+        margin: 0 0 1rem 0;
+      }
+      img {
+        width: 5em;
+        height: 5em;
+        margin-right: 2em;
+      }
     }
+
     p {
       font-size: 1.2rem;
       font-weight: 500;
@@ -94,6 +113,7 @@ const columns = [
     justify-content: end;
     padding-right: 15%;
     margin: 2em 0;
+    gap: 1em;
   }
   .notice-list {
     display: flex;
