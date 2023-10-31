@@ -15,7 +15,19 @@
         name="userId"
         :rules="[{ required: true, message: 'Please input your userId!' }]"
       >
-        <a-input v-model:value="signUpFormState.userId" />
+        <div class="id-input-wrapper">
+          <a-input
+            v-model:value="signUpFormState.userId"
+            @change="onChangeInputId"
+          />
+          <a-button
+            :loading="isLoadingIdConfirm"
+            @action="loadIdConfirm"
+            :disabled="isValidId"
+          >
+            아이디 확인
+          </a-button>
+        </div>
       </a-form-item>
 
       <a-form-item
@@ -143,15 +155,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref } from "vue";
 import { JoinUser, LoginUser } from "..";
 import { requestSignUp } from "../api/signup";
-import { loginWithIdAndPassword } from "../api/login";
+import { checkDuplicateID } from "../api";
 import Swal from "sweetalert2";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const root = ref(null as HTMLElement | null);
 const onLoadingApi = ref(false);
+const isLoadingIdConfirm = ref(false);
+const isValidId = ref(false);
 
 type SigunUpType = {
   userId: String;
@@ -167,7 +181,7 @@ type LoginType = {
   remember: Boolean;
 };
 
-const signUpFormState = reactive<SigunUpType>({
+const signUpFormState = ref<SigunUpType>({
   userId: "",
   userPass: "",
   userPassComfirm: "",
@@ -175,7 +189,7 @@ const signUpFormState = reactive<SigunUpType>({
   email: "",
 });
 
-const loginFormState = reactive<LoginType>({
+const loginFormState = ref<LoginType>({
   userId: "",
   userPass: "",
   remember: false,
@@ -187,6 +201,23 @@ const turnToSignUp = () => {
   }
 };
 
+const onChangeInputId = () => {
+  isValidId.value = false;
+};
+
+const loadIdConfirm = () => {
+  isLoadingIdConfirm.value = true;
+  checkDuplicateID(signUpFormState.value.userId)
+    .then((res) => {
+      if (res.status === 200) {
+        isValidId.value = true;
+        isLoadingIdConfirm.value = false;
+      }
+    })
+    .catch(() => {
+      isLoadingIdConfirm.value = false;
+    });
+};
 const onSubmitLoginForm = async (values: LoginUser) => {
   onLoadingApi.value = true;
   const submitData: LoginUser = {
@@ -255,6 +286,12 @@ const turnToLogin = () => {
 
   &.sign-up #slider {
     left: 50vw;
+  }
+
+  .id-input-wrapper {
+    display: flex;
+    gap: 2%;
+    align-items: center;
   }
 
   form {
