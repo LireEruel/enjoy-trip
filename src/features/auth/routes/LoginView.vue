@@ -97,13 +97,14 @@ const onSubmitLoginForm = async (values: LoginUser) => {
   }
 };
 
-const onSubmitSignUpFrom = async (values: SignUpFormType) => {
-  const splitedEmail = values.email.split("@");
+const onSubmitSignUpFrom = async () => {
+  const splitedEmail = signUpFormState.value.email.split("@");
   onLoadingApi.value = true;
+
   const submitData: JoinUser = {
-    userId: values.userId,
-    userPass: values.userPass,
-    userName: values.userName,
+    userId: signUpFormState.value.userId,
+    userPass: signUpFormState.value.userPass,
+    userName: signUpFormState.value.userName,
     emailId: splitedEmail[0],
     emailDomain: splitedEmail[1],
   };

@@ -5,7 +5,7 @@
     name="basic"
     autocomplete="off"
     layout="vertical"
-    @finish="emit('onSubmitSignUpFrom')"
+    @finish="onSubmitSignUpFrom"
     @finishFailed="onFinishFailed"
   >
     <h2>Sign up</h2>
@@ -21,8 +21,10 @@
         />
         <a-button
           :loading="isLoadingIdConfirm"
-          @action="loadIdConfirm"
-          :disabled="isValidId"
+          @click="loadIdConfirm"
+          :disabled="
+            signUpFormState.userId.length == 0 || signUpFormState.isValidId
+          "
         >
           아이디 확인
         </a-button>
@@ -89,8 +91,6 @@ import { checkDuplicateID } from "../api";
 import Swal from "sweetalert2";
 
 const isLoadingIdConfirm = ref(false);
-const isValidId = ref(false);
-
 const props = defineProps<{
   signUpFormState: SignUpFormType;
   onLoadingApi: boolean;
@@ -99,7 +99,7 @@ const props = defineProps<{
 const emit = defineEmits(["onSubmitSignUpFrom", "turnToLogin"]);
 
 const onChangeInputId = () => {
-  isValidId.value = false;
+  props.signUpFormState.isValidId = false;
 };
 
 const onFinishFailed = () => {
@@ -110,11 +110,20 @@ const loadIdConfirm = async () => {
   isLoadingIdConfirm.value = true;
   try {
     await checkDuplicateID(props.signUpFormState.userId);
-    isValidId.value = true;
+    props.signUpFormState.isValidId = true;
   } catch (error) {
+    Swal.fire("Failed!", "아이디가 중복되었습니다.", "warning");
     isLoadingIdConfirm.value = false;
   } finally {
     isLoadingIdConfirm.value = false;
+  }
+};
+
+const onSubmitSignUpFrom = () => {
+  if (props.signUpFormState.isValidId) {
+    emit("onSubmitSignUpFrom");
+  } else {
+    Swal.fire("Failed!", "아이디 중복 확인을 해주세요!", "warning");
   }
 };
 </script>

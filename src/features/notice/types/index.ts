@@ -9,3 +9,9 @@ type Notice = {
   hit: string;
   viewYn: string;
 };
+
+type NoticeListInfo = {
+  pgno: number;
+  totalCount: number;
+  list: Notice[];
+};

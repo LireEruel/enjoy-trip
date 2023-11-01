@@ -29,8 +29,13 @@
           :columns="columns"
           :dataSource="dataSource"
           :loading="onLoadingNoticeList"
+          :pagination="false"
         >
         </a-table>
+        <div>
+          <span>더 보기</span>
+          <span> {{ currentNoticeCount }} / {{ totalNoticeCount }}</span>
+        </div>
       </div>
     </section>
   </div>
@@ -44,14 +49,22 @@ const dataSource = ref<Array<Notice>>([]);
 const onLoadingNoticeList = ref<Boolean>(false);
 const searchText = ref<String>("");
 const pageNum = ref(1);
+const totalNoticeCount = ref(0);
+const currentNoticeCount = ref(0);
+
 const getNoticeList = async () => {
   onLoadingNoticeList.value = true;
   try {
     const res = await requestGetNoticeList(pageNum.value, searchText.value);
-    console.log(res);
+    totalNoticeCount.value = res.totalCount;
+    dataSource.value = [...dataSource.value, ...res.list];
+    currentNoticeCount.value = dataSource.value.length;
+    s;
   } catch (error) {
+    console.error(error);
   } finally {
     onLoadingNoticeList.value = false;
+    pageNum.value++;
   }
 };
 
@@ -61,7 +74,7 @@ onMounted(async () => {
 const columns = [
   {
     title: "번호",
-    dataIndex: "name",
+    dataIndex: "noticeId",
     sorter: true,
     width: "10%",
   },
@@ -73,7 +86,7 @@ const columns = [
   },
   {
     title: "제목",
-    dataIndex: "name",
+    dataIndex: "title",
   },
 ];
 </script>
