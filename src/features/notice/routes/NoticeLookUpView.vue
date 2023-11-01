@@ -59,7 +59,6 @@ const getNoticeList = async () => {
     totalNoticeCount.value = res.totalCount;
     dataSource.value = [...dataSource.value, ...res.list];
     currentNoticeCount.value = dataSource.value.length;
-    s;
   } catch (error) {
     console.error(error);
   } finally {
