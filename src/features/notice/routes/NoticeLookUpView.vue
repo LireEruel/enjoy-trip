@@ -8,13 +8,14 @@
         />
         <div>
           <h2>공지사항</h2>
-
           <p>커플 플래닝의 업데이트 정보 등 다양한 소식을 알려드립니다.</p>
         </div>
       </div>
     </section>
     <section class="option-section">
-      <a-button type="primary">공지사항 작성</a-button>
+      <router-link :to="{ name: 'noticeWrite' }">
+        <a-button type="primary">공지사항 작성</a-button>
+      </router-link>
       <a-input-search
         v-model:value="searchText"
         placeholder="input search text"

@@ -3,7 +3,7 @@ import HelloWorld from "../components/HelloWorld.vue";
 import DefaultHeader from "../components/layouts/DefaultHeader.vue";
 import DefaultFooter from "../components/layouts/DefaultFooter.vue";
 import LoginViewVue from "features/auth/routes/LoginView.vue";
-import NoticeLookupViewVue from "features/notice/routes/NoticeLookupView.vue";
+import { NoticeLookupView, NoticeWriteView } from "features/notice/routes";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,7 +31,16 @@ const router = createRouter({
       name: "notice",
       components: {
         header: DefaultHeader,
-        body: NoticeLookupViewVue,
+        body: NoticeLookupView,
+        footer: DefaultFooter,
+      },
+    },
+    {
+      path: "/notice/write",
+      name: "noticeWrite",
+      components: {
+        header: DefaultHeader,
+        body: NoticeWriteView,
         footer: DefaultFooter,
       },
     },

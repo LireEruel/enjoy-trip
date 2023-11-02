@@ -112,6 +112,7 @@ const loadIdConfirm = async () => {
     await checkDuplicateID(props.signUpFormState.userId);
     props.signUpFormState.isValidId = true;
   } catch (error) {
+    console.log(error);
     Swal.fire("Failed!", "아이디가 중복되었습니다.", "warning");
     isLoadingIdConfirm.value = false;
   } finally {
