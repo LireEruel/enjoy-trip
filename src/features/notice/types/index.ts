@@ -15,3 +15,12 @@ type NoticeListInfo = {
   totalCount: number;
   list: Notice[];
 };
+
+type WriteNoticeListInfo = {
+  title: String;
+  content: String;
+  startTime: String;
+  endTime: String;
+  viewYn: String; // 보일지 말지
+  file: File[];
+};

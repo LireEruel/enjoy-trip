@@ -18,6 +18,8 @@ declare module 'vue' {
     ALayoutHeader: typeof import('ant-design-vue/es')['LayoutHeader']
     AMenu: typeof import('ant-design-vue/es')['Menu']
     AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
+    ARangePicker: typeof import('ant-design-vue/es')['RangePicker']
+    ASwitch: typeof import('ant-design-vue/es')['Switch']
     ATable: typeof import('ant-design-vue/es')['Table']
     DefaultFooter: typeof import('./src/components/layouts/DefaultFooter.vue')['default']
     DefaultHeader: typeof import('./src/components/layouts/DefaultHeader.vue')['default']
