@@ -20,7 +20,7 @@
         v-model:value="searchText"
         placeholder="input search text"
         style="width: 200px"
-        @search="getNoticeList"
+        @search="searchNoticeList"
       />
     </section>
 
@@ -77,6 +77,14 @@ const getNoticeList = async () => {
     onLoadingNoticeList.value = false;
     pageNum.value++;
   }
+};
+
+const searchNoticeList = () => {
+  pageNum.value = 1;
+  totalNoticeCount.value = 0;
+  currentNoticeCount.value = 0;
+  dataSource.value = [];
+  getNoticeList();
 };
 
 onMounted(async () => {
