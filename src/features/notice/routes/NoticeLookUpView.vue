@@ -33,10 +33,21 @@
           :pagination="false"
         >
         </a-table>
-        <div>
-          <span>더 보기</span>
-          <span> {{ currentNoticeCount }} / {{ totalNoticeCount }}</span>
-        </div>
+        <p
+          class="view-more-wrap"
+          @click="getNoticeList"
+          v-show="currentNoticeCount < totalNoticeCount"
+        >
+          더 보기
+          <span class="current"> {{ currentNoticeCount }}</span> /<span
+            class="max"
+            >{{ totalNoticeCount }}</span
+          ><DownOutlined />
+        </p>
+        <div
+          v-show="currentNoticeCount == totalNoticeCount"
+          class="empty-space"
+        />
       </div>
     </section>
   </div>
@@ -45,7 +56,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { requestGetNoticeList } from "../api/list";
-
+import { DownOutlined } from "@ant-design/icons-vue";
 const dataSource = ref<Array<Notice>>([]);
 const onLoadingNoticeList = ref<Boolean>(false);
 const searchText = ref<String>("");
@@ -135,6 +146,24 @@ const columns = [
     .table-container {
       width: 70%;
     }
+  }
+  .view-more-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4em;
+    cursor: pointer;
+    gap: 0.5em;
+    font-size: 1.2em;
+    .current {
+      color: #4096ff;
+    }
+    .max {
+      color: #bfbfbf;
+    }
+  }
+  .empty-space {
+    padding: 4em;
   }
 }
 </style>
