@@ -1,8 +1,14 @@
 <template>
   <div id="noticeWriteView">
     <header>
-      <h2>공지사항 작성</h2>
-      <p>사용자에게 전해야 할 소식을 작성해봅시다.</p>
+      <img
+        src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Telephone%20Receiver.png"
+        alt="Telephone Receiver"
+      />
+      <div>
+        <h2>공지사항 작성</h2>
+        <p>사용자에게 전해야 할 소식을 작성해봅시다.</p>
+      </div>
     </header>
     <div class="contents">
       <a-button
@@ -120,14 +126,15 @@ const onClickConfirmBtn = () => {
     background-color: #4096ff;
     color: white;
     display: flex;
-    flex-direction: column;
-    gap: 0.5em;
-
+    justify-content: center;
     h2 {
-      font-size: 2em;
+      font-size: 2.5em;
+      margin: 0 0 1rem 0;
     }
-    p {
-      font-size: 1em;
+    img {
+      width: 5em;
+      height: 5em;
+      margin-right: 2em;
     }
   }
   .contents {
