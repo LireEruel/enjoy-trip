@@ -85,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from "vue";
+import { ref } from "vue";
 import { SignUpFormType } from "../types";
 import { checkDuplicateID } from "../api";
 import Swal from "sweetalert2";

@@ -5,7 +5,7 @@ const cancelTokenSource = axios.CancelToken.source();
 
 const commonAxios = axios.create({
   cancelToken: cancelTokenSource.token,
-  baseURL: "https://d6db-2001-2d8-217-a3ba-84b9-d2bf-f3f4-4bdc.ngrok.io",
+  baseURL: "219.255.6.129:23333",
 });
 
 commonAxios.interceptors.request.use(function (config): any {

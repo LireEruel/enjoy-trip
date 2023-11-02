@@ -47,7 +47,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
 import { LoginType } from "../types";
 import Swal from "sweetalert2";
 
