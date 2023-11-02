@@ -17,10 +17,11 @@ type NoticeListInfo = {
 };
 
 type WriteNoticeListInfo = {
+  noticeId?: number;
   title: String;
   content: String;
   startTime: String;
   endTime: String;
   viewYn: String; // 보일지 말지
-  file: File[];
+  files: File[];
 };

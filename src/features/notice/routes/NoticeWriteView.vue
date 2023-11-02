@@ -7,13 +7,14 @@
     <div class="contents">
       <a-button
         @click="onClickConfirmBtn"
+        :loading="onLoading"
         type="primary"
         class="submit-btn"
         size="large"
         >등록</a-button
       >
       <div class="options-wrap">
-        <a-range-picker v-model:value="selectedTime" show-time />
+        <a-range-picker v-model:value="selectedRange" show-time />
 
         <a-switch
           id="viewYn"
@@ -25,7 +26,13 @@
 
       <a-input v-model:value="title" placeholder="제목을 입력해주세요." />
       <div class="editor-wrap">
-        <QuillEditor theme="snow" v-model:content="input" contentType="html" />
+        <QuillEditor
+          theme="snow"
+          v-model:content="contents"
+          contentType="html"
+          ref="editorElem"
+        >
+        </QuillEditor>
       </div>
     </div>
   </div>
@@ -34,14 +41,72 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { Dayjs } from "dayjs";
+import Swal from "sweetalert2";
+import { requestAddNoticeList } from "../api";
 type RangeValue = [Dayjs, Dayjs];
-const input = ref("");
+const contents = ref("");
 const viewYn = ref(false);
 const title = ref("");
-const selectedTime = ref<RangeValue>();
+const selectedRange = ref<RangeValue>();
+const format = "YYYY-MM-DD hh:mm";
+type editorType = { getText: () => String } | null;
+const editorElem = ref<editorType>(null);
+const onLoading = ref(false);
+
+const checkValidState = () => {
+  const result = {
+    startTime: "",
+    endTime: "",
+    content: "",
+    viewYn: "",
+    title: "",
+    files: [],
+  };
+
+  if (selectedRange.value?.[0]) {
+    result.startTime = selectedRange.value[0].format(format);
+    result.endTime = selectedRange.value[1].format(format);
+  } else {
+    Swal.fire("error", "기간을 선택해주세요.", "warning");
+    return;
+  }
+
+  if (title.value) {
+    if (title.value.length < 10) {
+      Swal.fire("error", "제목이 너무 짧습니다.", "warning");
+      return;
+    } else {
+      result.title = title.value;
+    }
+  } else {
+    Swal.fire("error", "제목을 입력해주세요.", "warning");
+    return;
+  }
+  if (editorElem.value) {
+    const pureText = editorElem.value.getText().trim();
+    if (pureText.length < 15) {
+      Swal.fire("error", "글이 너무 짧습니다.", "warning");
+      return;
+    } else {
+      result.content = contents.value;
+    }
+  }
+  result.viewYn = viewYn ? "Y" : "F";
+  return result;
+};
 
 const onClickConfirmBtn = () => {
-  console.log(input.value);
+  const params = checkValidState();
+  console.log(params);
+  if (params) {
+    onLoading.value = true;
+    try {
+      const res = requestAddNoticeList(params);
+      console.log(res);
+    } finally {
+      onLoading.value = false;
+    }
+  }
 };
 </script>
 
