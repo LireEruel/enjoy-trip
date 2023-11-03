@@ -1,7 +1,7 @@
 <template>
   <div class="notice-detail-view">
     <div class="site-content">
-      <div v-if="onLoadingNoticeDetail">
+      <div class="skeleton-wrap" v-if="onLoadingNoticeDetail">
         <a-skeleton></a-skeleton>
       </div>
       <div v-else-if="!onLoadingNoticeDetail && currentNotice != null">
@@ -9,13 +9,10 @@
           <h1>{{ currentNotice?.title }}</h1>
           <div class="meta">
             <span class="register-time">{{ currentNotice.registerTime }}</span>
-            <p>
-              기간 : {{ currentNotice.startTime }} ~ {{ currentNotice.endTime }}
-            </p>
           </div>
         </header>
 
-        <section v-html="currentNotice.content"></section>
+        <section v-html="currentNotice.content" class="main-content"></section>
       </div>
       <a-empty v-else></a-empty>
       <footer>
@@ -65,7 +62,9 @@ onMounted(async () => {
   display: flex;
   justify-content: center;
 }
-
+.skeleton-wrap {
+  padding: 5rem 0;
+}
 .site-content {
   width: 1200px;
   header {
@@ -83,6 +82,30 @@ onMounted(async () => {
   flex-direction: column;
   gap: 0.2em;
   color: gray;
+}
+
+.main-content {
+  padding: 2rem 0;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 2rem;
+}
+
+footer {
+  a {
+    text-decoration: none;
+  }
+  a::before {
+    float: left;
+    width: 2rem;
+    height: 0.34rem;
+    box-sizing: border-box;
+    content: "<----";
+    margin-right: 0.1rem;
+    background-size: 0.33rem 0.14rem;
+    background-position: center;
+    letter-spacing: -0.1rem;
+  }
 }
 
 @media screen and (max-width: 1599px) {
