@@ -1,116 +1,18 @@
 <template>
   <section id="auth" ref="root">
-    <a-form
-      id="sign-up"
-      :model="signUpFormState"
-      name="basic"
-      autocomplete="off"
-      layout="vertical"
-      @finish="onSubmitSignUpFrom"
-      @finishFailed="onFinishFailed"
+    <signup-form
+      :on-loading-api="onLoadingApi"
+      :sign-up-form-state="signUpFormState"
+      @onSubmitSignUpFrom="onSubmitSignUpFrom"
+      @turnToLogin="turnToLogin"
     >
-      <h2>Sign up</h2>
-      <a-form-item
-        label="Id"
-        name="userId"
-        :rules="[{ required: true, message: 'Please input your userId!' }]"
-      >
-        <a-input v-model:value="signUpFormState.userId" />
-      </a-form-item>
-
-      <a-form-item
-        label="Username"
-        name="userName"
-        :rules="[{ required: true, message: 'Please input your name!' }]"
-      >
-        <a-input v-model:value="signUpFormState.userName" />
-      </a-form-item>
-
-      <a-form-item
-        label="Password"
-        name="userPass"
-        :rules="[{ required: true, message: 'Please input your password!' }]"
-      >
-        <a-input-password v-model:value="signUpFormState.userPass" />
-      </a-form-item>
-
-      <a-form-item
-        label="Password Confirm"
-        name="userPassComfirm"
-        :rules="[{ required: true, message: 'Please input your password!' }]"
-      >
-        <a-input-password v-model:value="signUpFormState.userPassComfirm" />
-      </a-form-item>
-
-      <a-form-item
-        label="Email"
-        name="email"
-        :rules="[
-          {
-            required: true,
-            type: 'email',
-            message: 'Please input your email!',
-          },
-        ]"
-      >
-        <a-input v-model:value="signUpFormState.email" />
-      </a-form-item>
-      <a-form-item>
-        <a-button
-          :loading="onLoadingApi"
-          type="primary"
-          html-type="submit"
-          class="submit-btn"
-          >Sign up</a-button
-        >
-        <div class="toggle">
-          Already have an account?
-          <span @click="turnToLogin">Log in</span>
-        </div>
-      </a-form-item>
-    </a-form>
-
-    <a-form
-      :model="loginFormState"
-      @finish="onSubmitLoginForm"
-      @finishFailed="onFinishFailed"
-      name="loginForm"
-      autocomplete="off"
-      layout="vertical"
-    >
-      <h2>Log In</h2>
-      <a-form-item
-        label="Id"
-        name="userId"
-        :rules="[{ required: true, message: 'Please input your username!' }]"
-      >
-        <a-input v-model:value="loginFormState.userId" />
-      </a-form-item>
-
-      <a-form-item
-        label="Password"
-        name="userPass"
-        :rules="[{ required: true, message: 'Please input your password!' }]"
-      >
-        <a-input-password v-model:value="loginFormState.userPass" />
-      </a-form-item>
-
-      <a-form-item name="remember">
-        <a-checkbox v-model:checked="loginFormState.remember"
-          >로그인 상태 유지하기</a-checkbox
-        >
-      </a-form-item>
-
-      <a-form-item>
-        <a-button type="primary" html-type="submit" class="submit-btn"
-          >Submit</a-button
-        >
-        <div class="toggle">
-          혹시 처음이신가요?
-          <span @click="turnToSignUp">회원 가입</span>
-        </div>
-      </a-form-item>
-    </a-form>
+    </signup-form>
+    <login-form
+      :on-loading-api="onLoadingApi"
+      :loginFormState="loginFormState"
+      @onSubmitLoginForm="onSubmitLoginForm"
+      @turnToSignUp="turnToSignUp"
+    ></login-form>
 
     <div id="slider">
       <div id="login-text">
@@ -143,39 +45,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
-import { JoinUser, LoginUser } from "..";
+import { ref } from "vue";
+
+import { JoinUser, LoginUser, loginWithIdAndPassword } from "..";
 import { requestSignUp } from "../api/signup";
-import { loginWithIdAndPassword } from "../api/login";
 import Swal from "sweetalert2";
 import { useRouter } from "vue-router";
+import { SignUpFormType, LoginType } from "../types";
+import { LoginForm, SignupForm } from "../components";
+
 const router = useRouter();
 const root = ref(null as HTMLElement | null);
 const onLoadingApi = ref(false);
 
-type SigunUpType = {
-  userId: String;
-  userPass: String;
-  userPassComfirm: String;
-  userName: String;
-  email: String;
-};
-
-type LoginType = {
-  userId: String;
-  userPass: String;
-  remember: Boolean;
-};
-
-const signUpFormState = reactive<SigunUpType>({
+const signUpFormState = ref<SignUpFormType>({
   userId: "",
   userPass: "",
   userPassComfirm: "",
   userName: "",
   email: "",
+  isValidId: false,
 });
 
-const loginFormState = reactive<LoginType>({
+const loginFormState = ref<LoginType>({
   userId: "",
   userPass: "",
   remember: false,
@@ -194,7 +86,7 @@ const onSubmitLoginForm = async (values: LoginUser) => {
     userPass: values.userPass,
   };
   try {
-    //await loginWithIdAndPassword(submitData);
+    await loginWithIdAndPassword(submitData);
     Swal.fire("Success!", "로그인 성공", "success").then(() => {
       router.push("/");
     });
@@ -205,13 +97,14 @@ const onSubmitLoginForm = async (values: LoginUser) => {
   }
 };
 
-const onSubmitSignUpFrom = async (values: SigunUpType) => {
-  const splitedEmail = values.email.split("@");
+const onSubmitSignUpFrom = async () => {
+  const splitedEmail = signUpFormState.value.email.split("@");
   onLoadingApi.value = true;
+
   const submitData: JoinUser = {
-    userId: values.userId,
-    userPass: values.userPass,
-    userName: values.userName,
+    userId: signUpFormState.value.userId,
+    userPass: signUpFormState.value.userPass,
+    userName: signUpFormState.value.userName,
     emailId: splitedEmail[0],
     emailDomain: splitedEmail[1],
   };
@@ -225,10 +118,6 @@ const onSubmitSignUpFrom = async (values: SigunUpType) => {
   } finally {
     onLoadingApi.value = false;
   }
-};
-
-const onFinishFailed = () => {
-  Swal.fire("Failed!", "입력 형식을 다시 살펴봐주세요!", "warning");
 };
 
 const turnToLogin = () => {
@@ -255,6 +144,12 @@ const turnToLogin = () => {
 
   &.sign-up #slider {
     left: 50vw;
+  }
+
+  .id-input-wrapper {
+    display: flex;
+    gap: 2%;
+    align-items: center;
   }
 
   form {

@@ -1,8 +1,6 @@
 <template>
   <a-layout id="components-layout">
-    <a-layout-header
-      :style="{ position: 'fixed', width: '100%', overflow: 'hidden' }"
-    >
+    <a-layout-header class="default-header">
       <div style="float: left">
         <router-link to="/" class="app-logo">Home </router-link>
       </div>
@@ -12,18 +10,12 @@
         <a-button class="login-button" @click="goLogin"> 로그인 </a-button>
         <span class="app-bar-padding" />
       </div>
-      <a-menu
-        v-model:selectedKeys="menuKey"
-        class="menu"
-        theme="dark"
-        mode="horizontal"
-        :style="{ lineHeight: '64px' }"
-      >
+      <a-menu v-model:selectedKeys="menuKey" class="menu" mode="horizontal">
         <a-menu-item key="/">
-          <RouterLink to="/"> MenuItem </RouterLink></a-menu-item
-        >
+          <router-link to="/notice"> 공지사항 </router-link>
+        </a-menu-item>
         <a-menu-item key="/#">
-          <RouterLink to="/#"> MenuItem2 </RouterLink>
+          <router-link to="/#"> MenuItem2 </router-link>
         </a-menu-item>
       </a-menu>
     </a-layout-header>
@@ -52,6 +44,18 @@ const menuKey = ref<string[]>([window.location.pathname]);
   justify-content: space-between;
   align-items: center;
   z-index: 1;
+}
+
+.default-header {
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+  .ant-menu {
+    height: 98%;
+  }
 }
 
 #components-layout .menu {
