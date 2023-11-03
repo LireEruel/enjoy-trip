@@ -50,11 +50,11 @@ import { ref } from "vue";
 import { JoinUser, LoginUser, loginWithIdAndPassword } from "..";
 import { requestSignUp } from "../api/signup";
 import Swal from "sweetalert2";
-import { useRouter } from "vue-router";
+//import { useRouter } from "vue-router";
 import { SignUpFormType, LoginType } from "../types";
 import { LoginForm, SignupForm } from "../components";
 
-const router = useRouter();
+//const router = useRouter();
 const root = ref(null as HTMLElement | null);
 const onLoadingApi = ref(false);
 
@@ -79,16 +79,17 @@ const turnToSignUp = () => {
   }
 };
 
-const onSubmitLoginForm = async (values: LoginUser) => {
+const onSubmitLoginForm = async () => {
   onLoadingApi.value = true;
   const submitData: LoginUser = {
-    userId: values.userId,
-    userPass: values.userPass,
+    userId: loginFormState.value.userId,
+    userPass: loginFormState.value.userPass,
   };
   try {
     await loginWithIdAndPassword(submitData);
     Swal.fire("Success!", "로그인 성공", "success").then(() => {
-      router.push("/");
+      //router.push("/");
+      console.log(sessionStorage.length);
     });
   } catch (e) {
     console.error(e);
