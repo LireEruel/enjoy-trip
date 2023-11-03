@@ -49,6 +49,7 @@ import { ref } from "vue";
 import type { Dayjs } from "dayjs";
 import Swal from "sweetalert2";
 import { requestAddNoticeList } from "../api";
+import { useRouter } from "vue-router";
 type RangeValue = [Dayjs, Dayjs];
 const contents = ref("");
 const viewYn = ref(false);
@@ -58,6 +59,7 @@ const format = "YYYY-MM-DD hh:mm";
 type editorType = { getText: () => String } | null;
 const editorElem = ref<editorType>(null);
 const onLoading = ref(false);
+const router = useRouter();
 
 const checkValidState = () => {
   const result = {
@@ -107,8 +109,14 @@ const onClickConfirmBtn = () => {
   if (params) {
     onLoading.value = true;
     try {
-      const res = requestAddNoticeList(params);
-      console.log(res);
+      requestAddNoticeList(params);
+      Swal.fire(
+        "success",
+        "공지사항이 정상적으로 등록되었습니다.",
+        "success"
+      ).then(() => {
+        router.push("/notice");
+      });
     } finally {
       onLoading.value = false;
     }
