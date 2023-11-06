@@ -131,6 +131,12 @@ const onClickAfter = () => {
     currentId.value++;
   }
 };
+
+// 3초에 한번씩 onClickAfter 실행시키기
+
+setInterval(() => {
+  onClickAfter();
+}, 4000);
 </script>
 
 <style scoped lang="scss">
