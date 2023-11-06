@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import DefaultHeader from "../components/layouts/DefaultHeader.vue";
-import DefaultFooter from "../components/layouts/DefaultFooter.vue";
+import { TheFooter, TheHeader } from "components/layouts";
 import LoginViewVue from "features/auth/routes/LoginView.vue";
 import { NoticeLookupView, NoticeWriteView } from "features/notice/routes";
 import { LandingView } from "features/landing";
@@ -12,36 +11,36 @@ const router = createRouter({
       path: "/",
       name: "home",
       components: {
-        header: DefaultHeader,
+        header: TheHeader,
         body: LandingView,
-        footer: DefaultFooter,
+        footer: TheFooter,
       },
     },
     {
       path: "/login",
       name: "login",
       components: {
-        header: DefaultHeader,
+        header: TheHeader,
         body: LoginViewVue,
-        footer: DefaultFooter,
+        footer: TheFooter,
       },
     },
     {
       path: "/notice",
       name: "notice",
       components: {
-        header: DefaultHeader,
+        header: TheHeader,
         body: NoticeLookupView,
-        footer: DefaultFooter,
+        footer: TheFooter,
       },
     },
     {
       path: "/notice/write",
       name: "noticeWrite",
       components: {
-        header: DefaultHeader,
+        header: TheHeader,
         body: NoticeWriteView,
-        footer: DefaultFooter,
+        footer: TheFooter,
       },
     },
   ],

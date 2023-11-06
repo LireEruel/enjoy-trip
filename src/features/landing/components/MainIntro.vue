@@ -22,7 +22,7 @@
                 </a-col>
                 <a-col class="gutter-row" :span="20">
                   <div class="image-holder">
-                    <img src="https://source.unsplash.com/cddaZDt6uRw" />
+                    <img :src="item.imgUrl" />
                   </div>
                   <a-row>
                     <a-col :span="18">
@@ -66,6 +66,11 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import JejuImg from "../assets/imgs/Jeju.jpg";
+import MilYangImg from "../assets/imgs/MilYang.jpg";
+import GwangJuImg from "../assets/imgs/GwangJu.jpg";
+import PyongChangImg from "../assets/imgs/PyongChang.jpg";
+import SeoulImg from "../assets/imgs/Seoul.jpg";
 
 type PlaceInfo = {
   id: number;
@@ -76,22 +81,42 @@ type PlaceInfo = {
 const placeInfoList: PlaceInfo[] = [
   {
     id: 0,
-    name: "Tokyo",
-    imgUrl: "https://source.unsplash.com/cddaZDt6uRw",
+    name: "제주도",
+    imgUrl: JejuImg,
     description:
-      "Tokyo, Japan’s busy capital, mixes the ultramodern and the traditional, from neon-lit skyscrapers to historic temples.",
+      "섬 전체가 하나의 거대한 관광자원인 제주도. 에메랄드빛 물빛이 인상적인 협재 해수욕장은 제주 대표 여행지며, 파도가 넘보는 주상절리와 바다 위 산책로인 용머리 해안은 제주에서만 볼 수 있는 천혜의 자연경관으로 손꼽힌다. ",
   },
   {
     id: 1,
-    name: "Kyoto",
-    imgUrl: "https://source.unsplash.com/peYW3VwICpE",
+    name: "밀양",
+    imgUrl: MilYangImg,
     description:
-      "Osaka is a large port city and commercial center known for its modern architecture, nightlife and hearty street food.",
+      "3대 신비가 숨어있는 밀양. 천황산 산 중턱에 있는 얼음골 계곡은 한여름에 얼음이 얼고 처서가 지날 무렵부터 얼음이 녹는 이상 기온 지대이다. ",
+  },
+  {
+    id: 2,
+    name: "광주",
+    imgUrl: GwangJuImg,
+    description:
+      "문화예술의 중심지라 불리는 광주광역시. 예향의 본고장답게 '맛'과 '멋'이 조화를 이루며 남도의 문화를 이끌어 왔다고 해도 과언이 아니다.",
+  },
+  {
+    id: 3,
+    name: "평창",
+    imgUrl: PyongChangImg,
+    description:
+      "자연 경관이 아름다운 평창. 드넓은 푸른 초원이 펼쳐진 대관령 양떼목장은 평창 대표 관광지이다. 풍차길이 매력적인 선자령은 백패킹의 성지로 알려져 있으며, 햐얀 눈꽃으로 수놓은 메밀꽃밭도 여행 코스로 빼놓을 수 없다. ",
+  },
+  {
+    id: 4,
+    name: "서울",
+    imgUrl: SeoulImg,
+    description:
+      "대한민국의 수도인 서울을 지방자치단체인 특별시로 부르는 명칭이다. 한반도 중앙에 있으며, 한강을 사이에 두고 남북으로 펼쳐져 있다. ",
   },
 ];
 
 const currentId = ref(0);
-
 const onClickPrevious = () => {
   if (currentId.value == 0) {
     currentId.value = placeInfoList.length - 1;
@@ -126,7 +151,7 @@ $md: 900px;
 }
 
 .intro-section {
-  margin-top: 5%;
+  margin-top: 3%;
   font-family: "Barlow", sans-serif;
   font-size: 1.125rem;
   font-weight: 400;
@@ -408,19 +433,19 @@ button {
   .intro {
     animation: fadeInLeft 0.8s 0.4s ease forwards;
     .title {
-      font-size: 4.25rem;
-      padding: 2.5rem 2.5rem 3rem 2.5rem;
+      font-size: 4rem;
+      padding: 2rem 2rem 3rem 2rem;
       background: $white;
     }
   }
 
   img {
-    height: 60vh;
+    height: 27rem;
   }
 
   .description {
     font-size: 1.25rem;
-    margin: 1rem 0 0 0;
+    height: 5rem;
   }
 
   .previous,
