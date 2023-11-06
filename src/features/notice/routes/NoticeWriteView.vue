@@ -48,7 +48,7 @@
 import { onMounted, ref } from "vue";
 import type { Dayjs } from "dayjs";
 import Swal from "sweetalert2";
-import { requestAddNoticeList, requestGetNoticeDetail } from "../api";
+import { requeseWriteNotice, requestGetNoticeDetail } from "../api";
 import { useRouter } from "vue-router";
 import dayjs from "dayjs";
 type RangeValue = [Dayjs, Dayjs];
@@ -71,6 +71,7 @@ const checkValidState = () => {
     viewYn: "",
     title: "",
     files: [],
+    noticeId: props.noticeId,
   };
 
   if (selectedRange.value?.[0]) {
@@ -107,17 +108,18 @@ const checkValidState = () => {
 
 const onClickConfirmBtn = () => {
   const params = checkValidState();
-  console.log(params);
   if (params) {
     onLoading.value = true;
     try {
-      requestAddNoticeList(params);
+      requeseWriteNotice(params);
       Swal.fire(
         "success",
-        "공지사항이 정상적으로 등록되었습니다.",
+        `공지사항이 정상적으로 ${
+          props.noticeId > 0 ? "수정" : "등록"
+        }되었습니다.`,
         "success"
       ).then(() => {
-        router.push("/notice");
+        router.go(-1); // TODO: 나중에 성공 후 noticeId 받아와서 글 상세로 이동해야함
       });
     } finally {
       onLoading.value = false;

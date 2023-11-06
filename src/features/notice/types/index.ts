@@ -15,7 +15,7 @@ type NoticeListInfo = {
   list: Notice[];
 };
 
-type WriteNoticeListInfo = {
+type WriteNoticeInfo = {
   noticeId?: number;
   title: String;
   content: String;
