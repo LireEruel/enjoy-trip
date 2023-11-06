@@ -3,12 +3,12 @@ import axios from "axios";
 
 const cancelTokenSource = axios.CancelToken.source();
 
-const commonAxios = axios.create({
+const fileAxios = axios.create({
   cancelToken: cancelTokenSource.token,
   baseURL: "http://219.255.6.129:23333",
 });
 
-commonAxios.interceptors.request.use(function (config): any {
+fileAxios.interceptors.request.use(function (config): any {
   if (typeof window === undefined) {
     return;
   }
@@ -27,14 +27,14 @@ commonAxios.interceptors.request.use(function (config): any {
   // }
 
   config.headers = Object.assign({}, config.headers, {
-    "Content-Type": "application/json",
+    "Content-Type": "multipart/form-data",
     // 'access_token': cookies['access_token'],
   });
 
   return config;
 });
 
-commonAxios.interceptors.response.use(
+fileAxios.interceptors.response.use(
   function (response) {
     return response.data;
   },
@@ -66,4 +66,4 @@ commonAxios.interceptors.response.use(
   }
 );
 
-export default commonAxios;
+export default fileAxios;
