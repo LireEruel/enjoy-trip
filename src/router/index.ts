@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HelloWorld from "../components/HelloWorld.vue";
 import DefaultHeader from "../components/layouts/DefaultHeader.vue";
 import DefaultFooter from "../components/layouts/DefaultFooter.vue";
 import LoginViewVue from "features/auth/routes/LoginView.vue";
 import { NoticeLookupView, NoticeWriteView } from "features/notice/routes";
+import { LandingView } from "features/landing";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,7 +13,7 @@ const router = createRouter({
       name: "home",
       components: {
         header: DefaultHeader,
-        body: HelloWorld,
+        body: LandingView,
         footer: DefaultFooter,
       },
     },
