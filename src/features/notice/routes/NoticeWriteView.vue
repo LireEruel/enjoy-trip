@@ -45,11 +45,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import type { Dayjs } from "dayjs";
 import Swal from "sweetalert2";
-import { requestAddNoticeList } from "../api";
+import { requestAddNoticeList, requestGetNoticeDetail } from "../api";
 import { useRouter } from "vue-router";
+import dayjs from "dayjs";
 type RangeValue = [Dayjs, Dayjs];
 const contents = ref("");
 const viewYn = ref(false);
@@ -60,7 +61,8 @@ type editorType = { getText: () => String } | null;
 const editorElem = ref<editorType>(null);
 const onLoading = ref(false);
 const router = useRouter();
-
+const onLoadingNoticeDetail = ref(false);
+const props = defineProps<{ noticeId: number }>();
 const checkValidState = () => {
   const result = {
     startTime: "",
@@ -122,6 +124,31 @@ const onClickConfirmBtn = () => {
     }
   }
 };
+
+const getNotice = async () => {
+  onLoadingNoticeDetail.value = true;
+  try {
+    const res = await requestGetNoticeDetail(props.noticeId);
+    title.value = res.title;
+    contents.value = res.content;
+    selectedRange.value = [
+      dayjs(res.startTime, format),
+      dayjs(res.endTime, format),
+    ];
+    viewYn.value = res.viewYn === "Y" ? true : false;
+  } catch (error) {
+    Swal.fire("error", "공지사항 조회에 실패하였습니다.", "error").then(() => {
+      router.push("/notice");
+    });
+  } finally {
+    onLoadingNoticeDetail.value = false;
+  }
+};
+onMounted(async () => {
+  if (props.noticeId > 0) {
+    await getNotice();
+  }
+});
 </script>
 
 <style scoped lang="scss">

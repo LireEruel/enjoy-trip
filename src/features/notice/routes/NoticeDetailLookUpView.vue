@@ -11,7 +11,7 @@
           <div class="meta">
             <span class="register-time">{{ currentNotice.registerTime }}</span>
             <div class="button-wrap">
-              <a-button>수정</a-button>
+              <a-button @click="goEditNotice">수정</a-button>
               <a-button
                 :loading="onLoadingDeleteNotice"
                 @click="deleteNotice"
@@ -42,7 +42,7 @@ const onLoadingNoticeDetail = ref(false);
 const currentNotice = ref<null | Notice>(null);
 const onLoadingDeleteNotice = ref(false);
 const router = useRouter();
-const getNoticeList = async () => {
+const getNotice = async () => {
   onLoadingNoticeDetail.value = true;
   try {
     const res = await requestGetNoticeDetail(props.noticeId);
@@ -57,7 +57,7 @@ const getNoticeList = async () => {
 };
 
 onMounted(async () => {
-  await getNoticeList();
+  await getNotice();
 });
 
 const deleteNotice = async () => {
@@ -74,6 +74,10 @@ const deleteNotice = async () => {
   } finally {
     onLoadingDeleteNotice.value = false;
   }
+};
+
+const goEditNotice = () => {
+  router.push("/notice/write/" + props.noticeId);
 };
 </script>
 

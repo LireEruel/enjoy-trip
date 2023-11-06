@@ -13,7 +13,7 @@
       </div>
     </section>
     <section class="option-section">
-      <router-link :to="{ name: 'noticeWrite' }">
+      <router-link :to="{ name: 'noticeWrite', params: { noticeId: 0 } }">
         <a-button type="primary">공지사항 작성</a-button>
       </router-link>
       <a-input-search

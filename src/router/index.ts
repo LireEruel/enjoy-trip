@@ -40,13 +40,14 @@ const router = createRouter({
       },
     },
     {
-      path: "/notice/write",
+      path: "/notice/write/:noticeId",
       name: "noticeWrite",
       components: {
         header: DefaultHeader,
         body: NoticeWriteView,
         footer: DefaultFooter,
       },
+      props: true,
     },
     {
       path: "/notice/detail/:noticeId",
