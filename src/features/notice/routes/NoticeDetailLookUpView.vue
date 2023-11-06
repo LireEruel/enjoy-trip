@@ -26,17 +26,7 @@ import { requestGetNoticeDetail } from "../api";
 import { onMounted, ref } from "vue";
 const props = defineProps<{ noticeId: number }>();
 const onLoadingNoticeDetail = ref(false);
-const currentNotice = ref<null | Notice>({
-  noticeId: 23,
-  writerNo: 123,
-  title: "[필독] 11/8 메일 서비스 스토리지 업그레이드 작업 사전 안내",
-  content:
-    "<p>안녕하세요, 네이버웍스입니다.</p>네이버웍스 메일 <strong>서비스의 스토리지 업그레이드 작업이 1</strong>1/8 오후 11시에 예정되어 있습니다.고객께서는 업그레이드 작업 중에 메일 서비스 접속 시 순단 현상을 경험할 수 있으니 자세한 내용은 아래 확인 부탁드립니다.",
-  startTime: "2023-11-11",
-  endTime: "2023-11-11",
-  registerTime: "2023-11-11",
-  viewYn: "Y",
-});
+const currentNotice = ref<null | Notice>(null);
 
 const getNoticeList = async () => {
   onLoadingNoticeDetail.value = true;
