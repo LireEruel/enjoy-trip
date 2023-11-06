@@ -12,7 +12,12 @@
             <span class="register-time">{{ currentNotice.registerTime }}</span>
             <div class="button-wrap">
               <a-button>수정</a-button>
-              <a-button danger>삭제</a-button>
+              <a-button
+                :loading="onLoadingDeleteNotice"
+                @click="deleteNotice"
+                danger
+                >삭제</a-button
+              >
             </div>
           </div>
         </header>
@@ -27,19 +32,25 @@
   </div>
 </template>
 <script setup lang="ts">
-import { requestGetNoticeDetail } from "../api";
+import Swal from "sweetalert2";
+import { requestGetNoticeDetail, requestDeleteNotice } from "../api";
 import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
+
 const props = defineProps<{ noticeId: number }>();
 const onLoadingNoticeDetail = ref(false);
 const currentNotice = ref<null | Notice>(null);
-
+const onLoadingDeleteNotice = ref(false);
+const router = useRouter();
 const getNoticeList = async () => {
   onLoadingNoticeDetail.value = true;
   try {
     const res = await requestGetNoticeDetail(props.noticeId);
     currentNotice.value = res;
   } catch (error) {
-    console.error(error);
+    Swal.fire("error", "공지사항 조회에 실패하였습니다.", "error").then(() => {
+      router.push("/notice");
+    });
   } finally {
     onLoadingNoticeDetail.value = false;
   }
@@ -48,6 +59,22 @@ const getNoticeList = async () => {
 onMounted(async () => {
   await getNoticeList();
 });
+
+const deleteNotice = async () => {
+  onLoadingDeleteNotice.value = true;
+  try {
+    const res = await requestDeleteNotice(props.noticeId);
+    currentNotice.value = res;
+    Swal.fire("Success", "삭제에 성공하였습니다.", "success").then(() => {
+      router.push("/notice");
+    });
+  } catch (error) {
+    Swal.fire("error", "공지사항 삭제에 실패하였습니다. ", "error");
+    console.error(error);
+  } finally {
+    onLoadingDeleteNotice.value = false;
+  }
+};
 </script>
 
 <style scoped lang="scss">
