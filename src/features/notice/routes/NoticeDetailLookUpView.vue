@@ -7,8 +7,13 @@
       <div v-else-if="!onLoadingNoticeDetail && currentNotice != null">
         <header>
           <h1>{{ currentNotice?.title }}</h1>
+
           <div class="meta">
             <span class="register-time">{{ currentNotice.registerTime }}</span>
+            <div class="button-wrap">
+              <a-button>수정</a-button>
+              <a-button danger>삭제</a-button>
+            </div>
           </div>
         </header>
 
@@ -69,9 +74,13 @@ onMounted(async () => {
 .meta {
   margin: 1rem 0;
   display: flex;
-  flex-direction: column;
-  gap: 0.2em;
   color: gray;
+  align-items: center;
+  justify-content: space-between;
+  .button-wrap {
+    display: flex;
+    gap: 0.7em;
+  }
 }
 
 .main-content {
