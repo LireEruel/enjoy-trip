@@ -1,12 +1,13 @@
 <template>
   <div class="attraction-carousel">
     <h1>대한민국의 아름다움을 찾아보세요</h1>
-    <a-space>
+    <a-space align="center" class="option-bar">
       <a-select
         v-model:value="selectedSido"
         style="width: 120px"
         :options="sidoCodeList"
         :field-names="{ label: 'name', value: 'key' }"
+        size="large"
       ></a-select>
 
       <a-select
@@ -14,6 +15,7 @@
         style="width: 120px"
         :options="gugunList"
         :field-names="{ label: 'name', value: 'key' }"
+        size="large"
       ></a-select>
     </a-space>
     <swiper
@@ -150,11 +152,13 @@ const attractionList = ref<Attraction[]>([
 
 const selectedSido = ref(sidoCodeList[0].key);
 const gugunList = computed(() => {
-  return sidoGugunMap.find(
+  const newGugunList = sidoGugunMap.find(
     (gugunInfo) => gugunInfo.sidoKey == selectedSido.value
   )?.gugunList;
+  if (newGugunList) return [{ key: 0, name: "전체" }, ...newGugunList];
+  else return [{ key: 0, name: "전체" }];
 });
-const selectedGugun = ref({ key: 1, name: "강남구" });
+const selectedGugun = ref({ key: 0, name: "전체" });
 // const getAttractionList = async () => {
 //   try {
 //     const res = await requestAttractionList({
@@ -166,15 +170,20 @@ const selectedGugun = ref({ key: 1, name: "강남구" });
 </script>
 
 <style lang="scss" scoped>
+.option-bar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 2%;
+}
 .attraction-carousel {
   height: 30%;
-  margin-top: 10rem;
+  padding: 10rem 0;
 
   h1 {
     text-align: center;
     font-size: 3rem;
     font-weight: 700;
-    margin: 5rem;
   }
 }
 .swiper {
