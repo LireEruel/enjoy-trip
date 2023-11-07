@@ -11,7 +11,7 @@ export type Attraction = {
 
 export type GetAttractionListProp = {
   pgno?: number;
-  contentTypeId?: number[];
+  contentTypeId?: number[] | number;
   sidoCode?: number;
   gugunCode?: number;
   title?: String;

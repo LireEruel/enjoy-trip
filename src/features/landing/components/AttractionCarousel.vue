@@ -47,11 +47,18 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import { EffectCoverflow, Pagination } from "swiper/modules";
 import { onMounted, ref } from "vue";
 import { requestAttractionList } from "../api";
+import { CONTENT_TYPE } from "../types";
 
 const modules = [EffectCoverflow, Pagination];
 const page = ref(1);
 const getAttractionList = async () => {
-  await requestAttractionList({ pgno: page.value });
+  await requestAttractionList({
+    pgno: page.value,
+    title: "휴양림",
+    contentTypeId: CONTENT_TYPE.문화시설,
+    sidoCode: 32,
+    gugunCode: 18,
+  });
 };
 onMounted(async () => {
   getAttractionList();
