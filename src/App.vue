@@ -15,19 +15,15 @@ import { RouterView } from "vue-router";
 <style lang="scss" scoped>
 .app {
   color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  position: fixed;
   width: 100%;
   height: 100%;
-  flex-direction: column;
 }
 
 .contents {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  min-height: calc(100% - 96px);
   min-width: 600px;
-  overflow-y: auto;
 }
 </style>

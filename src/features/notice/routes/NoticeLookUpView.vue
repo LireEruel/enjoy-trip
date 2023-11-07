@@ -45,7 +45,9 @@
           ><DownOutlined />
         </p>
         <div
-          v-show="currentNoticeCount == totalNoticeCount"
+          v-show="
+            currentNoticeCount == totalNoticeCount && currentNoticeCount > 0
+          "
           class="empty-space"
         />
       </div>

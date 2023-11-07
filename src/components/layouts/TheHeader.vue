@@ -41,8 +41,9 @@ const menuKey = ref<string[]>([window.location.pathname]);
   width: 100%;
   margin-bottom: 1px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  position: relative;
   z-index: 1;
 }
 
