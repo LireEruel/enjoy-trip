@@ -1,10 +1,10 @@
 export type Attraction = {
   contentId: number;
   contentTypeId: number;
-  title: String;
-  first_image: String;
-  addr1: String;
-  add2: String;
+  title: string;
+  firstImage: string;
+  addr1: string;
+  add2: string;
   isMyLove: boolean;
   isPartenerLove: boolean;
 };
@@ -14,7 +14,7 @@ export type GetAttractionListProp = {
   contentTypeId?: number[] | number;
   sidoCode?: number;
   gugunCode?: number;
-  title?: String;
+  title?: string;
 };
 
 export type AttractionResult = {

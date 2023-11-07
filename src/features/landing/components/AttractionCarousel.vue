@@ -16,26 +16,11 @@
       :pagination="true"
       :modules="modules"
     >
-      <swiper-slide>
-        <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
-      </swiper-slide>
-      <swiper-slide>
-        <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-      </swiper-slide>
-      <swiper-slide>
-        <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-      </swiper-slide>
-      <swiper-slide>
-        <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-      </swiper-slide>
-      <swiper-slide>
-        <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
-      </swiper-slide>
-      <swiper-slide>
-        <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
-      </swiper-slide>
-      <swiper-slide>
-        <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
+      <swiper-slide
+        v-for="attraction in attractionList"
+        :key="attraction.contentId"
+      >
+        <img :src="attraction.firstImage" />
       </swiper-slide>
     </swiper>
   </div>
@@ -47,18 +32,18 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import { EffectCoverflow, Pagination } from "swiper/modules";
 import { onMounted, ref } from "vue";
 import { requestAttractionList } from "../api";
-import { CONTENT_TYPE } from "util/code";
+import { Attraction } from "..";
 
 const modules = [EffectCoverflow, Pagination];
 const page = ref(1);
+const attractionList = ref<Attraction[]>([]);
 const getAttractionList = async () => {
-  await requestAttractionList({
-    pgno: page.value,
-    title: "휴양림",
-    contentTypeId: CONTENT_TYPE.문화시설,
-    sidoCode: 32,
-    gugunCode: 18,
-  });
+  try {
+    const res = await requestAttractionList({
+      pgno: page.value,
+    });
+    attractionList.value = res.list;
+  } catch (e) {}
 };
 onMounted(async () => {
   getAttractionList();
@@ -93,5 +78,7 @@ onMounted(async () => {
 .swiper-slide img {
   display: block;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>
