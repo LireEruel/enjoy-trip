@@ -5,7 +5,7 @@
       <a-select
         v-model:value="selectedSido"
         style="width: 120px"
-        :options="sidoCodeList"
+        :options="sidoList"
         :field-names="{ label: 'name', value: 'key' }"
         size="large"
       ></a-select>
@@ -50,16 +50,15 @@
 </template>
 
 <script setup lang="ts">
-// Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
-import { computed, ref } from "vue";
-//import { requestAttractionList } from "../api";
+import { computed, ref, watch } from "vue";
+import { requestAttractionList } from "../api";
 import { Attraction } from "..";
 import { sidoGugunMap, sidoCodeList } from "../../../util/code";
 
 const modules = [EffectCoverflow, Pagination, Autoplay];
-const attractionList = ref<Attraction[]>([
+const bestAttractions = [
   {
     contentId: 317503,
     contentTypeId: 12,
@@ -148,9 +147,11 @@ const attractionList = ref<Attraction[]>([
     isMyLove: false,
     isPartenerLove: false,
   },
-]);
-
-const selectedSido = ref(sidoCodeList[0].key);
+];
+const attractionList = ref<Attraction[]>(bestAttractions);
+const page = ref(1);
+const sidoList = [{ key: 0, name: "대한민국" }, ...sidoCodeList];
+const selectedSido = ref(0);
 const gugunList = computed(() => {
   const newGugunList = sidoGugunMap.find(
     (gugunInfo) => gugunInfo.sidoKey == selectedSido.value
@@ -158,15 +159,31 @@ const gugunList = computed(() => {
   if (newGugunList) return [{ key: 0, name: "전체" }, ...newGugunList];
   else return [{ key: 0, name: "전체" }];
 });
-const selectedGugun = ref({ key: 0, name: "전체" });
-// const getAttractionList = async () => {
-//   try {
-//     const res = await requestAttractionList({
-//       pgno: page.value,
-//     });
-//     attractionList.value = res.list;
-//   } catch (e) {}
-// };
+const selectedGugun = ref(0);
+
+watch(selectedSido, async () => {
+  selectedGugun.value = 0;
+  await getAttractionList();
+});
+
+watch(selectedGugun, async () => {
+  await getAttractionList();
+});
+
+const getAttractionList = async () => {
+  try {
+    if (selectedSido.value == 0) {
+      attractionList.value = bestAttractions;
+    } else {
+      const res = await requestAttractionList({
+        pgno: page.value,
+        sidoCode: selectedSido.value,
+        gugunCode: selectedGugun.value,
+      });
+      attractionList.value = res.list;
+    }
+  } catch (e) {}
+};
 </script>
 
 <style lang="scss" scoped>

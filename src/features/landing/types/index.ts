@@ -11,10 +11,8 @@ export type Attraction = {
 
 export type GetAttractionListProp = {
   pgno?: number;
-  contentTypeId?: number[] | number;
   sidoCode?: number;
   gugunCode?: number;
-  title?: string;
 };
 
 export type AttractionResult = {
