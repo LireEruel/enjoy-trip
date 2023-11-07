@@ -2,16 +2,19 @@
   <div class="attraction-carousel">
     <h1>대한민국의 아름다움을 찾아보세요</h1>
     <a-space>
-      <!-- <a-select
-        v-model:value="province"
-        style="width: 120px"
-        :options="provinceData.map((pro) => ({ value: pro }))"
-      ></a-select>
       <a-select
-        v-model:value="secondCity"
+        v-model:value="selectedSido"
         style="width: 120px"
-        :options="cities.map((city) => ({ value: city }))"
-      ></a-select> -->
+        :options="sidoCodeList"
+        :field-names="{ label: 'name', value: 'key' }"
+      ></a-select>
+
+      <a-select
+        v-model:value="selectedGugun"
+        style="width: 120px"
+        :options="gugunList"
+        :field-names="{ label: 'name', value: 'key' }"
+      ></a-select>
     </a-space>
     <swiper
       :effect="'coverflow'"
@@ -48,13 +51,12 @@
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
-import { onMounted, ref } from "vue";
-import { requestAttractionList } from "../api";
+import { computed, ref } from "vue";
+//import { requestAttractionList } from "../api";
 import { Attraction } from "..";
 import { sidoGugunMap, sidoCodeList } from "../../../util/code";
 
 const modules = [EffectCoverflow, Pagination, Autoplay];
-const page = ref(1);
 const attractionList = ref<Attraction[]>([
   {
     contentId: 317503,
@@ -145,16 +147,22 @@ const attractionList = ref<Attraction[]>([
     isPartenerLove: false,
   },
 ]);
-const cityData = sidoCodeList;
 
-const getAttractionList = async () => {
-  try {
-    const res = await requestAttractionList({
-      pgno: page.value,
-    });
-    attractionList.value = res.list;
-  } catch (e) {}
-};
+const selectedSido = ref(sidoCodeList[0].key);
+const gugunList = computed(() => {
+  return sidoGugunMap.find(
+    (gugunInfo) => gugunInfo.sidoKey == selectedSido.value
+  )?.gugunList;
+});
+const selectedGugun = ref({ key: 1, name: "강남구" });
+// const getAttractionList = async () => {
+//   try {
+//     const res = await requestAttractionList({
+//       pgno: page.value,
+//     });
+//     attractionList.value = res.list;
+//   } catch (e) {}
+// };
 </script>
 
 <style lang="scss" scoped>
