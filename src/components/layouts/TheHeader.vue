@@ -45,6 +45,7 @@ const menuKey = ref<string[]>([window.location.pathname]);
   align-items: center;
   position: relative;
   z-index: 1;
+  background-color: white;
 }
 
 .default-header {
@@ -52,7 +53,6 @@ const menuKey = ref<string[]>([window.location.pathname]);
   width: 100%;
   overflow: hidden;
   background-color: white;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
   .ant-menu {
     height: 98%;
