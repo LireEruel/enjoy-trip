@@ -53,7 +53,7 @@ const menuKey = ref<string[]>([window.location.pathname]);
   width: 100%;
   overflow: hidden;
   background-color: white;
-
+  top: 0;
   .ant-menu {
     height: 98%;
   }
