@@ -4,7 +4,7 @@ export type Attraction = {
   title: string;
   firstImage: string;
   addr1: string;
-  add2: string;
+  addr2: string;
   isMyLove: boolean;
   isPartenerLove: boolean;
 };

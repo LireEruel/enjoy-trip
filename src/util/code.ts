@@ -29,7 +29,27 @@ export enum SIDO_CODE {
   제주도 = 39,
 }
 
-export const sido_gugun_map = {
+export const sidoCodeList = [
+  { key: 1, name: "서울" },
+  { key: 2, name: "인천" },
+  { key: 3, name: "대전" },
+  { key: 4, name: "대구" },
+  { key: 5, name: "광주" },
+  { key: 6, name: "부산" },
+  { key: 7, name: "울산" },
+  { key: 8, name: "세종특별자치시" },
+  { key: 31, name: "경기도" },
+  { key: 32, name: "강원도" },
+  { key: 33, name: "충청북도" },
+  { key: 34, name: "충청남도" },
+  { key: 35, name: "경상북도" },
+  { key: 36, name: "경상남도" },
+  { key: 37, name: "전라북도" },
+  { key: 38, name: "전라남도" },
+  { key: 39, name: "제주도" },
+];
+
+export const sidoGugunMap = {
   [SIDO_CODE.서울]: [
     { key: 1, name: "강남구" },
     { key: 2, name: "강동구" },
