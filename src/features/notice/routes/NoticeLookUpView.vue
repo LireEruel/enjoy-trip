@@ -118,9 +118,9 @@ const columns = [
   .top-section {
     background-color: #4096ff;
     color: white;
-    height: 30%;
     display: flex;
     align-items: center;
+    padding: 4em;
     .title-wrap {
       display: flex;
       justify-content: center;
