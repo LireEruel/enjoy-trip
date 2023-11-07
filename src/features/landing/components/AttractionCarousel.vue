@@ -47,7 +47,7 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import { EffectCoverflow, Pagination } from "swiper/modules";
 import { onMounted, ref } from "vue";
 import { requestAttractionList } from "../api";
-import { CONTENT_TYPE } from "../types";
+import { CONTENT_TYPE } from "util/code";
 
 const modules = [EffectCoverflow, Pagination];
 const page = ref(1);
