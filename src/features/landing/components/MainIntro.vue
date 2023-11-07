@@ -44,7 +44,7 @@
               </a-row>
             </li>
           </ul>
-          <a-row>
+          <!-- <a-row>
             <a-col :span="24">
               <div class="controls">
                 <button class="previous" @click="onClickPrevious">
@@ -57,7 +57,7 @@
                 </button>
               </div>
             </a-col>
-          </a-row>
+          </a-row> -->
         </a-col>
       </a-row>
     </div>
@@ -117,13 +117,13 @@ const placeInfoList: PlaceInfo[] = [
 ];
 
 const currentId = ref(0);
-const onClickPrevious = () => {
-  if (currentId.value == 0) {
-    currentId.value = placeInfoList.length - 1;
-  } else {
-    currentId.value--;
-  }
-};
+// const onClickPrevious = () => {
+//   if (currentId.value == 0) {
+//     currentId.value = placeInfoList.length - 1;
+//   } else {
+//     currentId.value--;
+//   }
+// };
 const onClickAfter = () => {
   if (currentId.value == placeInfoList.length - 1) {
     currentId.value = 0;
@@ -157,7 +157,7 @@ $md: 900px;
 }
 
 .intro-section {
-  margin-top: 3%;
+  margin: 4% 0;
   font-family: "Barlow", sans-serif;
   font-size: 1.125rem;
   font-weight: 400;
