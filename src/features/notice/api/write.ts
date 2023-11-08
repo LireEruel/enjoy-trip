@@ -1,7 +1,5 @@
 import fileAxios from "lib/fileAxios";
 
-export const requestAddNoticeList = (
-  param: WriteNoticeListInfo
-): Promise<NoticeListInfo> => {
+export const requeseWriteNotice = (param: WriteNoticeInfo) => {
   return fileAxios.post("/board/notice", param);
 };

@@ -6,7 +6,6 @@ type Notice = {
   startTime: string;
   endTime: string;
   registerTime: string;
-  hit: string;
   viewYn: string;
 };
 
@@ -16,7 +15,7 @@ type NoticeListInfo = {
   list: Notice[];
 };
 
-type WriteNoticeListInfo = {
+type WriteNoticeInfo = {
   noticeId?: number;
   title: String;
   content: String;

@@ -13,7 +13,7 @@
       </div>
     </section>
     <section class="option-section">
-      <router-link :to="{ name: 'noticeWrite' }">
+      <router-link :to="{ name: 'noticeWrite', params: { noticeId: 0 } }">
         <a-button type="primary">공지사항 작성</a-button>
       </router-link>
       <a-input-search
@@ -32,6 +32,11 @@
           :loading="onLoadingNoticeList"
           :pagination="false"
         >
+          <template #bodyCell="{ column, text, record }">
+            <template v-if="column.dataIndex === 'title'">
+              <a @click="() => goDetail(record.noticeId)">{{ text }}</a>
+            </template>
+          </template>
         </a-table>
         <p
           class="view-more-wrap"
@@ -59,12 +64,15 @@
 import { onMounted, ref } from "vue";
 import { requestGetNoticeList } from "../api/list";
 import { DownOutlined } from "@ant-design/icons-vue";
+import { useRouter } from "vue-router";
+
 const dataSource = ref<Array<Notice>>([]);
 const onLoadingNoticeList = ref<Boolean>(false);
 const searchText = ref<String>("");
 const pageNum = ref(1);
 const totalNoticeCount = ref(0);
 const currentNoticeCount = ref(0);
+const router = useRouter();
 
 const getNoticeList = async () => {
   onLoadingNoticeList.value = true;
@@ -89,6 +97,10 @@ const searchNoticeList = () => {
   getNoticeList();
 };
 
+const goDetail = (noticeId: Number) => {
+  router.push("/notice/detail/" + noticeId);
+};
+
 onMounted(async () => {
   await getNoticeList();
 });
@@ -101,7 +113,7 @@ const columns = [
   },
   {
     title: "작성일",
-    dataIndex: "startTime",
+    dataIndex: "registerTime",
     sorter: true,
     width: "20%",
   },
