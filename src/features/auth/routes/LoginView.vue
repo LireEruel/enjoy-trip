@@ -144,7 +144,7 @@ const turnToLogin = () => {
   }
 
   &.sign-up #slider {
-    left: 50vw;
+    left: 50%;
   }
 
   .id-input-wrapper {
@@ -177,7 +177,7 @@ const turnToLogin = () => {
   position: absolute;
   top: 0;
   left: 0;
-  width: 50vw;
+  width: 50%;
   height: 100vh;
   background-image: url(https://images.unsplash.com/photo-1533299346856-b1a85808f2ec?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1489&q=80);
   background-attachment: fixed;
