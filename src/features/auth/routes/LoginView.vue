@@ -132,8 +132,8 @@ const turnToLogin = () => {
 @import url("https://fonts.googleapis.com/css?family=Quattrocento+Sans&display=swap");
 
 #auth {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: row;
   font-family: "Quattrocento Sans";
