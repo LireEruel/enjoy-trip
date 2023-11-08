@@ -130,11 +130,13 @@ const turnToLogin = () => {
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css?family=Quattrocento+Sans&display=swap");
-
+$root-height: calc(100vh - 110px);
 #auth {
   width: 100%;
-  height: 100%;
+  height: $root-height;
   display: flex;
+  align-items: center;
+
   flex-direction: row;
   font-family: "Quattrocento Sans";
   overflow: hidden;
@@ -154,14 +156,14 @@ const turnToLogin = () => {
   }
 
   form {
+    height: 100%;
     flex: 0 0 50%;
-    padding: 10vh 10vw;
+    padding: 0 10vw;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: center;
     background-color: #f2f2f7;
-
     .ant-input {
       padding: 0.5rem;
     }
@@ -178,7 +180,7 @@ const turnToLogin = () => {
   top: 0;
   left: 0;
   width: 50%;
-  height: 100vh;
+  height: calc(100% - 40px);
   background-image: url(https://images.unsplash.com/photo-1533299346856-b1a85808f2ec?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1489&q=80);
   background-attachment: fixed;
   background-size: 100vw;
