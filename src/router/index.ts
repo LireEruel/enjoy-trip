@@ -35,13 +35,24 @@ const router = createRouter({
       },
     },
     {
-      path: "/notice/write",
+      path: "/notice/write/:noticeId",
       name: "noticeWrite",
       components: {
         header: TheHeader,
         body: NoticeWriteView,
         footer: TheFooter,
       },
+      props: true,
+    },
+    {
+      path: "/notice/detail/:noticeId",
+      name: "noticeDetail",
+      components: {
+        header: TheHeader,
+        body: NoticeLookupView,
+        footer: TheFooter,
+      },
+      props: true,
     },
   ],
 });

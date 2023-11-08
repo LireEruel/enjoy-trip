@@ -50,13 +50,15 @@ import { ref } from "vue";
 import { JoinUser, LoginUser, loginWithIdAndPassword } from "..";
 import { requestSignUp } from "../api/signup";
 import Swal from "sweetalert2";
-//import { useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { SignUpFormType, LoginType } from "../types";
 import { LoginForm, SignupForm } from "../components";
+import { useUserStore } from "../../../stores/user";
 
-//const router = useRouter();
+const router = useRouter();
 const root = ref(null as HTMLElement | null);
 const onLoadingApi = ref(false);
+const userStore = useUserStore();
 
 const signUpFormState = ref<SignUpFormType>({
   userId: "",
@@ -86,10 +88,10 @@ const onSubmitLoginForm = async () => {
     userPass: loginFormState.value.userPass,
   };
   try {
-    await loginWithIdAndPassword(submitData);
+    const res = await loginWithIdAndPassword(submitData);
     Swal.fire("Success!", "로그인 성공", "success").then(() => {
-      //router.push("/");
-      console.log(sessionStorage.length);
+      userStore.user_info = res;
+      router.push("/");
     });
   } catch (e) {
     console.error(e);
@@ -130,11 +132,13 @@ const turnToLogin = () => {
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css?family=Quattrocento+Sans&display=swap");
-
+$root-height: calc(100vh - 110px);
 #auth {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: $root-height;
   display: flex;
+  align-items: center;
+
   flex-direction: row;
   font-family: "Quattrocento Sans";
   overflow: hidden;
@@ -144,7 +148,7 @@ const turnToLogin = () => {
   }
 
   &.sign-up #slider {
-    left: 50vw;
+    left: 50%;
   }
 
   .id-input-wrapper {
@@ -154,14 +158,14 @@ const turnToLogin = () => {
   }
 
   form {
+    height: 100%;
     flex: 0 0 50%;
-    padding: 10vh 10vw;
+    padding: 0 10vw;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: center;
     background-color: #f2f2f7;
-
     .ant-input {
       padding: 0.5rem;
     }
@@ -177,8 +181,8 @@ const turnToLogin = () => {
   position: absolute;
   top: 0;
   left: 0;
-  width: 50vw;
-  height: 100vh;
+  width: 50%;
+  height: calc(100% - 40px);
   background-image: url(https://images.unsplash.com/photo-1533299346856-b1a85808f2ec?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1489&q=80);
   background-attachment: fixed;
   background-size: 100vw;

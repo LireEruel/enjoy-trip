@@ -23,7 +23,7 @@ import { RouterView } from "vue-router";
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: calc(100% - 96px);
+  min-height: calc(100% - 110px);
   min-width: 600px;
 }
 </style>
