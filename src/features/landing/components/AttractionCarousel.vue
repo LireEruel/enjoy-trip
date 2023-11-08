@@ -197,20 +197,21 @@ const getAttractionList = async () => {
 </script>
 
 <style lang="scss" scoped>
-.option-bar {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin: 2%;
-}
 .attraction-carousel {
   height: 30%;
   padding: 10rem 0;
-
+  overflow: hidden;
   h1 {
     text-align: center;
     font-size: 3rem;
     font-weight: 700;
+  }
+
+  .option-bar {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 2%;
   }
 }
 .swiper {
