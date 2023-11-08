@@ -1,3 +1,3 @@
 import MainHeading from "./MainIntro.vue";
-
-export { MainHeading };
+import AttractionCarousel from "./AttractionCarousel.vue";
+export { MainHeading, AttractionCarousel };
