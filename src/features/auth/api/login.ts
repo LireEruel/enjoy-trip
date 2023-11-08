@@ -1,4 +1,4 @@
-import commonAxios from "lib/commonAxios";
+import commonAxios from "@/lib/commonAxios";
 import type { LoginUser } from "../types";
 import { MyInfo, User } from "types/user";
 
