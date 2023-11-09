@@ -1,4 +1,4 @@
-import commonAxios from "lib/commonAxios";
+import commonAxios from "@/lib/commonAxios";
 import type { JoinUser } from "../types";
 
 export const requestSignUp = async (data: JoinUser) => {

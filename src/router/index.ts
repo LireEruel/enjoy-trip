@@ -1,8 +1,9 @@
+import { TheHeader, TheFooter } from "@/components/layouts";
+import LoginViewVue from "@/features/auth/routes/LoginView.vue";
+import { LandingView } from "@/features/landing";
+import { NoticeLookupView, NoticeWriteView } from "@/features/notice";
+import { UserInfoView } from "@/features/user";
 import { createRouter, createWebHistory } from "vue-router";
-import { TheFooter, TheHeader } from "components/layouts";
-import LoginViewVue from "features/auth/routes/LoginView.vue";
-import { NoticeLookupView, NoticeWriteView } from "features/notice/routes";
-import { LandingView } from "features/landing";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,6 +51,16 @@ const router = createRouter({
       components: {
         header: TheHeader,
         body: NoticeLookupView,
+        footer: TheFooter,
+      },
+      props: true,
+    },
+    {
+      path: "/user/detail/:cusNo",
+      name: "userInfo",
+      components: {
+        header: TheHeader,
+        body: UserInfoView,
         footer: TheFooter,
       },
       props: true,

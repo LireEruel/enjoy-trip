@@ -90,7 +90,7 @@ const onSubmitLoginForm = async () => {
   try {
     const res = await loginWithIdAndPassword(submitData);
     Swal.fire("Success!", "로그인 성공", "success").then(() => {
-      userStore.user_info = res;
+      userStore.userInfo = res;
       router.push("/");
     });
   } catch (e) {

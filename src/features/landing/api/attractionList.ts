@@ -1,4 +1,4 @@
-import commonAxios from "lib/commonAxios";
+import commonAxios from "@/lib/commonAxios";
 import { AttractionResult, GetAttractionListProp } from "..";
 
 export const requestAttractionList = (
