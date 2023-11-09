@@ -15,7 +15,11 @@
         </a-menu>
         <div v-if="userStore" class="right-buttons-wrap">
           <a-button shape="circle" :icon="h(BellOutlined)" />
-          <a-button shape="circle" :icon="h(UserOutlined)" />
+          <a-button
+            shape="circle"
+            :icon="h(UserOutlined)"
+            @click="goUserInfo"
+          />
         </div>
         <div v-else>
           <a-button class="login-button" @click="goLogin" size="large">
@@ -33,7 +37,7 @@ import { RouterLink } from "vue-router";
 import { useRouter } from "vue-router";
 import { h } from "vue";
 import { UserOutlined, BellOutlined } from "@ant-design/icons-vue";
-import { useUserStore } from "../../stores/user";
+import { useUserStore } from "@/stores/user";
 const router = useRouter();
 
 const goLogin = () => {
@@ -42,6 +46,10 @@ const goLogin = () => {
 const userStore = useUserStore();
 
 const menuKey = ref<string[]>([window.location.pathname]);
+
+const goUserInfo = () => {
+  router.push("user/detail/" + userStore.user_info?.cusNo);
+};
 </script>
 
 <style lang="scss" scoped>
