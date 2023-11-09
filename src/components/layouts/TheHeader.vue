@@ -48,7 +48,7 @@ const userStore = useUserStore();
 const menuKey = ref<string[]>([window.location.pathname]);
 
 const goUserInfo = () => {
-  router.push("user/detail/" + userStore.user_info?.cusNo);
+  router.replace("/user/detail/" + userStore.user_info?.cusNo);
 };
 </script>
 
