@@ -3,11 +3,11 @@
     <header>
       <nav>
         <h1>계정</h1>
-        <a>로그아웃</a>
+        <a @click="logout">로그아웃</a>
       </nav>
       <div class="header-content">
         <p class="greeting">
-          서희 님, 안녕하세요.
+          {{ userInfo?.userName }} 님, 안녕하세요.
           <img
             src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Blue%20Heart.png"
             alt="Blue Heart"
@@ -24,7 +24,26 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useUserStore } from "@/stores/user";
+import { MyInfo, User } from "@/types/user";
+import { onMounted, ref } from "vue";
+
+const userStore = useUserStore();
+const userInfo = ref<MyInfo | User | undefined>(undefined);
+const params = defineProps({ cusNo: { type: Number, required: true } });
+const isMyInfo = ref<boolean>(false);
+const logout = () => {
+  userStore.logout();
+};
+
+onMounted(() => {
+  isMyInfo.value = userStore.userInfo?.cusNo === +params.cusNo;
+  if (isMyInfo.value) {
+    userInfo.value = userStore.userInfo;
+  }
+});
+</script>
 
 <style scoped lang="scss">
 @mixin more-button($font-size: number) {

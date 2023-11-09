@@ -13,7 +13,7 @@
             <router-link to="/#"> MenuItem2 </router-link>
           </a-menu-item>
         </a-menu>
-        <div v-if="userStore" class="right-buttons-wrap">
+        <div v-if="userStore.userInfo" class="right-buttons-wrap">
           <a-button shape="circle" :icon="h(BellOutlined)" />
           <a-button
             shape="circle"
@@ -48,7 +48,10 @@ const userStore = useUserStore();
 const menuKey = ref<string[]>([window.location.pathname]);
 
 const goUserInfo = () => {
-  router.replace("/user/detail/" + userStore.user_info?.cusNo);
+  router.push({
+    name: "userInfo",
+    params: { cusNo: userStore.userInfo?.cusNo },
+  });
 };
 </script>
 
