@@ -1,15 +1,16 @@
-<script setup lang="ts">
-import { RouterView } from "vue-router";
-</script>
-
 <template>
   <div class="app">
-    <router-view class="header" name="header" />
+    <router-view
+      @on-click-chat-btn="onClickChatBtn"
+      class="header"
+      name="header"
+    />
     <div class="contents">
       <router-view class="body" name="body" />
     </div>
     <router-view class="footer" name="footer" />
   </div>
+  <chat-window :is-open="isOpenChat" @close-chat="onCloseChat"></chat-window>
 </template>
 
 <style lang="scss" scoped>
@@ -27,3 +28,19 @@ import { RouterView } from "vue-router";
   min-width: 600px;
 }
 </style>
+
+<script setup lang="ts">
+import { RouterView } from "vue-router";
+import { ChatWindow } from "./features/chat";
+import { ref } from "vue";
+
+const isOpenChat = ref(false);
+
+const onClickChatBtn = () => {
+  isOpenChat.value = !isOpenChat.value;
+};
+
+const onCloseChat = () => {
+  isOpenChat.value = false;
+};
+</script>

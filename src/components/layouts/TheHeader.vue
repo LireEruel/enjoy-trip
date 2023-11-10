@@ -14,7 +14,11 @@
           </a-menu-item>
         </a-menu>
         <div v-if="userStore.userInfo" class="right-buttons-wrap">
-          <a-button shape="circle" :icon="h(MessageOutlined)" />
+          <a-button
+            shape="circle"
+            :icon="h(MessageOutlined)"
+            @click="emit('on-click-chat-btn')"
+          />
           <a-button shape="circle" :icon="h(BellOutlined)" />
           <a-button
             shape="circle"
@@ -49,6 +53,7 @@ const goLogin = () => {
   router.push("login");
 };
 const userStore = useUserStore();
+const emit = defineEmits(["on-click-chat-btn"]);
 
 const menuKey = ref<string[]>([window.location.pathname]);
 
