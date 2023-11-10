@@ -14,6 +14,7 @@
           </a-menu-item>
         </a-menu>
         <div v-if="userStore.userInfo" class="right-buttons-wrap">
+          <a-button shape="circle" :icon="h(MessageOutlined)" />
           <a-button shape="circle" :icon="h(BellOutlined)" />
           <a-button
             shape="circle"
@@ -36,7 +37,11 @@ import { ref } from "vue";
 import { RouterLink } from "vue-router";
 import { useRouter } from "vue-router";
 import { h } from "vue";
-import { UserOutlined, BellOutlined } from "@ant-design/icons-vue";
+import {
+  MessageOutlined,
+  UserOutlined,
+  BellOutlined,
+} from "@ant-design/icons-vue";
 import { useUserStore } from "@/stores/user";
 const router = useRouter();
 
