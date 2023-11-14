@@ -33,9 +33,9 @@
 </template>
 <script setup lang="ts">
 import Swal from "sweetalert2";
-import { requestGetNoticeDetail, requestDeleteNotice } from "../api";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { requestDeleteNotice, requestGetNoticeDetail } from "../api";
 
 const props = defineProps<{ noticeId: number }>();
 const onLoadingNoticeDetail = ref(false);

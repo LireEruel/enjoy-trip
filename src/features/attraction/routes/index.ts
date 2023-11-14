@@ -1,3 +1,3 @@
 import AttractionListView from "./AttractionListView.vue";
-
-export { AttractionListView };
+import AttractionDetailView from "./AttractionDetailView.vue";
+export { AttractionListView, AttractionDetailView };

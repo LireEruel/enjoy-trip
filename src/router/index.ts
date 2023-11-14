@@ -1,5 +1,8 @@
 import { TheHeader, TheFooter } from "@/components/layouts";
-import { AttractionListView } from "@/features/attraction";
+import {
+  AttractionDetailView,
+  AttractionListView,
+} from "@/features/attraction";
 import LoginViewVue from "@/features/auth/routes/LoginView.vue";
 import { LandingView } from "@/features/landing";
 import { NoticeLookupView, NoticeWriteView } from "@/features/notice";
@@ -74,6 +77,16 @@ const router = createRouter({
         body: AttractionListView,
         footer: TheFooter,
       },
+    },
+    {
+      path: "/attraction/:contentId",
+      name: "attractionDetail",
+      components: {
+        header: TheHeader,
+        body: AttractionDetailView,
+        footer: TheFooter,
+      },
+      props: true,
     },
   ],
 });
