@@ -17,7 +17,12 @@
         </p>
         <div class="header-feature-wrap">
           <a> 개인정보 수정</a>
-          <a> 애인 조회</a>
+          <span v-if="!userInfo?.partnerCusNo">
+            <a> 애인 조회</a>
+          </span>
+          <span v-else>
+            <a @click="handleCopy" :value="inviteKey">애인 초대키 복사</a>
+          </span>
         </div>
       </div>
     </header>
@@ -25,14 +30,20 @@
 </template>
 
 <script setup lang="ts">
+import Swal from "sweetalert2";
+import { requestGetInviteKey } from "../api";
 import { useUserStore } from "@/stores/user";
-import { MyInfo, User } from "@/types/user";
+import { MyInfo } from "@/types/user";
 import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 
 const userStore = useUserStore();
-const userInfo = ref<MyInfo | User | undefined>(undefined);
+const userInfo = ref<MyInfo | undefined>(undefined);
 const params = defineProps({ cusNo: { type: Number, required: true } });
 const isMyInfo = ref<boolean>(false);
+const inviteKey = ref("");
+const router = useRouter();
+
 const logout = () => {
   userStore.logout();
 };
@@ -42,7 +53,23 @@ onMounted(() => {
   if (isMyInfo.value) {
     userInfo.value = userStore.userInfo;
   }
+  getInviteKey();
 });
+
+const getInviteKey = async () => {
+  try {
+    const res = await requestGetInviteKey(params.cusNo);
+    inviteKey.value = res;
+  } catch (error) {
+    Swal.fire("error", "초대키 조회에 실패하였습니다.", "error");
+  }
+};
+
+const handleCopy = () => {
+  navigator.clipboard
+    .writeText(inviteKey.value)
+    .then(() => Swal.fire("success", "초대키를 복사했습니다", "success"));
+};
 </script>
 
 <style scoped lang="scss">
