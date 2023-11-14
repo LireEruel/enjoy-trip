@@ -6,11 +6,11 @@
       </div>
       <div class="nav-right">
         <a-menu v-model:selectedKeys="menuKey" class="menu" mode="horizontal">
-          <a-menu-item key="/">
+          <a-menu-item key="/notice">
             <router-link to="/notice"> 공지사항 </router-link>
           </a-menu-item>
-          <a-menu-item key="/#">
-            <router-link to="/#"> MenuItem2 </router-link>
+          <a-menu-item key="/attraction/list">
+            <router-link to="/attraction/list"> MenuItem2 </router-link>
           </a-menu-item>
         </a-menu>
         <div v-if="userStore.userInfo" class="right-buttons-wrap">
