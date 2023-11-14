@@ -6,9 +6,9 @@
       </div>
       <div class="nav-right">
         <a-menu v-model:selectedKeys="menuKey" class="menu" mode="horizontal">
-          <a-menu-it em key="/notice">
+          <a-menu-item key="/notice">
             <router-link to="/notice"> 공지사항 </router-link>
-          </a-menu-it>
+          </a-menu-item>
           <a-menu-item key="/attraction/list">
             <router-link to="/attraction/list"> 관광지 목록 </router-link>
           </a-menu-item>
