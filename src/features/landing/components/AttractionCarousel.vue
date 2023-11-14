@@ -63,9 +63,9 @@
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
 import { computed, ref, watch } from "vue";
-import { requestAttractionList } from "../api";
+import { requestAttractionList } from "@/features/attraction";
 import { Attraction } from "..";
-import { sidoGugunMap, sidoCodeList } from "../../../util/code";
+import { sidoGugunMap, sidoCodeList } from "@/util/code";
 
 const modules = [EffectCoverflow, Pagination, Autoplay];
 const bestAttractions = [
