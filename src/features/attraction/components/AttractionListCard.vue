@@ -14,7 +14,12 @@
       </a-image>
     </template>
     <a-card-meta :title="attraction.title">
-      <template #description>{{ attraction.title }}</template>
+      <template #description>
+        <a-typography-paragraph
+          :ellipsis="{ rows: 2, expandable: false, symbol: 'more' }"
+          :content="attraction.description"
+        />
+      </template>
     </a-card-meta>
   </a-card>
 </template>

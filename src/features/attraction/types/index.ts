@@ -7,6 +7,7 @@ export type Attraction = {
   addr2: string;
   isMyLove: boolean;
   isPartenerLove: boolean;
+  description?: string;
 };
 
 export type GetAttractionListProp = {
