@@ -188,7 +188,7 @@ const getAttractionList = async () => {
 
 function handleScroll() {
   const { scrollTop, offsetHeight, scrollHeight } = document.documentElement;
-  if (scrollTop + offsetHeight >= scrollHeight - 10) {
+  if (scrollTop + offsetHeight >= scrollHeight - 100) {
     // 페이지 끝에 거의 다다랐는지 확인
     getAttractionList();
   }

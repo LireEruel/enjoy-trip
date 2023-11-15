@@ -28,11 +28,11 @@ import Swal from "sweetalert2";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { requestGetAttractionDetail } from "../api";
-import { Attraction } from "../types";
+import { AttractionDetail } from "../types";
 
 const props = defineProps<{ contentId: number }>();
 const onLoadingAttractionDetail = ref(false);
-const currentAttraction = ref<null | Attraction>(null);
+const currentAttraction = ref<null | AttractionDetail>(null);
 const router = useRouter();
 const getAttraction = async () => {
   onLoadingAttractionDetail.value = true;

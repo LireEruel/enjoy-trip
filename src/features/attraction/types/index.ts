@@ -10,6 +10,21 @@ export type Attraction = {
   description?: string;
 };
 
+export type AttractionDetail = {
+  contentId: number;
+  contentTypeId: number;
+  title: string;
+  firstImage: string;
+  addr1: string;
+  addr2: string;
+  isMyLove: boolean;
+  isPartenerLove: boolean;
+  description: string;
+  latitude: number;
+  longitude: number;
+  tel: string;
+};
+
 export type GetAttractionListProp = {
   pgno?: number;
   sidoCode?: number;

@@ -1,8 +1,8 @@
 import commonAxios from "@/lib/commonAxios";
-import { Attraction } from "..";
+import { AttractionDetail } from "..";
 
 export const requestGetAttractionDetail = (
   contentId: number
-): Promise<Attraction> => {
+): Promise<AttractionDetail> => {
   return commonAxios.get("/attraction/" + contentId);
 };
