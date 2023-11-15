@@ -1,4 +1,11 @@
-export * from "./list";
-export * from "./write";
-export * from "./detail";
-export * from "./delete";
+import { requestGetNoticeList } from "./list";
+import { requeseWriteNotice } from "./write";
+import { requestGetNoticeDetail } from "./detail";
+import { requestDeleteNotice } from "./delete";
+
+export {
+  requestGetNoticeList,
+  requeseWriteNotice,
+  requestGetNoticeDetail,
+  requestDeleteNotice,
+};

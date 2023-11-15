@@ -4,17 +4,22 @@
       v-for="attraction in attractionList"
       :key="attraction.contentId"
       :attraction="attraction"
-    ></attraction-list-card>
+      @click="() => goDetail(attraction.contentId)"
+    >
+    </attraction-list-card>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Attraction } from "../types";
+import { useRouter } from "vue-router";
 import AttractionListCard from "./AttractionListCard.vue";
 
-const props = defineProps<{ attractionList: Attraction[] }>();
-
-console.log(props.attractionList);
+const { attractionList } = defineProps<{ attractionList: Attraction[] }>();
+const router = useRouter();
+const goDetail = (id: number) => {
+  router.push("/attraction/" + id);
+};
 </script>
 
 <style scoped lang="scss">

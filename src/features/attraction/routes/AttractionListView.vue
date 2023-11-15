@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { sidoGugunMap, sidoCodeList } from "@/util/code";
 import { Attraction } from "../types";
 import { requestAttractionList } from "../api";
@@ -133,20 +133,40 @@ const gugunList = computed(() => {
   if (newGugunList) return [{ key: 0, name: "전체" }, ...newGugunList];
   else return [{ key: 0, name: "전체" }];
 });
-const page = ref(1);
+
 const selectedSido = ref(0);
 const selectedGugun = ref(0);
 
 const attractionList = ref<Attraction[]>(bestAttractions);
 
+const page = ref(1);
+const totalAttractionCount = ref(0);
+const currentAttractionCount = ref(0);
+
 watch(selectedSido, async () => {
   selectedGugun.value = 0;
-  await getAttractionList();
+  await resetPagination();
 });
 
 watch(selectedGugun, async () => {
-  await getAttractionList();
+  await resetPagination();
 });
+
+onMounted(() => {
+  window.addEventListener("scroll", handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll);
+});
+
+const resetPagination = async () => {
+  page.value = 1;
+  totalAttractionCount.value = 0;
+  currentAttractionCount.value = 0;
+  attractionList.value = [];
+  await getAttractionList();
+};
 
 const getAttractionList = async () => {
   try {
@@ -154,10 +174,25 @@ const getAttractionList = async () => {
       pgno: page.value,
       sidoCode: selectedSido.value,
       gugunCode: selectedGugun.value,
+      pageSize: 20,
     });
-    attractionList.value = res.list;
-  } catch (e) {}
+    totalAttractionCount.value = res.totalCount;
+    attractionList.value = [...attractionList.value, ...res.list];
+    currentAttractionCount.value = attractionList.value.length;
+  } catch (e) {
+    console.error(e);
+  } finally {
+    page.value++;
+  }
 };
+
+function handleScroll() {
+  const { scrollTop, offsetHeight, scrollHeight } = document.documentElement;
+  if (scrollTop + offsetHeight >= scrollHeight - 100) {
+    // 페이지 끝에 거의 다다랐는지 확인
+    getAttractionList();
+  }
+}
 </script>
 
 <style scoped lang="scss">
