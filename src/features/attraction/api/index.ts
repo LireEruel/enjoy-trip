@@ -1,8 +1,8 @@
 import { requestAttractionList } from "./attractionList";
 import { requestGetAttractionDetail } from "./detail";
-import { requestAttractionCommentList } from "./commentList";
+import { requestAttractionReviewList } from "./reviewList";
 export {
   requestAttractionList,
   requestGetAttractionDetail,
-  requestAttractionCommentList,
+  requestAttractionReviewList,
 };

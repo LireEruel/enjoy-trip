@@ -25,7 +25,7 @@
         </div>
         <section class="review-section">
           <h3>
-            여행지 후기 <span>{{ commentTotalCount }}</span>
+            여행지 후기 <span>{{ reviewTotalCount }}</span>
           </h3>
           <a-divider></a-divider>
           <div class="input-wrap">
@@ -34,6 +34,10 @@
               >등록</a-button
             >
           </div>
+          <attraction-comment
+            v-for="attraction in reviewList"
+            :key="attraction.reviewId"
+          ></attraction-comment>
         </section>
       </div>
       <a-empty v-else></a-empty>
@@ -46,27 +50,28 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import {
   requestGetAttractionDetail,
-  requestAttractionCommentList,
+  requestAttractionReviewList,
 } from "../api";
 import { AttractionDetail, AttractionReview } from "../types";
 import { mountMap } from "@/lib/mapUtli.js";
+import AttractionComment from "../components/AttractionComment.vue";
 
 const props = defineProps<{ contentId: number }>();
 const onLoadingAttractionDetail = ref(false);
 const currentAttraction = ref<null | AttractionDetail>(null);
 const router = useRouter();
-const commentPageSize = ref(10);
-const commentPageNum = ref(1);
-const commentTotalCount = ref(0);
+const reviewPageSize = ref(10);
+const reviewPageNum = ref(1);
+const reviewTotalCount = ref(0);
 
-const inputComment = ref("");
-const commentList = ref<AttractionReview[]>([]);
+const inputReview = ref("");
+const reviewList = ref<AttractionReview[]>([]);
 
 let map: null = null;
 
 onMounted(async () => {
   getAttraction();
-  getComments();
+  getReviews();
 });
 
 const getAttraction = async () => {
@@ -93,16 +98,16 @@ const getAttraction = async () => {
   }
 };
 
-const getComments = async () => {
+const getReviews = async () => {
   try {
-    const res = await requestAttractionCommentList(
-      commentPageSize.value,
-      commentPageNum.value,
+    const res = await requestAttractionReviewList(
+      reviewPageSize.value,
+      reviewPageNum.value,
       props.contentId
     );
-    commentList.value = res.list;
-    commentPageNum.value = res.pgno;
-    commentTotalCount.value = res.totalCount;
+    reviewList.value = res.list;
+    reviewPageNum.value = res.pgno;
+    reviewTotalCount.value = res.totalCount;
   } catch (e) {
     console.error(e);
   }
