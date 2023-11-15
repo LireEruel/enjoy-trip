@@ -38,3 +38,24 @@ export type AttractionResult = {
   totalCount: number;
   list: Attraction[];
 };
+
+export type AttractionReviewResult = {
+  pgno: number;
+  totalCount: number;
+  list: AttractionReview[];
+};
+
+export type AttractionReview = {
+  attractionId: number;
+  conetnt: string;
+  hit: number;
+  orderNo: number;
+  rating: number; // 별점
+  registerTime: string;
+  reviewId: number;
+  reviewMasterId: number;
+  title: string;
+  viewYn: string;
+  visitedDate: string;
+  writerName: string;
+};

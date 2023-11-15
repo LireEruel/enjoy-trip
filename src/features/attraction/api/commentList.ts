@@ -1,13 +1,15 @@
 import commonAxios from "@/lib/commonAxios";
-import { AttractionResult } from "..";
+import { AttractionReviewResult } from "..";
 
 export const requestAttractionCommentList = (
   commentPageSize: number,
   commentPageNum: number,
   contentId: number
-): Promise<AttractionResult> => {
-  return commonAxios.post("/attraction/" + contentId, {
-    pgno: commentPageNum,
-    pageSize: commentPageSize,
+): Promise<AttractionReviewResult> => {
+  return commonAxios.get("/board/review/" + contentId, {
+    params: {
+      pgno: commentPageNum,
+      pageSize: commentPageSize,
+    },
   });
 };
