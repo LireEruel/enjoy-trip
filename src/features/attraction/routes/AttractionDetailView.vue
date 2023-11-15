@@ -21,6 +21,14 @@
         <p>{{ currentAttraction.description }}</p>
 
         <div id="map"></div>
+
+        <a-input-group compact>
+          <a-input
+            v-model:value="inputComment"
+            style="width: calc(100% - 200px)"
+          />
+          <a-button type="primary">Submit</a-button>
+        </a-input-group>
       </div>
       <a-empty v-else></a-empty>
     </div>
@@ -30,7 +38,10 @@
 import Swal from "sweetalert2";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { requestGetAttractionDetail } from "../api";
+import {
+  requestGetAttractionDetail,
+  requestAttractionCommentList,
+} from "../api";
 import { AttractionDetail } from "../types";
 import { mountMap } from "@/lib/mapUtli.js";
 
@@ -38,7 +49,18 @@ const props = defineProps<{ contentId: number }>();
 const onLoadingAttractionDetail = ref(false);
 const currentAttraction = ref<null | AttractionDetail>(null);
 const router = useRouter();
+const commentPageSize = ref(10);
+const commentPageNum = ref(1);
+
+const inputComment = ref("");
+
 let map: null = null;
+
+onMounted(async () => {
+  getAttraction();
+  getComments();
+});
+
 const getAttraction = async () => {
   onLoadingAttractionDetail.value = true;
   try {
@@ -63,9 +85,18 @@ const getAttraction = async () => {
   }
 };
 
-onMounted(async () => {
-  await getAttraction();
-});
+const getComments = async () => {
+  try {
+    const res = await requestAttractionCommentList(
+      commentPageSize.value,
+      commentPageNum.value,
+      props.contentId
+    );
+    console.log(res);
+  } catch (e) {
+    console.error(e);
+  }
+};
 </script>
 
 <style scoped lang="scss">
