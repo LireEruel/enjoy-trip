@@ -23,6 +23,7 @@ export type AttractionDetail = {
   latitude: number;
   longitude: number;
   tel: string;
+  mlevel: number;
 };
 
 export type GetAttractionListProp = {
