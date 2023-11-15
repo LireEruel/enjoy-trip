@@ -29,7 +29,7 @@
           </h3>
           <a-divider></a-divider>
           <div class="input-wrap">
-            <a-input class="input-comment"></a-input>
+            <a-input class="input-comment" :value="inputReview"></a-input>
             <a-button class="submit-btn" type="primary" size="large"
               >등록</a-button
             >
