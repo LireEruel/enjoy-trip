@@ -35,14 +35,12 @@ import { requestGetInviteKey } from "../api";
 import { useUserStore } from "@/stores/user";
 import { MyInfo } from "@/types/user";
 import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
 
 const userStore = useUserStore();
 const userInfo = ref<MyInfo | undefined>(undefined);
 const params = defineProps({ cusNo: { type: Number, required: true } });
 const isMyInfo = ref<boolean>(false);
 const inviteKey = ref("");
-const router = useRouter();
 
 const logout = () => {
   userStore.logout();

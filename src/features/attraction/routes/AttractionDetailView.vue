@@ -8,8 +8,10 @@
         <header>
           <h1>{{ currentAttraction?.title }}</h1>
         </header>
+        <div class="img-wrap">
+          <a-image :src="currentAttraction.firstImage"></a-image>
+        </div>
 
-        <a-image :src="currentAttraction.firstImage"></a-image>
         <h2>상세정보</h2>
         <a-divider></a-divider>
         <p>{{ currentAttraction.description }}</p>
@@ -66,41 +68,41 @@ onMounted(async () => {
   header {
     padding-top: 5rem;
     h1 {
-      font-size: 1.7rem;
+      font-size: 3rem;
       line-height: 1.5;
+      text-align: center;
     }
   }
 }
-
-.meta {
-  margin: 1rem 0;
+.img-wrap {
   display: flex;
-  color: gray;
-  align-items: center;
-  justify-content: space-between;
-  .button-wrap {
-    display: flex;
-    gap: 0.7em;
-  }
+  justify-content: center;
+  width: 100%;
+  margin: 5rem 0;
 }
-
-.main-content {
-  padding: 2rem 0;
-  border-top: 1px solid #f0f0f0;
-  border-bottom: 1px solid #f0f0f0;
-  margin-bottom: 2rem;
+h2 {
+  font-size: 2rem;
+  line-height: 1.5;
 }
-
+p {
+  font-size: 1.2rem;
+  line-height: 1.3;
+  margin-bottom: 3rem;
+}
 footer {
   a {
     text-decoration: none;
+    color: #06c;
+    font-size: 1.3rem;
   }
   a::before {
     float: left;
-    width: 2rem;
+    width: 1rem;
+    font-size: 1.3rem;
     height: 0.34rem;
+    color: #06c;
     box-sizing: border-box;
-    content: "<----";
+    content: "<";
     margin-right: 0.1rem;
     background-size: 0.33rem 0.14rem;
     background-position: center;
