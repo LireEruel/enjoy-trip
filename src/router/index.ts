@@ -5,7 +5,11 @@ import {
 } from "@/features/attraction";
 import LoginViewVue from "@/features/auth/routes/LoginView.vue";
 import { LandingView } from "@/features/landing";
-import { NoticeLookupView, NoticeWriteView } from "@/features/notice";
+import {
+  NoticeDetailLookUpView,
+  NoticeLookupView,
+  NoticeWriteView,
+} from "@/features/notice";
 import { UserInfoView } from "@/features/user";
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -54,7 +58,7 @@ const router = createRouter({
       name: "noticeDetail",
       components: {
         header: TheHeader,
-        body: NoticeLookupView,
+        body: NoticeDetailLookUpView,
         footer: TheFooter,
       },
       props: true,
