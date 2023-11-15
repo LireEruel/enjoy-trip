@@ -14,6 +14,7 @@ export type GetAttractionListProp = {
   pgno?: number;
   sidoCode?: number;
   gugunCode?: number;
+  pageSize?: number;
 };
 
 export type AttractionResult = {
