@@ -38,6 +38,9 @@ const initMap = () => {
   // 지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
   map = new window.kakao.maps.Map(container, options);
 
+  addMarker(latitude, longitude);
+};
+const addMarker = (latitude: number, longitude: number) => {
   // 마커가 표시될 위치입니다
   var markerPosition = new window.kakao.maps.LatLng(latitude, longitude);
 
