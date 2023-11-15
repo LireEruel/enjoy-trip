@@ -1,19 +1,19 @@
 <template>
   <a-comment>
-    <template #author><a>Han Solo</a></template>
-    <template #avatar>
-      <a-avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
-    </template>
+    <template #author
+      ><a>{{ review?.writerName }}</a></template
+    >
     <template #content>
-      <p>
-        We supply a series of design principles, practical patterns and high
-        quality design resources (Sketch and Axure), to help people create their
-        product prototypes beautifully and efficiently.
+      <p class="title">{{ review?.title }}</p>
+      <p class="content">
+        {{ review?.content }}
       </p>
     </template>
     <template #datetime>
-      <a-tooltip :title="dayjs().format('YYYY-MM-DD HH:mm:ss')">
-        <span>{{ dayjs().fromNow() }}</span>
+      <a-tooltip
+        :title="dayjs(review?.registerTime).format('YYYY-MM-DD HH:mm:ss')"
+      >
+        <span>{{ dayjs(review?.registerTime).fromNow() }}</span>
       </a-tooltip>
     </template>
   </a-comment>
@@ -22,7 +22,22 @@
 <script setup lang="ts">
 import * as dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { AttractionReview } from "../index.js";
+
 dayjs.extend(relativeTime);
+
+const { review } = defineProps<{ review: AttractionReview }>();
+console.log(review);
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@import "@/assets/_colors.scss";
+.title {
+  font-size: 1.2rem;
+  color: $gray-10;
+}
+
+.content {
+  color: $gray-8;
+}
+</style>

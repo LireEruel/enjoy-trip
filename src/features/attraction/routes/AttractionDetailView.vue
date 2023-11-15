@@ -34,10 +34,26 @@
               >등록</a-button
             >
           </div>
-          <attraction-comment
-            v-for="attraction in reviewList"
-            :key="attraction.reviewId"
-          ></attraction-comment>
+          <a-list :data-source="reviewList">
+            <template #loadMore>
+              <div
+                v-show=""
+                :style="{
+                  textAlign: 'center',
+                  marginTop: '12px',
+                  height: '32px',
+                  lineHeight: '32px',
+                }"
+              >
+                <a-button @click="getReviews">loading more</a-button>
+              </div>
+            </template>
+            <template #renderItem="{ item }">
+              <a-list-item>
+                <attraction-comment :review="item"></attraction-comment>
+              </a-list-item>
+            </template>
+          </a-list>
         </section>
       </div>
       <a-empty v-else></a-empty>
@@ -54,13 +70,13 @@ import {
 } from "../api";
 import { AttractionDetail, AttractionReview } from "../types";
 import { mountMap } from "@/lib/mapUtli.js";
-import AttractionComment from "../components/AttractionComment.vue";
+import { AttractionComment } from "../components";
 
 const props = defineProps<{ contentId: number }>();
 const onLoadingAttractionDetail = ref(false);
 const currentAttraction = ref<null | AttractionDetail>(null);
 const router = useRouter();
-const reviewPageSize = ref(10);
+const reviewPageSize = 5;
 const reviewPageNum = ref(1);
 const reviewTotalCount = ref(0);
 
@@ -101,12 +117,12 @@ const getAttraction = async () => {
 const getReviews = async () => {
   try {
     const res = await requestAttractionReviewList(
-      reviewPageSize.value,
+      reviewPageSize,
       reviewPageNum.value,
       props.contentId
     );
     reviewList.value = res.list;
-    reviewPageNum.value = res.pgno;
+    reviewPageNum.value++;
     reviewTotalCount.value = res.totalCount;
   } catch (e) {
     console.error(e);

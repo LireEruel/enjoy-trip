@@ -47,7 +47,7 @@ export type AttractionReviewResult = {
 
 export type AttractionReview = {
   attractionId: number;
-  conetnt: string;
+  content: string;
   hit: number;
   orderNo: number;
   rating: number; // 별점
