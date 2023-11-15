@@ -1,5 +1,6 @@
 <template>
   <div class="attraction-detail-view">
+    <a class="back" href="/attraction/list">목록으로</a>
     <div class="site-content">
       <div class="skeleton-wrap" v-if="onLoadingAttractionDetail">
         <a-skeleton></a-skeleton>
@@ -22,9 +23,6 @@
         <div id="map"></div>
       </div>
       <a-empty v-else></a-empty>
-      <footer>
-        <a href="/attraction/list">목록으로</a>
-      </footer>
     </div>
   </div>
 </template>
@@ -106,13 +104,11 @@ p {
   line-height: 1.3;
   margin-bottom: 3rem;
 }
-footer {
-  a {
-    text-decoration: none;
-    color: #06c;
-    font-size: 1.3rem;
-  }
-  a::before {
+.back {
+  text-decoration: none;
+  color: #06c;
+  font-size: 1.3rem;
+  &::before {
     float: left;
     width: 1rem;
     font-size: 1.3rem;
