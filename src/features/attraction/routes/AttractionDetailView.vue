@@ -137,6 +137,7 @@ const getReviews = async () => {
   width: 100%;
   display: flex;
   justify-content: center;
+  padding-bottom: 5%;
 }
 .back {
   text-decoration: none;
