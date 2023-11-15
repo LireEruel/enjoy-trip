@@ -37,7 +37,7 @@
           <a-list :data-source="reviewList">
             <template #loadMore>
               <div
-                v-show=""
+                v-show="reviewPageSize * reviewPageNum <= reviewTotalCount"
                 :style="{
                   textAlign: 'center',
                   marginTop: '12px',
