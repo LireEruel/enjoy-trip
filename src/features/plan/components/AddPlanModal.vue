@@ -127,6 +127,14 @@ const createMasterPlan = async () => {
     const planBase: PlanBase = Object.assign({}, addPlanState.value, {
       planMasterId: res.planMasterId,
     });
+    const sidoName = sidoCodeList.find(
+      (code) => code.key == addPlanState.value.sidoCode
+    )?.name;
+    const gugunName = gugunList.value.find(
+      (code) => code.key == addPlanState.value.gugunCode
+    )?.name;
+    planBase.sidoName = sidoName;
+    planBase.gugunName = gugunName;
     planStore.currentPlan = planBase;
 
     commonStore.isOpenAddPlanModal = false;

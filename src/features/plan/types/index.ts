@@ -10,6 +10,8 @@ export type MasterPlanProp = {
 
 export type PlanBase = {
   planMasterId: number;
+  sidoName?: string;
+  gugunName?: string;
 } & MasterPlanProp;
 
 export type PlanDaily = {

@@ -6,13 +6,21 @@
           <div id="map"></div>
         </a-spin>
         <div class="right-side">
-          <div class="main-info">
-            <a-page-header
-              title="한국 여행 일정"
-              sub-title="(3일)"
-              @back="() => null"
-            >
-            </a-page-header>
+          <a-page-header
+            :title="planBase?.title"
+            :sub-title="`${planBase?.startDate} - ${planBase?.endDate}`"
+            @back="() => null"
+          >
+          </a-page-header>
+          <div class="destination">
+            <div class="plan-main">
+              <div class="sub-title">
+                <div class="icon-wrap">
+                  <font-awesome-icon icon="location-dot" flip class="icon" />
+                </div>
+                <p>{{ `${planBase?.sidoName} ${planBase?.gugunName}` }}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -30,6 +38,7 @@ let map: null = null;
 const isLoadingMap = ref(true);
 const planStore = usePlanStore();
 const planBase = planStore.currentPlan;
+
 console.log(planBase);
 
 onMounted(() => {
@@ -65,10 +74,11 @@ const getinitialData = async () => {
 <style scoped lang="scss">
 .root {
   display: flex;
-
+  gap: 2%;
   #map {
-    width: 600px;
+    width: 40vw;
     height: 800px;
+    border-radius: 1rem;
   }
 }
 
@@ -76,13 +86,27 @@ const getinitialData = async () => {
   width: 100%;
 }
 
-.main-info {
-  position: fixed;
-  z-index: 10;
-  top: 60px;
-  box-sizing: border-box;
-  width: 100%;
-  height: auto;
-  background-color: white;
+.plan-main {
+  padding: 2rem;
+}
+
+.sub-title {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  .icon-wrap {
+    display: inline-block;
+    padding: 1rem;
+    background-color: $blue-1;
+    border-radius: 1rem;
+    .icon {
+      color: $primary;
+      font-size: 1.2rem;
+    }
+  }
+  p {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
 }
 </style>
