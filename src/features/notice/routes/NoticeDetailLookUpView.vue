@@ -26,7 +26,7 @@
       </div>
       <a-empty v-else></a-empty>
       <footer>
-        <a href="/notice/list">목록으로</a>
+        <a href="/notice">목록으로</a>
       </footer>
     </div>
   </div>
