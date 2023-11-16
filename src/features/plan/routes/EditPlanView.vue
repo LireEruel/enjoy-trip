@@ -18,7 +18,7 @@
                 <div class="icon-wrap">
                   <font-awesome-icon icon="location-dot" flip class="icon" />
                 </div>
-                <p>{{ `${planBase?.sidoName} ${planBase?.gugunName}` }}</p>
+                <p>{{ destination }}</p>
               </div>
             </div>
           </div>
@@ -38,6 +38,7 @@ let map: null = null;
 const isLoadingMap = ref(true);
 const planStore = usePlanStore();
 const planBase = planStore.currentPlan;
+let destination = "";
 
 console.log(planBase);
 
@@ -45,11 +46,21 @@ onMounted(() => {
   mountMap(map, 37.566826, 126.9786567, 2);
   setMiddle();
   getinitialData();
+  setDestination();
 });
+
+const setDestination = () => {
+  if (planBase && planBase.sidoName) {
+    destination += planBase.sidoName;
+    if (planBase.gugunName) {
+      destination += " " + planBase.gugunName;
+    }
+  }
+};
 
 const setMiddle = () => {
   isLoadingMap.value = true;
-  const res = keywordSearch("대구");
+  const res = keywordSearch(destination);
   if (res) {
     isLoadingMap.value = false;
   } else {
