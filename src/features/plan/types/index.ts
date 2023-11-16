@@ -1,6 +1,6 @@
 import type { Dayjs } from "dayjs";
 
-export type InitialPlanProp = {
+export type MasterPlanProp = {
   title: String;
   sidoCode?: number;
   gugunCode?: number;

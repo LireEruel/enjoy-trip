@@ -36,7 +36,7 @@
       type="primary"
       class="next-btn"
       size="large"
-      :loading="onLoading"
+      :loading="isLoading"
       >다음</a-button
     >
   </a-modal>
@@ -45,17 +45,18 @@
 <script setup lang="ts">
 import { useCommonStore } from "@/stores/common";
 import { computed, ref } from "vue";
-import { InitialPlanProp } from "../types";
+import { MasterPlanProp } from "../types";
 import { sidoGugunMap, sidoCodeList } from "@/util/code";
 import { LeftOutlined } from "@ant-design/icons-vue";
 import type { Dayjs } from "dayjs";
+import { requestCreateMasterPlan } from "../api";
 
 const commonStore = useCommonStore();
 const step = ref(0);
 type RangeValue = [Dayjs, Dayjs];
 const selectedRange = ref<RangeValue>();
-const onLoading = ref(false);
-const addPlanState = ref<InitialPlanProp>({
+const isLoading = ref(false);
+const addPlanState = ref<MasterPlanProp>({
   title: "",
   sidoCode: -1,
   gugunCode: -1,
@@ -102,9 +103,21 @@ const goNext = () => {
       addPlanState.value.startDate =
         selectedRange.value[0].format("YYYY-MM-DD");
       addPlanState.value.endDate = selectedRange.value[1].format("YYYY-MM-DD");
+      createMasterPlan();
+      // TODO: 생성 성공 후 선택한 값들 초기화
     }
   } else {
     step.value++;
+  }
+};
+
+const createMasterPlan = async () => {
+  try {
+    isLoading.value = true;
+    const res = await requestCreateMasterPlan(addPlanState.value);
+    console.log(res);
+  } finally {
+    isLoading.value = false;
   }
 };
 </script>
