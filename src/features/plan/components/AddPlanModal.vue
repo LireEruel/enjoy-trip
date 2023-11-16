@@ -24,6 +24,21 @@
         </a-button>
       </div>
     </div>
+    <div v-show="step == 2" class="range-selecter">
+      <a-range-picker v-model:value="selectedRange" />
+
+      <h2 class="content-title">이번 여행의 이름이 무엇인가요?</h2>
+      <a-input v-model:value="addPlanState.title"></a-input>
+    </div>
+    <a-button
+      v-show="step !== 0"
+      @click="goNext"
+      type="primary"
+      class="next-btn"
+      size="large"
+      :loading="onLoading"
+      >다음</a-button
+    >
   </a-modal>
 </template>
 
@@ -33,9 +48,13 @@ import { computed, ref } from "vue";
 import { InitialPlanProp } from "../types";
 import { sidoGugunMap, sidoCodeList } from "@/util/code";
 import { LeftOutlined } from "@ant-design/icons-vue";
+import type { Dayjs } from "dayjs";
+
 const commonStore = useCommonStore();
 const step = ref(0);
-
+type RangeValue = [Dayjs, Dayjs];
+const selectedRange = ref<RangeValue>();
+const onLoading = ref(false);
 const addPlanState = ref<InitialPlanProp>({
   title: "",
   sidoCode: -1,
@@ -60,6 +79,7 @@ const onSelectedSido = (key: number) => {
       addPlanState.value.sidoCode = key;
       step.value++;
     }
+    addPlanState.value.gugunCode = -1;
   } else if (step.value == 1) {
     if (addPlanState.value.gugunCode == key) {
       addPlanState.value.gugunCode = -1;
@@ -73,6 +93,18 @@ const onSelectedSido = (key: number) => {
 const goBefore = () => {
   if (step.value > 0) {
     step.value--;
+  }
+};
+
+const goNext = () => {
+  if (step.value == 2) {
+    if (selectedRange.value && addPlanState.value.title) {
+      addPlanState.value.startDate =
+        selectedRange.value[0].format("YYYY-MM-DD");
+      addPlanState.value.endDate = selectedRange.value[1].format("YYYY-MM-DD");
+    }
+  } else {
+    step.value++;
   }
 };
 </script>
@@ -108,5 +140,12 @@ const goBefore = () => {
 .select-option {
   width: 100%;
   height: 5rem;
+}
+.next-btn {
+  width: 100%;
+}
+
+.range-selecter {
+  height: 15rem;
 }
 </style>
