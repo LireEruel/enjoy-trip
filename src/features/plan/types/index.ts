@@ -7,3 +7,11 @@ export type MasterPlanProp = {
   startDate: String | Dayjs;
   endDate: String | Dayjs;
 };
+
+export type MasterPlanDailyInitialData = {
+  dailyPlanId: number;
+  dayNo: number;
+  planDate: String;
+  planMasterId: number;
+  dailyPlanDetailDtoList: null;
+};
