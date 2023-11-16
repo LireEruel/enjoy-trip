@@ -7,19 +7,18 @@
     <h2 class="content-title">
       {{ step == 2 ? "언제 떠나시나요?" : "어디로 떠나시나요?" }}
     </h2>
-    <div v-show="step == 0">
-      <ul>
-        <a-row :gutter="24">
-          <a-col :span="12" v-for="sido in sidoCodeList" :key="sido.key">
-            <li
-              @click="() => onSelectedSido(sido.key)"
-              v-bind:class="{ selected: sido.key === addPlanState.sidoCode }"
-            >
-              {{ sido.name }}
-            </li>
-          </a-col>
-        </a-row>
-      </ul>
+    <div v-show="step == 0" class="sido-selecter">
+      <div class="button-container">
+        <a-button
+          v-for="sido in sidoCodeList"
+          :key="sido.key"
+          class="select-option"
+          @click="() => onSelectedSido(sido.key)"
+          :type="sido.key === addPlanState.sidoCode ? 'primary' : 'default'"
+        >
+          {{ sido.name }}
+        </a-button>
+      </div>
     </div>
   </a-modal>
 </template>
@@ -68,10 +67,17 @@ const onSelectedSido = (key: number) => {
   background-color: $primary;
   color: white;
 }
-ul {
-}
 
-li {
-  list-style: none;
+.button-container {
+  height: 25rem;
+  overflow-y: scroll;
+  margin: 0 !important;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 두 개의 동일한 크기의 열 */
+  gap: 16px;
+}
+.select-option {
+  width: 100%;
+  height: 5rem;
 }
 </style>
