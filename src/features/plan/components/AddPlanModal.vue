@@ -3,14 +3,15 @@
     v-model:open="commonStore.isOpenAddPlanModal"
     :centered="true"
     :maskClosable="false"
+    footer=""
   >
     <h2 class="content-title">
       {{ step == 2 ? "언제 떠나시나요?" : "어디로 떠나시나요?" }}
     </h2>
-    <div v-show="step == 0" class="sido-selecter">
+    <div v-show="step !== 2" class="sido-selecter">
       <div class="button-container">
         <a-button
-          v-for="sido in sidoCodeList"
+          v-for="sido in step == 0 ? sidoCodeList : gugunList"
           :key="sido.key"
           class="select-option"
           @click="() => onSelectedSido(sido.key)"
@@ -25,7 +26,7 @@
 
 <script setup lang="ts">
 import { useCommonStore } from "@/stores/common";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { InitialPlanProp } from "../types";
 import { sidoGugunMap, sidoCodeList } from "@/util/code";
 const commonStore = useCommonStore();
@@ -39,11 +40,29 @@ const addPlanState = ref<InitialPlanProp>({
   endDate: "",
 });
 
+const gugunList = computed(() => {
+  const newGugunList = sidoGugunMap.find(
+    (gugunInfo) => gugunInfo.sidoKey == addPlanState.value.sidoCode
+  )?.gugunList;
+  if (newGugunList) return [{ key: 0, name: "전체" }, ...newGugunList];
+  else return [{ key: 0, name: "전체" }];
+});
+
 const onSelectedSido = (key: number) => {
-  if (addPlanState.value.sidoCode == key) {
-    addPlanState.value.sidoCode = -1;
-  } else {
-    addPlanState.value.sidoCode = key;
+  if (step.value == 0) {
+    if (addPlanState.value.sidoCode == key) {
+      addPlanState.value.sidoCode = -1;
+    } else {
+      addPlanState.value.sidoCode = key;
+      step.value++;
+    }
+  } else if (step.value == 1) {
+    if (addPlanState.value.gugunCode == key) {
+      addPlanState.value.gugunCode = -1;
+    } else {
+      addPlanState.value.gugunCode = key;
+      step.value++;
+    }
   }
 };
 </script>
