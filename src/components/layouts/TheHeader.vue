@@ -55,7 +55,7 @@ import { useCommonStore } from "@/stores/common";
 const router = useRouter();
 
 const goLogin = () => {
-  router.push("login");
+  router.push("/login");
 };
 const userStore = useUserStore();
 const commonStore = useCommonStore();

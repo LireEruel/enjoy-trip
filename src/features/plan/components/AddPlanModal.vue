@@ -5,6 +5,9 @@
     :maskClosable="false"
     footer=""
   >
+    <template #title>
+      <LeftOutlined @click="goBefore" />
+    </template>
     <h2 class="content-title">
       {{ step == 2 ? "언제 떠나시나요?" : "어디로 떠나시나요?" }}
     </h2>
@@ -29,6 +32,7 @@ import { useCommonStore } from "@/stores/common";
 import { computed, ref } from "vue";
 import { InitialPlanProp } from "../types";
 import { sidoGugunMap, sidoCodeList } from "@/util/code";
+import { LeftOutlined } from "@ant-design/icons-vue";
 const commonStore = useCommonStore();
 const step = ref(0);
 
@@ -63,6 +67,12 @@ const onSelectedSido = (key: number) => {
       addPlanState.value.gugunCode = key;
       step.value++;
     }
+  }
+};
+
+const goBefore = () => {
+  if (step.value > 0) {
+    step.value--;
   }
 };
 </script>
