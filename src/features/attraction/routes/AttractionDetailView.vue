@@ -69,7 +69,7 @@ import {
   requestAttractionReviewList,
 } from "../api";
 import { AttractionDetail, AttractionReview } from "../types";
-import { mountMap } from "@/lib/mapUtli.js";
+import { mountMap, addMarker } from "@/lib/mapUtli.js";
 import { AttractionComment } from "../components";
 
 const props = defineProps<{ contentId: number }>();
@@ -101,6 +101,10 @@ const getAttraction = async () => {
         currentAttraction.value.latitude,
         currentAttraction.value.longitude,
         currentAttraction.value.mlevel
+      );
+      addMarker(
+        currentAttraction.value.latitude,
+        currentAttraction.value.longitude
       );
     } catch (e) {
       console.log(e);
