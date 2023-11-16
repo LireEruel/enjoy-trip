@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useCommonStore = defineStore("user", {
+export const useCommonStore = defineStore("common", {
   state: () => ({
     isOpenAddPlanModal: false as boolean,
   }),
