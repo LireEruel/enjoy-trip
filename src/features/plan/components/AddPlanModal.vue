@@ -1,5 +1,9 @@
 <template>
-  <a-modal v-model:open="isOpenAddPlanModal">
+  <a-modal
+    v-model:open="commonStore.isOpenAddPlanModal"
+    :centered="true"
+    :maskClosable="false"
+  >
     <p>Some contents...</p>
     <p>Some contents...</p>
     <p>Some contents...</p>
@@ -10,7 +14,6 @@
 import { useCommonStore } from "@/stores/common";
 
 const commonStore = useCommonStore();
-const isOpenAddPlanModal = commonStore.isOpenAddPlanModal;
 </script>
 
 <style scoped lang="scss"></style>
