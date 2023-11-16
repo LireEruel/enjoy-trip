@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
+import AddPlanModal from "@/features/plan/components/AddPlanModal.vue";
 </script>
 
 <template>
@@ -10,6 +11,7 @@ import { RouterView } from "vue-router";
     </div>
     <router-view class="footer" name="footer" />
   </div>
+  <add-plan-modal></add-plan-modal>
 </template>
 
 <style lang="scss" scoped>
