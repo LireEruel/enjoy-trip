@@ -11,11 +11,11 @@ import VCalendar from "v-calendar";
 import "v-calendar/style.css";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
-library.add(faLocationDot);
+library.add(faLocationDot, faPaperPlane);
 
 const app = createApp(App);
 
