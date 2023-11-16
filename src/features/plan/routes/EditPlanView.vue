@@ -24,11 +24,14 @@
 import { keywordSearch, mountMap } from "@/lib/mapUtli.js";
 import { onMounted, ref } from "vue";
 import { requestGetMasterPlan } from "../api/creatPlan";
+import { usePlanStore } from "@/stores/plan";
 
 let map: null = null;
 const isLoadingMap = ref(true);
-const props = defineProps<{ planMasterId: string }>();
-const planMasterId = +props.planMasterId;
+const planStore = usePlanStore();
+const planBase = planStore.currentPlan;
+console.log(planBase);
+
 onMounted(() => {
   mountMap(map, 37.566826, 126.9786567, 2);
   setMiddle();
@@ -49,8 +52,10 @@ const setMiddle = () => {
 
 const getinitialData = async () => {
   try {
-    const res = await requestGetMasterPlan(planMasterId);
-    console.log(res);
+    if (planBase) {
+      const res = await requestGetMasterPlan(planBase.planMasterId);
+      console.log(res);
+    }
   } catch (e) {
     console.error(e);
   }

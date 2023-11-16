@@ -8,10 +8,21 @@ export type MasterPlanProp = {
   endDate: String | Dayjs;
 };
 
-export type MasterPlanDailyInitialData = {
+export type PlanBase = {
+  planMasterId: number;
+} & MasterPlanProp;
+
+export type PlanDaily = {
   dailyPlanId: number;
   dayNo: number;
   planDate: String;
   planMasterId: number;
-  dailyPlanDetailDtoList: null;
+  dailyPlanDetailDtoList: Course[];
+};
+
+export type Course = {
+  dailyPlanId: number;
+  attractionId: number;
+  memo: String;
+  orderNo: number;
 };

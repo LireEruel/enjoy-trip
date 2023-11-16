@@ -45,13 +45,14 @@
 
 <script setup lang="ts">
 import { useCommonStore } from "@/stores/common";
-import { computed, ref } from "vue";
-import { MasterPlanProp } from "../types";
+import { computed, onMounted, ref } from "vue";
+import { MasterPlanProp, PlanBase } from "../types";
 import { sidoGugunMap, sidoCodeList } from "@/util/code";
 import { LeftOutlined } from "@ant-design/icons-vue";
 import type { Dayjs } from "dayjs";
 import { requestCreateMasterPlan } from "../api";
 import { useRouter } from "vue-router";
+import { usePlanStore } from "@/stores/plan";
 
 const router = useRouter();
 const commonStore = useCommonStore();
@@ -59,12 +60,17 @@ const step = ref(0);
 type RangeValue = [Dayjs, Dayjs];
 const selectedRange = ref<RangeValue>();
 const isLoading = ref(false);
+const planStore = usePlanStore();
 const addPlanState = ref<MasterPlanProp>({
   title: "",
   sidoCode: -1,
   gugunCode: -1,
   startDate: "",
   endDate: "",
+});
+
+onMounted(() => {
+  resetPlanState();
 });
 
 const gugunList = computed(() => {
@@ -107,7 +113,6 @@ const goNext = () => {
         selectedRange.value[0].format("YYYY-MM-DD");
       addPlanState.value.endDate = selectedRange.value[1].format("YYYY-MM-DD");
       createMasterPlan();
-      resetPlanState();
     }
   } else {
     step.value++;
@@ -118,8 +123,16 @@ const createMasterPlan = async () => {
   try {
     isLoading.value = true;
     const res = await requestCreateMasterPlan(addPlanState.value);
-    resetPlanState();
-    router.push("/plan/edit/" + res.planMasterId);
+
+    const planBase: PlanBase = Object.assign({}, addPlanState.value, {
+      planMasterId: res.planMasterId,
+    });
+    planStore.currentPlan = planBase;
+
+    commonStore.isOpenAddPlanModal = false;
+    router.push({
+      name: "editPlan",
+    });
   } finally {
     isLoading.value = false;
   }
@@ -134,7 +147,6 @@ const resetPlanState = () => {
     endDate: "",
   };
   step.value = 0;
-  commonStore.isOpenAddPlanModal = false;
   selectedRange.value = undefined;
 };
 

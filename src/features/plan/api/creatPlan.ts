@@ -1,5 +1,5 @@
 import commonAxios from "@/lib/commonAxios";
-import { MasterPlanProp, MasterPlanDailyInitialData } from "../types";
+import { MasterPlanProp, PlanDaily } from "../types";
 
 export const requestCreateMasterPlan = (
   params: MasterPlanProp
@@ -9,6 +9,6 @@ export const requestCreateMasterPlan = (
 
 export const requestGetMasterPlan = (
   planMasterId: number
-): Promise<Array<MasterPlanDailyInitialData>> => {
+): Promise<Array<PlanDaily>> => {
   return commonAxios.get("/plan/master/" + planMasterId);
 };
