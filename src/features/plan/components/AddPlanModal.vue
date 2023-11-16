@@ -4,6 +4,7 @@
     :centered="true"
     :maskClosable="false"
     footer=""
+    @cancel="onCloseModal"
   >
     <template #title>
       <LeftOutlined @click="goBefore" />
@@ -50,7 +51,9 @@ import { sidoGugunMap, sidoCodeList } from "@/util/code";
 import { LeftOutlined } from "@ant-design/icons-vue";
 import type { Dayjs } from "dayjs";
 import { requestCreateMasterPlan } from "../api";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const commonStore = useCommonStore();
 const step = ref(0);
 type RangeValue = [Dayjs, Dayjs];
@@ -104,7 +107,7 @@ const goNext = () => {
         selectedRange.value[0].format("YYYY-MM-DD");
       addPlanState.value.endDate = selectedRange.value[1].format("YYYY-MM-DD");
       createMasterPlan();
-      // TODO: 생성 성공 후 선택한 값들 초기화
+      resetPlanState();
     }
   } else {
     step.value++;
@@ -115,10 +118,28 @@ const createMasterPlan = async () => {
   try {
     isLoading.value = true;
     const res = await requestCreateMasterPlan(addPlanState.value);
-    console.log(res);
+    resetPlanState();
+    router.push("/plan/edit/" + res.planMasterId);
   } finally {
     isLoading.value = false;
   }
+};
+
+const resetPlanState = () => {
+  addPlanState.value = {
+    title: "",
+    sidoCode: -1,
+    gugunCode: -1,
+    startDate: "",
+    endDate: "",
+  };
+  step.value = 0;
+  commonStore.isOpenAddPlanModal = false;
+  selectedRange.value = undefined;
+};
+
+const onCloseModal = () => {
+  resetPlanState();
 };
 </script>
 
