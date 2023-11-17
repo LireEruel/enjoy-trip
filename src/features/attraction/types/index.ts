@@ -31,7 +31,7 @@ export type GetAttractionListProp = {
   sidoCode?: number;
   gugunCode?: number;
   pageSize?: number;
-  contentTypeId?: number[];
+  contentTypeId?: (number | null)[];
   title?: String;
 };
 

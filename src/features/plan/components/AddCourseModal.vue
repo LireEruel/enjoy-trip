@@ -10,7 +10,7 @@
         v-for="(tag, index) in tagsData"
         :key="tag"
         v-model:checked="selectTags[index]"
-        color="cyan"
+        @change="resetPagination"
       >
         {{ contentTypeMap.get(tag) }}
       </a-checkable-tag>
@@ -80,7 +80,12 @@ onMounted(() => {
 const getAttractionList = async () => {
   try {
     onLoading.value = true;
+    const selectedTags = selectTags.value
+      .map((isSelected, index) => (isSelected ? tagsData.value[index] : null))
+      .filter((tag) => tag !== null);
+
     const res = await requestAttractionList({
+      contentTypeId: selectedTags,
       pgno: page.value,
       sidoCode: sidoCode,
       gugunCode: gugunCode,
