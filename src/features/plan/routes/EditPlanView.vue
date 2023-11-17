@@ -1,53 +1,65 @@
 <template>
-  <a-row justify="center">
-    <a-col span="20">
-      <div class="root">
-        <a-spin :spinning="isLoadingMap">
-          <div id="map"></div>
-        </a-spin>
-        <a-flex></a-flex>
-        <div class="right-side">
-          <a-page-header
-            :title="planBase?.title"
-            :sub-title="`${planBase?.startDate} - ${planBase?.endDate}`"
-            @back="() => null"
-          >
-          </a-page-header>
-          <div class="destination">
-            <div class="plan-main">
-              <div class="sub-title">
-                <div class="icon-wrap">
-                  <font-awesome-icon icon="location-dot" flip class="icon" />
-                </div>
-                <p>{{ destination }}</p>
-              </div>
-              <div>
-                <div
-                  v-for="(dailyPlan, index) in dailyPlanList"
-                  :key="dailyPlan.dailyPlanId"
-                  class="daily-plan"
-                >
-                  <div class="daily-plan-content">
-                    <div class="day-count">
-                      <font-awesome-icon icon="paper-plane" />
-                      <span> Day{{ index + 1 }}</span>
-                    </div>
-                    <div class="date">
-                      {{ dayjs(dailyPlan.planDate).format("YYYY.MM.DD") }}
-                    </div>
+  <div>
+    <a-row justify="center">
+      <a-col span="20">
+        <div class="root">
+          <a-spin :spinning="isLoadingMap">
+            <div id="map"></div>
+          </a-spin>
+          <a-flex></a-flex>
+          <div class="right-side">
+            <a-page-header
+              :title="planBase?.title"
+              :sub-title="`${planBase?.startDate} - ${planBase?.endDate}`"
+              @back="() => null"
+            >
+            </a-page-header>
+            <div class="destination">
+              <div class="plan-main">
+                <div class="sub-title">
+                  <div class="icon-wrap">
+                    <font-awesome-icon icon="location-dot" flip class="icon" />
                   </div>
-                  <div class="btn-wrap">
-                    <button>장소 추가</button>
-                    <button>메모 추가</button>
+                  <p>{{ destination }}</p>
+                </div>
+                <div>
+                  <div
+                    v-for="(dailyPlan, index) in dailyPlanList"
+                    :key="dailyPlan.dailyPlanId"
+                    class="daily-plan"
+                  >
+                    <div class="daily-plan-content">
+                      <div class="day-count">
+                        <font-awesome-icon icon="paper-plane" />
+                        <span> Day{{ index + 1 }}</span>
+                      </div>
+                      <div class="date">
+                        {{ dayjs(dailyPlan.planDate).format("YYYY.MM.DD") }}
+                      </div>
+                    </div>
+                    <div class="btn-wrap">
+                      <button
+                        @click="
+                          () => onClickAddCourceBtn(dailyPlan.dailyPlanId)
+                        "
+                      >
+                        장소 추가
+                      </button>
+                      <button>메모 추가</button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </a-col>
-  </a-row>
+      </a-col>
+    </a-row>
+    <AddCourseModal
+      :open="isOpenAddCourseModal"
+      @onClose="onCloseAddCourseModal"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -57,15 +69,16 @@ import { requestGetMasterPlan } from "../api/createPlan.js";
 import { usePlanStore } from "@/stores/plan";
 import { PlanDaily } from "..";
 import * as dayjs from "dayjs";
+import AddCourseModal from "../components/AddCourseModal.vue";
 
 let map: null = null;
 const isLoadingMap = ref(true);
 const planStore = usePlanStore();
 const planBase = planStore.currentPlan;
 const dailyPlanList = ref<PlanDaily[]>([]);
-let destination = "";
+const isOpenAddCourseModal = ref(false);
 
-console.log(planBase);
+let destination = "";
 
 onMounted(() => {
   mountMap(map, 37.566826, 126.9786567, 2);
@@ -95,6 +108,10 @@ const setMiddle = () => {
   }
 };
 
+const onClickAddCourceBtn = () => {
+  isOpenAddCourseModal.value = true;
+};
+
 const getinitialData = async () => {
   try {
     if (planBase) {
@@ -104,6 +121,10 @@ const getinitialData = async () => {
   } catch (e) {
     console.error(e);
   }
+};
+
+const onCloseAddCourseModal = () => {
+  isOpenAddCourseModal.value = false;
 };
 </script>
 
@@ -215,7 +236,6 @@ const getinitialData = async () => {
       border: none;
       padding: 1rem;
       color: $gray-10;
-
       &:hover {
         border-radius: 12px;
         background: #ffffff;
