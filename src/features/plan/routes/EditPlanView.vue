@@ -6,7 +6,6 @@
           <a-spin :spinning="isLoadingMap">
             <div id="map"></div>
           </a-spin>
-          <a-flex></a-flex>
           <div class="right-side">
             <a-page-header
               :title="planBase?.title"

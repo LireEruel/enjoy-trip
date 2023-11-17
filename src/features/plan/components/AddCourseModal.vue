@@ -10,7 +10,6 @@
         v-for="(tag, index) in tagsData"
         :key="tag"
         v-model:checked="selectTags[index]"
-        @change="(checked: boolean) => handleChange(tag, checked)"
         color="cyan"
       >
         {{ contentTypeMap.get(tag) }}
@@ -21,7 +20,7 @@
       <div
         v-for="attraction in attractionList"
         class="attraction-card"
-        @click="selectAttraction"
+        @click="() => selectAttraction(attraction)"
       >
         <div class="attraction-card-content">
           <a-image
@@ -42,7 +41,7 @@
           </div>
         </div>
 
-        <a-checkbox></a-checkbox>
+        <a-checkbox v-model:checked="attraction.selected"></a-checkbox>
       </div>
     </a-spin>
   </a-modal>
@@ -70,6 +69,7 @@ const attractionList = ref<PlanAttraction[]>([]);
 const page = ref(1);
 const totalAttractionCount = ref(0);
 const currentAttractionCount = ref(0);
+
 const onSearch = () => {
   inputText.value = "";
 };
@@ -105,8 +105,13 @@ const resetPagination = async () => {
   await getAttractionList();
 };
 
-const handleChange = (tag: number, checked: boolean) => {
-  resetPagination();
+const selectAttraction = (attraction: PlanAttraction) => {
+  console.log(attraction);
+  if (attraction.selected) {
+    attraction.selected = false;
+  } else {
+    attraction.selected = true;
+  }
 };
 </script>
 
