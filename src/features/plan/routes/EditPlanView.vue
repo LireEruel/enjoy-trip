@@ -57,6 +57,8 @@
     </a-row>
     <AddCourseModal
       :open="isOpenAddCourseModal"
+      :sido-code="planBase?.sidoCode ? planBase?.sidoCode : -1"
+      :gugun-code="planBase?.gugunCode ? planBase?.gugunCode : -1"
       @onClose="onCloseAddCourseModal"
     />
   </div>
@@ -77,6 +79,7 @@ const planStore = usePlanStore();
 const planBase = planStore.currentPlan;
 const dailyPlanList = ref<PlanDaily[]>([]);
 const isOpenAddCourseModal = ref(false);
+const selectedDay = ref(-1);
 
 let destination = "";
 
@@ -86,6 +89,17 @@ onMounted(() => {
   getinitialData();
   setDestination();
 });
+
+const getinitialData = async () => {
+  try {
+    if (planBase) {
+      const res = await requestGetMasterPlan(planBase.planMasterId);
+      dailyPlanList.value = res;
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
 
 const setDestination = () => {
   if (planBase && planBase.sidoName) {
@@ -108,19 +122,9 @@ const setMiddle = () => {
   }
 };
 
-const onClickAddCourceBtn = () => {
+const onClickAddCourceBtn = (dailyPlanId: number) => {
   isOpenAddCourseModal.value = true;
-};
-
-const getinitialData = async () => {
-  try {
-    if (planBase) {
-      const res = await requestGetMasterPlan(planBase.planMasterId);
-      dailyPlanList.value = res;
-    }
-  } catch (e) {
-    console.error(e);
-  }
+  selectedDay.value = dailyPlanId;
 };
 
 const onCloseAddCourseModal = () => {

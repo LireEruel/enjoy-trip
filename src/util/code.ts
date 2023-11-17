@@ -8,6 +8,16 @@ export enum CONTENT_TYPE {
   쇼핑 = 38,
   음식점 = 39,
 }
+export const contentTypeMap = new Map<number, string>([
+  [CONTENT_TYPE.관광지, "관광지"],
+  [CONTENT_TYPE.문화시설, "문화시설"],
+  [CONTENT_TYPE.축제공연행사, "축제공연행사"],
+  [CONTENT_TYPE.여행코스, "여행코스"],
+  [CONTENT_TYPE.레포츠, "레포츠"],
+  [CONTENT_TYPE.숙박, "숙박"],
+  [CONTENT_TYPE.쇼핑, "쇼핑"],
+  [CONTENT_TYPE.음식점, "음식점"],
+]);
 
 export enum SIDO_CODE {
   서울 = 1,

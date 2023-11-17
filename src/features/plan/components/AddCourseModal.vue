@@ -1,23 +1,135 @@
 <template>
   <a-modal :open="open" title="추천 장소" @cancel="emit('onClose')">
-    <a-input-group compact>
-      <a-select v-model:value="selectedOption">
-        <a-select-option value="Option1">Option1</a-select-option>
-        <a-select-option value="Option2">Option2</a-select-option>
-      </a-select>
-      <a-input v-model:value="inputText" style="width: 50%" />
-    </a-input-group>
+    <a-input-search
+      v-model:value="inputText"
+      placeholder="input search text"
+      @search="onSearch"
+    />
+    <div class="content-type-check-wrap">
+      <a-checkable-tag
+        v-for="(tag, index) in tagsData"
+        :key="tag"
+        v-model:checked="selectTags[index]"
+        @change="(checked: boolean) => handleChange(tag, checked)"
+        color="cyan"
+      >
+        {{ contentTypeMap.get(tag) }}
+      </a-checkable-tag>
+    </div>
+
+    <a-spin :spinning="onLoading">
+      <div
+        v-for="attraction in attractionList"
+        class="attraction-card"
+        @click="selectAttraction"
+      >
+        <div class="attraction-card-content">
+          <a-image
+            :src="attraction.firstImage"
+            fallback="data:image/png;base64,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"
+            :height="70"
+            :width="70"
+            :preview="false"
+          >
+            <template #placeholder>
+              <a-spin class="card-loading" />
+            </template>
+          </a-image>
+          <div>
+            <h5>{{ attraction.title }}</h5>
+            <span>{{ contentTypeMap.get(attraction.contentTypeId) }}</span>
+            <a-typography-text :content="attraction.addr1" :ellipsis="true" />
+          </div>
+        </div>
+
+        <a-checkbox></a-checkbox>
+      </div>
+    </a-spin>
   </a-modal>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-
-const { open } = defineProps<{ open: boolean }>();
+import { Attraction } from "@/features/attraction";
+import { onMounted, ref } from "vue";
+import { contentTypeMap } from "@/util/code";
+import { requestAttractionList } from "@/features/attraction/api";
+const { open, sidoCode, gugunCode } = defineProps<{
+  open: boolean;
+  sidoCode: number;
+  gugunCode: number;
+}>();
+type PlanAttraction = {
+  selected?: boolean;
+} & Attraction;
 const emit = defineEmits(["onClose"]);
-
-const selectedOption = ref(0);
+const tagsData = ref([...contentTypeMap.keys()]);
 const inputText = ref("");
+const onLoading = ref(false);
+const selectTags = ref([true, false, false, false, false, false, false, false]);
+const attractionList = ref<PlanAttraction[]>([]);
+const page = ref(1);
+const totalAttractionCount = ref(0);
+const currentAttractionCount = ref(0);
+const onSearch = () => {
+  inputText.value = "";
+};
+
+onMounted(() => {
+  getAttractionList();
+});
+const getAttractionList = async () => {
+  try {
+    onLoading.value = true;
+    const res = await requestAttractionList({
+      pgno: page.value,
+      sidoCode: sidoCode,
+      gugunCode: gugunCode,
+      pageSize: 15,
+    });
+    totalAttractionCount.value = res.totalCount;
+    attractionList.value = [...attractionList.value, ...res.list];
+    currentAttractionCount.value = attractionList.value.length;
+  } catch (e) {
+    console.error(e);
+  } finally {
+    onLoading.value = false;
+    page.value++;
+  }
+};
+
+const resetPagination = async () => {
+  page.value = 1;
+  totalAttractionCount.value = 0;
+  currentAttractionCount.value = 0;
+  attractionList.value = [];
+  await getAttractionList();
+};
+
+const handleChange = (tag: number, checked: boolean) => {
+  resetPagination();
+};
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.content-type-check-wrap {
+  padding: 1rem 0;
+  display: flex;
+}
+.attraction-card {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 1rem;
+  justify-content: space-between;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+    rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  .attraction-card-content {
+    display: flex;
+    align-items: center;
+
+    gap: 1rem;
+  }
+}
+</style>
