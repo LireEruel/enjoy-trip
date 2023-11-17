@@ -5,6 +5,7 @@
         <a-spin :spinning="isLoadingMap">
           <div id="map"></div>
         </a-spin>
+        <a-flex></a-flex>
         <div class="right-side">
           <a-page-header
             :title="planBase?.title"
@@ -26,7 +27,7 @@
                   :key="dailyPlan.dailyPlanId"
                   class="daily-plan"
                 >
-                  <p>
+                  <div class="daily-plan-content">
                     <div class="day-count">
                       <font-awesome-icon icon="paper-plane" />
                       <span> Day{{ index + 1 }}</span>
@@ -34,10 +35,10 @@
                     <div class="date">
                       {{ dailyPlan.planDate }}
                     </div>
-                  </p>
-                  <div>
-                    <a-button>장소 추가</a-button>
-                    <a-button>메모 추가</a-button>
+                  </div>
+                  <div class="btn-wrap">
+                    <button>장소 추가</button>
+                    <button>메모 추가</button>
                   </div>
                 </div>
               </div>
@@ -145,11 +146,12 @@ const getinitialData = async () => {
 }
 
 .daily-plan {
-  & > p {
+  .daily-plan-content {
     height: auto;
     display: flex;
     -webkit-box-align: center;
     align-items: center;
+    margin-top: 2rem;
     .day-count {
       display: flex;
       width: auto;
@@ -197,6 +199,30 @@ const getinitialData = async () => {
       }
     }
   }
+  .btn-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+    gap: 2rem;
+    button {
+      border-radius: 12px;
+      background: linear-gradient(145deg, #ffffff, #e6e6e6);
+      box-shadow:
+        7px 7px 11px #dbdbdb,
+        -7px -7px 11px #ffffff;
+      border: none;
+      padding: 1rem;
+      color: $gray-10;
+
+      &:hover {
+        border-radius: 12px;
+        background: #ffffff;
+        box-shadow:
+          7px 7px 11px #dbdbdb,
+          -7px -7px 11px #ffffff;
+      }
+    }
+  }
 }
 </style>
-../api/createPlan
