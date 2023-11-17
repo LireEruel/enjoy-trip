@@ -1,3 +1,3 @@
-import { requestCreateMasterPlan } from "./creatPlan";
+import { requestCreateMasterPlan } from "./createPlan";
 
 export { requestCreateMasterPlan };

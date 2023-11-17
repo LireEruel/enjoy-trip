@@ -52,7 +52,7 @@
 <script setup lang="ts">
 import { keywordSearch, mountMap } from "@/lib/mapUtli.js";
 import { onMounted, ref } from "vue";
-import { requestGetMasterPlan } from "../api/creatPlan";
+import { requestGetMasterPlan } from "../api/createPlan.js";
 import { usePlanStore } from "@/stores/plan";
 import { PlanDaily } from "..";
 
@@ -199,3 +199,4 @@ const getinitialData = async () => {
   }
 }
 </style>
+../api/createPlan
