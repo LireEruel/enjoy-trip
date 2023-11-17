@@ -2,6 +2,7 @@
   <a-modal
     :open="open"
     title="추천 장소"
+    @ok="onOkModal"
     @cancel="emit('onClose')"
     width="1000px"
   >
@@ -86,7 +87,7 @@ const { open, sidoCode, gugunCode } = defineProps<{
 type PlanAttraction = {
   selected?: boolean;
 } & Attraction;
-const emit = defineEmits(["onClose"]);
+const emit = defineEmits(["onClose", "addCourses"]);
 const tagsData = ref([...contentTypeMap.keys()]);
 const inputText = ref("");
 const selectTags = ref([true, false, false, false, false, false, false, false]);
@@ -104,6 +105,14 @@ const contentTypeColorMap = new Map<number, string>([
   [CONTENT_TYPE.쇼핑, "red"],
   [CONTENT_TYPE.음식점, "green"],
 ]);
+const reset = () => {
+  inputText.value = "";
+  selectTags.value = [true, false, false, false, false, false, false, false];
+  attractionList.value = [];
+  page.value = 1;
+  totalAttractionCount.value = 0;
+  currentAttractionCount.value = 0;
+};
 
 const onSearch = () => {
   resetPagination();
@@ -152,6 +161,15 @@ const selectAttraction = (attraction: PlanAttraction) => {
   } else {
     attraction.selected = true;
   }
+};
+
+const onOkModal = () => {
+  const selectedAttraction = attractionList.value.filter(
+    (attraction) => attraction.selected
+  );
+  emit("addCourses", selectedAttraction);
+  reset();
+  emit("onClose");
 };
 </script>
 

@@ -59,6 +59,7 @@
       :sido-code="planBase?.sidoCode ? planBase?.sidoCode : -1"
       :gugun-code="planBase?.gugunCode ? planBase?.gugunCode : -1"
       @onClose="onCloseAddCourseModal"
+      @addCourses="addCourses"
     />
   </div>
 </template>
@@ -71,6 +72,7 @@ import { usePlanStore } from "@/stores/plan";
 import { PlanDaily } from "..";
 import * as dayjs from "dayjs";
 import AddCourseModal from "../components/AddCourseModal.vue";
+import { Attraction } from "@/features/attraction";
 
 let map: null = null;
 const isLoadingMap = ref(true);
@@ -94,6 +96,7 @@ const getinitialData = async () => {
     if (planBase) {
       const res = await requestGetMasterPlan(planBase.planMasterId);
       dailyPlanList.value = res;
+      console.log(res);
     }
   } catch (e) {
     console.error(e);
@@ -119,6 +122,9 @@ const setMiddle = () => {
       setMiddle();
     }, 100);
   }
+};
+const addCourses = (attractionList: Attraction[]) => {
+  console.log(attractionList);
 };
 
 const onClickAddCourceBtn = (dailyPlanId: number) => {
