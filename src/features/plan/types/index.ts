@@ -1,11 +1,11 @@
 import type { Dayjs } from "dayjs";
 
 export type MasterPlanProp = {
-  title: String;
+  title: string;
   sidoCode?: number;
   gugunCode?: number;
-  startDate: String | Dayjs;
-  endDate: String | Dayjs;
+  startDate: string | Dayjs;
+  endDate: string | Dayjs;
 };
 
 export type PlanBase = {
@@ -17,7 +17,7 @@ export type PlanBase = {
 export type PlanDaily = {
   dailyPlanId: number;
   dayNo: number;
-  planDate: String;
+  planDate: string;
   planMasterId: number;
   dailyPlanDetailDtoList: Course[];
 };
@@ -25,6 +25,6 @@ export type PlanDaily = {
 export type Course = {
   dailyPlanId: number;
   attractionId: number;
-  memo: String;
+  memo: string;
   orderNo: number;
 };

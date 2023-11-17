@@ -33,7 +33,7 @@
                       <span> Day{{ index + 1 }}</span>
                     </div>
                     <div class="date">
-                      {{ dailyPlan.planDate }}
+                      {{ dayjs(dailyPlan.planDate).format("YYYY.MM.DD") }}
                     </div>
                   </div>
                   <div class="btn-wrap">
@@ -56,6 +56,7 @@ import { onMounted, ref } from "vue";
 import { requestGetMasterPlan } from "../api/createPlan.js";
 import { usePlanStore } from "@/stores/plan";
 import { PlanDaily } from "..";
+import * as dayjs from "dayjs";
 
 let map: null = null;
 const isLoadingMap = ref(true);
@@ -221,6 +222,13 @@ const getinitialData = async () => {
         box-shadow:
           7px 7px 11px #dbdbdb,
           -7px -7px 11px #ffffff;
+      }
+      &:active {
+        border-radius: 14px;
+        background: linear-gradient(145deg, #e6e6e6, #ffffff);
+        box-shadow:
+          8px 8px 17px #dbdbdb,
+          -8px -8px 17px #ffffff;
       }
     }
   }
