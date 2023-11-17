@@ -16,7 +16,7 @@
       </a-checkable-tag>
     </div>
 
-    <a-spin :spinning="onLoading">
+    <a-spin :spinning="onLoading" class="spin">
       <div
         v-for="attraction in attractionList"
         class="attraction-card"
@@ -35,9 +35,20 @@
             </template>
           </a-image>
           <div>
-            <h5>{{ attraction.title }}</h5>
-            <span>{{ contentTypeMap.get(attraction.contentTypeId) }}</span>
-            <a-typography-text :content="attraction.addr1" :ellipsis="true" />
+            <h5>
+              {{ attraction.title
+              }}<a-tag
+                :color="contentTypeColorMap.get(attraction.contentTypeId)"
+                class="content-type-tag"
+                >{{ contentTypeMap.get(attraction.contentTypeId) }}
+              </a-tag>
+            </h5>
+
+            <a-typography-text
+              :content="attraction.addr1"
+              :ellipsis="true"
+              class="address"
+            />
           </div>
         </div>
 
@@ -50,7 +61,7 @@
 <script setup lang="ts">
 import { Attraction } from "@/features/attraction";
 import { onMounted, ref } from "vue";
-import { contentTypeMap } from "@/util/code";
+import { CONTENT_TYPE, contentTypeMap } from "@/util/code";
 import { requestAttractionList } from "@/features/attraction/api";
 const { open, sidoCode, gugunCode } = defineProps<{
   open: boolean;
@@ -69,8 +80,19 @@ const attractionList = ref<PlanAttraction[]>([]);
 const page = ref(1);
 const totalAttractionCount = ref(0);
 const currentAttractionCount = ref(0);
+const contentTypeColorMap = new Map<number, string>([
+  [CONTENT_TYPE.관광지, "blue"],
+  [CONTENT_TYPE.문화시설, "purple"],
+  [CONTENT_TYPE.축제공연행사, "cyan"],
+  [CONTENT_TYPE.여행코스, "pink"],
+  [CONTENT_TYPE.레포츠, "pink"],
+  [CONTENT_TYPE.숙박, "orange"],
+  [CONTENT_TYPE.쇼핑, "red"],
+  [CONTENT_TYPE.음식점, "green"],
+]);
 
 const onSearch = () => {
+  resetPagination();
   inputText.value = "";
 };
 
@@ -85,6 +107,7 @@ const getAttractionList = async () => {
       .filter((tag) => tag !== null);
 
     const res = await requestAttractionList({
+      title: inputText.value,
       contentTypeId: selectedTags,
       pgno: page.value,
       sidoCode: sidoCode,
@@ -132,14 +155,35 @@ const selectAttraction = (attraction: PlanAttraction) => {
   padding: 1rem;
   border-radius: 1rem;
   justify-content: space-between;
-  box-shadow:
-    rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
-    rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  border: 1px solid $gray-3;
+  cursor: pointer;
+  h5 {
+    font-size: 1rem;
+  }
+  transition: all 0.2s linear;
+  &:hover {
+    box-shadow:
+      rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+      rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  }
   .attraction-card-content {
     display: flex;
     align-items: center;
-
     gap: 1rem;
+    .content-type-tag {
+      margin-left: 0.7rem;
+    }
+    .address {
+      color: $gray-8;
+    }
   }
+}
+
+.spin {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
