@@ -27,7 +27,6 @@ import { AttractionReview } from "../index.js";
 dayjs.extend(relativeTime);
 
 const { review } = defineProps<{ review: AttractionReview }>();
-console.log(review);
 </script>
 
 <style scoped lang="scss">

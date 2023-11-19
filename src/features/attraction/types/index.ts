@@ -8,6 +8,8 @@ export type Attraction = {
   isMyLove: boolean;
   isPartenerLove: boolean;
   description?: string;
+  latitude: number;
+  longitude: number;
 };
 
 export type AttractionDetail = {
@@ -31,6 +33,8 @@ export type GetAttractionListProp = {
   sidoCode?: number;
   gugunCode?: number;
   pageSize?: number;
+  contentTypeId?: (number | null)[];
+  title?: String;
 };
 
 export type AttractionResult = {

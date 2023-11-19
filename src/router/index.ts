@@ -10,6 +10,7 @@ import {
   NoticeLookupView,
   NoticeWriteView,
 } from "@/features/notice";
+import { EditPlanView } from "@/features/plan";
 import { UserInfoView } from "@/features/user";
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -91,6 +92,15 @@ const router = createRouter({
         footer: TheFooter,
       },
       props: true,
+    },
+    {
+      path: "/plan/edit",
+      name: "editPlan",
+      components: {
+        header: TheHeader,
+        body: EditPlanView,
+        footer: TheFooter,
+      },
     },
   ],
 });

@@ -20,6 +20,19 @@
             :icon="h(UserOutlined)"
             @click="goUserInfo"
           />
+          <a-dropdown :trigger="['click']">
+            <a-button type="primary">생성하기</a-button>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item key="0" @click="openAddPlanModal">
+                  <p>여행 계획 작성</p>
+                </a-menu-item>
+                <a-menu-item key="1">
+                  <p>여행 후기 작성</p>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
         </div>
         <div v-else>
           <a-button class="login-button" @click="goLogin" size="large">
@@ -38,13 +51,14 @@ import { useRouter } from "vue-router";
 import { h } from "vue";
 import { UserOutlined, BellOutlined } from "@ant-design/icons-vue";
 import { useUserStore } from "@/stores/user";
+import { useCommonStore } from "@/stores/common";
 const router = useRouter();
 
 const goLogin = () => {
-  router.push("login");
+  router.push("/login");
 };
 const userStore = useUserStore();
-
+const commonStore = useCommonStore();
 const menuKey = ref<string[]>([window.location.pathname]);
 
 const goUserInfo = () => {
@@ -52,6 +66,10 @@ const goUserInfo = () => {
     name: "userInfo",
     params: { cusNo: userStore.userInfo?.cusNo },
   });
+};
+
+const openAddPlanModal = () => {
+  commonStore.isOpenAddPlanModal = true;
 };
 </script>
 
