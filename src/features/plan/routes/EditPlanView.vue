@@ -58,7 +58,9 @@
                       "
                     >
                       <Draggable
-                        v-for="course in dailyPlan.dailyPlanDetailDtoList"
+                        v-for="(
+                          course, courseIndex
+                        ) in dailyPlan.dailyPlanDetailDtoList"
                         :key="course.attractionId"
                       >
                         <div class="course-item">
@@ -84,7 +86,13 @@
                               placeholder="여행지에 대한 메모"
                             ></a-input>
                           </div>
-                          <DeleteOutlined />
+                          <a-button
+                            danger
+                            :icon="h(DeleteOutlined)"
+                            @click="
+                              () => deleteItem(dailyPlan.dayNo, courseIndex)
+                            "
+                          ></a-button>
                         </div>
                       </Draggable>
                     </Container>
@@ -109,7 +117,7 @@
 
 <script setup lang="ts">
 import { keywordSearch, mountMap } from "@/lib/mapUtli.js";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, h } from "vue";
 import { requestGetMasterPlan } from "../api/createPlan.js";
 import { usePlanStore } from "@/stores/plan";
 import { Course, MasterPlan, PlanDaily } from "..";
@@ -186,6 +194,10 @@ const addCourses = (attractionList: Attraction[]) => {
     }
   }
   console.log(currentDailyPlan);
+};
+
+const deleteItem = (dayNo: number, courseIndex: number) => {
+  dailyPlanList.value[dayNo - 1].dailyPlanDetailDtoList.splice(courseIndex, 1);
 };
 
 const onDrop = (dayno: number, dropResult: DropResult) => {
