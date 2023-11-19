@@ -30,7 +30,18 @@
       <h2>내 여행 계획</h2>
       <div class="plan-list">
         <div v-for="plan in myPlanList" :key="plan.planMasterId">
-          <div>{{ plan.title }}</div>
+          <div class="plan-card">
+            <div class="first-image transition-all"></div>
+            <h3>{{ plan.title }}</h3>
+            <p>
+              <span>{{ dayjs(plan.startDate).format("DD MMM YYYY") }}</span>
+
+              •
+              <span>{{
+                dayjs(plan.endDate).diff(dayjs(plan.startDate), "day") + 1
+              }}</span>
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -45,6 +56,7 @@ import { MyInfo } from "@/types/user";
 import { onMounted, ref } from "vue";
 import { requestGetPersonalPlan } from "@/features/plan/api";
 import { MasterPlan } from "@/features/plan";
+import * as dayjs from "dayjs";
 
 const userStore = useUserStore();
 const userInfo = ref<MyInfo | undefined>(undefined);
@@ -112,7 +124,7 @@ const handleCopy = () => {
 }
 header {
   background-color: #e6f7ff;
-  padding: 0 200px;
+  padding: 0 20%;
   nav {
     display: flex;
     justify-content: space-between;
@@ -150,9 +162,24 @@ header {
     padding: 1rem 0;
     margin-bottom: 2rem;
   }
-  .cover-image {
+}
+.plan-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding-bottom: 8rem;
+  gap: 1.5rem;
+  .plan-card {
+    width: 100%;
+  }
+
+  .first-image {
     height: 10rem;
     object-fit: cover;
+    background-image: url(https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=a48f007b-043f-4cbc-a706-330ae504b6f1);
+    padding: 1rem;
+    background-position: center;
+    background-size: cover;
+    border-radius: 0.5rem;
   }
 }
 </style>

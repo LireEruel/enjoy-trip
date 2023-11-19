@@ -22,7 +22,8 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: '@import "./src/assets/_colors";',
+        additionalData:
+          '@import "./src/assets/_colors"; @import "./src/assets/_util";',
       },
     },
   },
