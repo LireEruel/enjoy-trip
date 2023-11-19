@@ -13,7 +13,12 @@
               @back="() => null"
             >
               <template #extra>
-                <a-button type="primary" class="save-btn">저장</a-button>
+                <a-button
+                  @click="onClickSaveBtn"
+                  type="primary"
+                  class="save-btn"
+                  >저장</a-button
+                >
               </template>
             </a-page-header>
 
@@ -118,9 +123,9 @@
 <script setup lang="ts">
 import { keywordSearch, mountMap } from "@/lib/mapUtli.js";
 import { onMounted, ref, h } from "vue";
-import { requestGetMasterPlan } from "../api/createPlan.js";
+import { requestEditPlanDetails, requestGetMasterPlan } from "../api";
 import { usePlanStore } from "@/stores/plan";
-import { Course, MasterPlan, PlanDaily } from "..";
+import { Course, DetailPlanParam, MasterPlan, PlanDaily } from "..";
 import * as dayjs from "dayjs";
 import AddCourseModal from "../components/AddCourseModal.vue";
 import { Attraction } from "@/features/attraction";
@@ -177,6 +182,29 @@ const setMiddle = () => {
     setTimeout(() => {
       setMiddle();
     }, 100);
+  }
+};
+const onClickSaveBtn = async () => {
+  const detailPlanPropList: DetailPlanParam[] = [];
+  let orderNo;
+  for (let dailyPlan of dailyPlanList.value) {
+    orderNo = 0;
+    for (let course of dailyPlan.dailyPlanDetailDtoList) {
+      orderNo++;
+      detailPlanPropList.push({
+        dailyPlanId: dailyPlan.dailyPlanId,
+        attractionId: course.attractionId,
+        memo: course.memo,
+        orderNo: orderNo,
+      });
+    }
+  }
+  if (planBase) {
+    const res = await requestEditPlanDetails(
+      planBase.planMasterId,
+      detailPlanPropList
+    );
+    console.log(res);
   }
 };
 const addCourses = (attractionList: Attraction[]) => {
@@ -276,7 +304,7 @@ const onCloseAddCourseModal = () => {
   }
 }
 .destination {
-  height: 80vh;
+  height: 75vh;
   overflow-y: scroll;
 }
 .daily-plan {

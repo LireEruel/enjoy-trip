@@ -43,3 +43,10 @@ export type MasterPlan = {
   writerName: string;
   writerNo: number;
 } & MasterPlanProp;
+
+export type DetailPlanParam = {
+  dailyPlanId: number;
+  attractionId: number;
+  memo: string;
+  orderNo: number;
+};
