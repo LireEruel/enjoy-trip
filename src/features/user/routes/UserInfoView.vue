@@ -26,6 +26,14 @@
         </div>
       </div>
     </header>
+    <section class="my-plan-section">
+      <h2>내 여행 계획</h2>
+      <div class="plan-list">
+        <div v-for="plan in myPlanList" :key="plan.planMasterId">
+          <div>{{ plan.title }}</div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -35,12 +43,15 @@ import { requestGetInviteKey } from "../api";
 import { useUserStore } from "@/stores/user";
 import { MyInfo } from "@/types/user";
 import { onMounted, ref } from "vue";
+import { requestGetPersonalPlan } from "@/features/plan/api";
+import { MasterPlan } from "@/features/plan";
 
 const userStore = useUserStore();
 const userInfo = ref<MyInfo | undefined>(undefined);
 const params = defineProps({ cusNo: { type: Number, required: true } });
 const isMyInfo = ref<boolean>(false);
 const inviteKey = ref("");
+const myPlanList = ref<MasterPlan[]>([]);
 
 const logout = () => {
   userStore.logout();
@@ -52,12 +63,22 @@ onMounted(() => {
     userInfo.value = userStore.userInfo;
   }
   getInviteKey();
+  getMyPlanList();
 });
 
 const getInviteKey = async () => {
   try {
     const res = await requestGetInviteKey(params.cusNo);
     inviteKey.value = res;
+  } catch (error) {
+    Swal.fire("error", "초대키 조회에 실패하였습니다.", "error");
+  }
+};
+
+const getMyPlanList = async () => {
+  try {
+    const res = await requestGetPersonalPlan(params.cusNo);
+    myPlanList.value = res.list;
   } catch (error) {
     Swal.fire("error", "초대키 조회에 실패하였습니다.", "error");
   }
@@ -120,6 +141,18 @@ header {
         @include more-button(0.9em);
       }
     }
+  }
+}
+
+.my-plan-section {
+  padding: 8rem 20%;
+  h2 {
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+  }
+  .cover-image {
+    height: 10rem;
+    object-fit: cover;
   }
 }
 </style>
