@@ -8,6 +8,8 @@ export type Attraction = {
   isMyLove: boolean;
   isPartenerLove: boolean;
   description?: string;
+  latitude: number;
+  longitude: number;
 };
 
 export type AttractionDetail = {

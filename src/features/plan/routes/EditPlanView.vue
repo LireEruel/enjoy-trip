@@ -121,11 +121,11 @@
 </template>
 
 <script setup lang="ts">
-import { keywordSearch, mountMap } from "@/lib/mapUtli.js";
-import { onMounted, ref, h } from "vue";
+import { keywordSearch, mountMap, addMarker } from "@/lib/mapUtli.js";
+import { onMounted, ref, h, watchEffect } from "vue";
 import { requestEditPlanDetails, requestGetMasterPlan } from "../api";
 import { usePlanStore } from "@/stores/plan";
-import { Course, DetailPlanParam, MasterPlan, PlanDaily } from "..";
+import { Course, DetailPlanParam, MasterPlan, DailyPlan } from "..";
 import * as dayjs from "dayjs";
 import AddCourseModal from "../components/AddCourseModal.vue";
 import { Attraction } from "@/features/attraction";
@@ -134,11 +134,10 @@ import { DropResult } from "smooth-dnd";
 import { contentTypeMap } from "@/util/code";
 import { contentTypeColorMap } from "../util/TypeMap";
 import { DeleteOutlined } from "@ant-design/icons-vue";
-let map: null = null;
 const isLoadingMap = ref(true);
 const planStore = usePlanStore();
 const planBase = planStore.currentPlan;
-const dailyPlanList = ref<PlanDaily[]>([]);
+const dailyPlanList = ref<DailyPlan[]>([]);
 const isOpenAddCourseModal = ref(false);
 const selectedDayIndex = ref(-1);
 const MasterPlan = ref<MasterPlan | null>(null);
@@ -146,7 +145,7 @@ const MasterPlan = ref<MasterPlan | null>(null);
 let destination = "";
 
 onMounted(() => {
-  mountMap(map, 37.566826, 126.9786567, 2);
+  mountMap(37.566826, 126.9786567, 2);
   setMiddle();
   getinitialData();
   setDestination();
@@ -163,6 +162,19 @@ const getinitialData = async () => {
     console.error(e);
   }
 };
+
+watchEffect(() => {
+  if (!isLoadingMap.value) {
+    for (let dailyPlan of dailyPlanList.value) {
+      for (let course of dailyPlan.dailyPlanDetailDtoList) {
+        addMarker(
+          course.attractionDto.latitude,
+          course.attractionDto.longitude
+        );
+      }
+    }
+  }
+});
 
 const setDestination = () => {
   if (planBase && planBase.sidoName) {

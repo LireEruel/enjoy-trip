@@ -15,7 +15,7 @@ export type PlanBase = {
   gugunName?: string;
 } & MasterPlanProp;
 
-export type PlanDaily = {
+export type DailyPlan = {
   dailyPlanId: number;
   dayNo: number;
   planDate: string;
@@ -34,7 +34,7 @@ export type Course = {
 };
 
 export type MasterPlan = {
-  dailyPlanDtoList: PlanDaily[];
+  dailyPlanDtoList: DailyPlan[];
   planMasterId: number;
   sidoName: string;
   gugunName: string;

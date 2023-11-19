@@ -10,7 +10,6 @@ let map: any = null;
 let ps: any = null;
 
 const mountMap = async (
-  _map: any,
   _latitude: number,
   _longitude: number,
   _level: number
@@ -18,7 +17,6 @@ const mountMap = async (
   latitude = _latitude;
   longitude = _longitude;
   level = _level;
-  map = _map;
 
   const script = document.createElement("script");
   /* global kakao */
@@ -41,14 +39,19 @@ const initMap = () => {
 };
 
 const addMarker = (latitude: number, longitude: number) => {
-  // 마커가 표시될 위치입니다
-  var markerPosition = new window.kakao.maps.LatLng(latitude, longitude);
+  try {
+    // 마커가 표시될 위치입니다
+    var markerPosition = new window.kakao.maps.LatLng(latitude, longitude);
 
-  // 마커를 생성합니다
-  var marker = new window.kakao.maps.Marker({
-    position: markerPosition,
-  });
-  marker.setMap(map);
+    // 마커를 생성합니다
+    var marker = new window.kakao.maps.Marker({
+      position: markerPosition,
+    });
+    marker.setMap(map);
+    return true;
+  } catch {
+    return false;
+  }
 };
 const keywordSearch = (keyword: string) => {
   try {
