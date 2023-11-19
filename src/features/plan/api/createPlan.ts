@@ -7,9 +7,8 @@ export const requestCreateMasterPlan = (
   return commonAxios.post("/plan/master", params);
 };
 
-export const requestGetMasterPlan = async (
+export const requestGetMasterPlan = (
   planMasterId: number
 ): Promise<MasterPlan> => {
-  const res: any = await commonAxios.get("/plan/master/" + planMasterId);
-  return res[0];
+  return commonAxios.get("/plan/master/" + planMasterId);
 };

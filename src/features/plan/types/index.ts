@@ -1,3 +1,4 @@
+import { Attraction } from "@/features/attraction";
 import type { Dayjs } from "dayjs";
 
 export type MasterPlanProp = {
@@ -23,14 +24,13 @@ export type PlanDaily = {
 };
 
 export type Course = {
+  dailyPlanDetailId?: number;
   dailyPlanId: number;
   attractionId: number;
+  attractionDto: Attraction;
+  reviewId?: number;
   memo: string;
   orderNo?: number;
-  contentTypeId: number;
-  title: string;
-  latitude: number;
-  longitude: number;
 };
 
 export type MasterPlan = {

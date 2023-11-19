@@ -48,7 +48,7 @@
                         v-for="course in dailyPlan.dailyPlanDetailDtoList"
                         :key="course.attractionId"
                       >
-                        <div>{{ course.title }}</div>
+                        <div>{{ course.attractionDto.title }}</div>
                       </Draggable>
                     </Container>
 
@@ -144,11 +144,8 @@ const addCourses = (attractionList: Attraction[]) => {
       const course: Course = {
         dailyPlanId: currentDailyPlan.dailyPlanId,
         attractionId: attraction.contentId,
-        memo: "",
-        contentTypeId: attraction.contentTypeId,
-        title: attraction.title,
-        latitude: 0,
-        longitude: 0,
+        attractionDto: attraction,
+        memo: "메모",
       };
       courseList.push(course);
     }
