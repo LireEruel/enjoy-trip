@@ -26,5 +26,20 @@ export type Course = {
   dailyPlanId: number;
   attractionId: number;
   memo: string;
-  orderNo: number;
+  orderNo?: number;
+  contentTypeId: number;
+  title: string;
+  latitude: number;
+  longitude: number;
 };
+
+export type MasterPlan = {
+  dailyPlanDtoList: PlanDaily[];
+  planMasterId: number;
+  sidoName: string;
+  gugunName: string;
+  registerTime: string;
+  shareYn: string; // Y or N
+  writerName: string;
+  writerNo: number;
+} & MasterPlanProp;

@@ -37,11 +37,7 @@
                       </div>
                     </div>
                     <div class="btn-wrap">
-                      <button
-                        @click="
-                          () => onClickAddCourceBtn(dailyPlan.dailyPlanId)
-                        "
-                      >
+                      <button @click="() => onClickAddCourceBtn(index)">
                         장소 추가
                       </button>
                       <button>메모 추가</button>
@@ -69,10 +65,11 @@ import { keywordSearch, mountMap } from "@/lib/mapUtli.js";
 import { onMounted, ref } from "vue";
 import { requestGetMasterPlan } from "../api/createPlan.js";
 import { usePlanStore } from "@/stores/plan";
-import { PlanDaily } from "..";
+import { Course, MasterPlan, PlanDaily } from "..";
 import * as dayjs from "dayjs";
 import AddCourseModal from "../components/AddCourseModal.vue";
 import { Attraction } from "@/features/attraction";
+import { Container, Draggable } from "vue3-smooth-dnd";
 
 let map: null = null;
 const isLoadingMap = ref(true);
@@ -80,7 +77,8 @@ const planStore = usePlanStore();
 const planBase = planStore.currentPlan;
 const dailyPlanList = ref<PlanDaily[]>([]);
 const isOpenAddCourseModal = ref(false);
-const selectedDay = ref(-1);
+const selectedDayIndex = ref(-1);
+const MasterPlan = ref<MasterPlan | null>(null);
 
 let destination = "";
 
@@ -95,8 +93,8 @@ const getinitialData = async () => {
   try {
     if (planBase) {
       const res = await requestGetMasterPlan(planBase.planMasterId);
-      dailyPlanList.value = res;
       console.log(res);
+      dailyPlanList.value = res.dailyPlanDtoList;
     }
   } catch (e) {
     console.error(e);
@@ -124,12 +122,27 @@ const setMiddle = () => {
   }
 };
 const addCourses = (attractionList: Attraction[]) => {
-  console.log(attractionList);
+  const currentDailyPlan = dailyPlanList.value[selectedDayIndex.value];
+  if (currentDailyPlan) {
+    const courseList = currentDailyPlan.dailyPlanDetailDtoList;
+    for (const attraction of attractionList) {
+      const course: Course = {
+        dailyPlanId: currentDailyPlan.dailyPlanId,
+        attractionId: attraction.contentId,
+        memo: "",
+        contentTypeId: attraction.contentTypeId,
+        title: attraction.title,
+        latitude: 0,
+        longitude: 0,
+      };
+      courseList.push(course);
+    }
+  }
 };
 
 const onClickAddCourceBtn = (dailyPlanId: number) => {
   isOpenAddCourseModal.value = true;
-  selectedDay.value = dailyPlanId;
+  selectedDayIndex.value = dailyPlanId;
 };
 
 const onCloseAddCourseModal = () => {

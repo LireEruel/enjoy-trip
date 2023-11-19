@@ -136,9 +136,11 @@ const getAttractionList = async () => {
       gugunCode: gugunCode,
       pageSize: 15,
     });
-    totalAttractionCount.value = res.totalCount;
-    attractionList.value = [...attractionList.value, ...res.list];
-    currentAttractionCount.value = attractionList.value.length;
+    if (res.list) {
+      totalAttractionCount.value = res.totalCount;
+      attractionList.value = [...attractionList.value, ...res.list];
+      currentAttractionCount.value = attractionList.value.length;
+    }
   } catch (e) {
     console.error(e);
   } finally {
