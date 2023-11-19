@@ -76,15 +76,11 @@
 
 <script setup lang="ts">
 import { Attraction } from "@/features/attraction";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 import { contentTypeMap } from "@/util/code";
 import { requestAttractionList } from "@/features/attraction/api";
 import { contentTypeColorMap } from "../util/TypeMap";
-const { open, sidoCode, gugunCode } = defineProps<{
-  open: boolean;
-  sidoCode: number;
-  gugunCode: number;
-}>();
+
 type PlanAttraction = {
   selected?: boolean;
 } & Attraction;
@@ -96,30 +92,56 @@ const attractionList = ref<PlanAttraction[]>([]);
 const page = ref(1);
 const totalAttractionCount = ref(0);
 const currentAttractionCount = ref(0);
+const { open, sidoCode, gugunCode } = defineProps<{
+  open: boolean;
+  sidoCode: number;
+  gugunCode: number;
+}>();
 
-const reset = () => {
-  inputText.value = "";
-  selectTags.value = [true, false, false, false, false, false, false, false];
-  attractionList.value = [];
-  page.value = 1;
-  totalAttractionCount.value = 0;
-  currentAttractionCount.value = 0;
-};
+// watchEffect(() => {
+//   console.log(open);
+//   if (open) {
+//     reset();
+//     getAttractionList();
+//   }
+// });
+
+// todo: watch 잘 되도록 수정
+
+onMounted(() => {
+  getAttractionList();
+});
+
+watchEffect(() => {
+  const trueIndex = selectTags.value.findIndex((tag) => tag == true);
+  if (trueIndex == -1) {
+    selectTags.value[0] = true;
+  }
+});
+
+// const reset = () => {
+//   inputText.value = "";
+//   selectTags.value = [true, false, false, false, false, false, false, false];
+//   attractionList.value = [];
+//   page.value = 1;
+//   totalAttractionCount.value = 0;
+//   currentAttractionCount.value = 0;
+// };
 
 const onSearch = () => {
   resetPagination();
   inputText.value = "";
 };
 
-onMounted(() => {
-  getAttractionList();
-});
 const getAttractionList = async () => {
   try {
-    const selectedTags = selectTags.value
+    let selectedTags = selectTags.value
       .map((isSelected, index) => (isSelected ? tagsData.value[index] : null))
       .filter((tag) => tag !== null);
-
+    if (selectedTags.length == 0) {
+      selectedTags = [tagsData.value[0]];
+      selectTags.value[0] = true;
+    }
     const res = await requestAttractionList({
       title: inputText.value,
       contentTypeId: selectedTags,
@@ -162,7 +184,6 @@ const onOkModal = () => {
     (attraction) => attraction.selected
   );
   emit("addCourses", selectedAttraction);
-  reset();
   emit("onClose");
 };
 </script>

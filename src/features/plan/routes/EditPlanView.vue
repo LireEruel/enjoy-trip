@@ -84,7 +84,7 @@
                               placeholder="여행지에 대한 메모"
                             ></a-input>
                           </div>
-                          <MenuOutlined />
+                          <DeleteOutlined />
                         </div>
                       </Draggable>
                     </Container>
@@ -97,6 +97,7 @@
       </a-col>
     </a-row>
     <AddCourseModal
+      v-if="isOpenAddCourseModal"
       :open="isOpenAddCourseModal"
       :sido-code="planBase?.sidoCode ? planBase?.sidoCode : -1"
       :gugun-code="planBase?.gugunCode ? planBase?.gugunCode : -1"
@@ -119,7 +120,7 @@ import { Container, Draggable } from "vue3-smooth-dnd";
 import { DropResult } from "smooth-dnd";
 import { contentTypeMap } from "@/util/code";
 import { contentTypeColorMap } from "../util/TypeMap";
-import { MenuOutlined } from "@ant-design/icons-vue";
+import { DeleteOutlined } from "@ant-design/icons-vue";
 let map: null = null;
 const isLoadingMap = ref(true);
 const planStore = usePlanStore();
