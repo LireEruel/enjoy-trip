@@ -12,7 +12,11 @@
               :sub-title="`${planBase?.startDate} - ${planBase?.endDate}`"
               @back="() => null"
             >
+              <template #extra>
+                <a-button type="primary" class="save-btn">저장</a-button>
+              </template>
             </a-page-header>
+
             <div class="destination">
               <div class="plan-main">
                 <div class="sub-title">
@@ -28,14 +32,23 @@
                     class="daily-plan"
                   >
                     <div class="daily-plan-content">
-                      <div class="day-count">
-                        <font-awesome-icon icon="paper-plane" />
-                        <span> Day{{ index + 1 }}</span>
+                      <div>
+                        <div class="day-count">
+                          <font-awesome-icon icon="paper-plane" />
+                          <span> Day{{ index + 1 }}</span>
+                        </div>
+                        <div class="date">
+                          {{ dayjs(dailyPlan.planDate).format("YYYY.MM.DD") }}
+                        </div>
                       </div>
-                      <div class="date">
-                        {{ dayjs(dailyPlan.planDate).format("YYYY.MM.DD") }}
-                      </div>
+
+                      <a-button @click="() => onClickAddCourceBtn(index)">
+                        장소 추가
+                      </a-button>
                     </div>
+                    <a-empty
+                      v-show="dailyPlan.dailyPlanDetailDtoList.length == 0"
+                    />
                     <Container
                       :group-name="'1'"
                       @drop="onDrop(dailyPlan.dayNo, $event)"
@@ -48,15 +61,33 @@
                         v-for="course in dailyPlan.dailyPlanDetailDtoList"
                         :key="course.attractionId"
                       >
-                        <div>{{ course.attractionDto.title }}</div>
+                        <div class="course-item">
+                          <div class="item-content">
+                            <p class="course-title">
+                              {{ course.attractionDto.title }}
+                              <a-tag
+                                :color="
+                                  contentTypeColorMap.get(
+                                    course.attractionDto.contentTypeId
+                                  )
+                                "
+                                class="content-type-tag"
+                                >{{
+                                  contentTypeMap.get(
+                                    course.attractionDto.contentTypeId
+                                  )
+                                }}
+                              </a-tag>
+                            </p>
+                            <a-input
+                              v-model:value="course.memo"
+                              placeholder="여행지에 대한 메모"
+                            ></a-input>
+                          </div>
+                          <MenuOutlined />
+                        </div>
                       </Draggable>
                     </Container>
-
-                    <div class="btn-wrap">
-                      <button @click="() => onClickAddCourceBtn(index)">
-                        장소 추가
-                      </button>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -86,6 +117,9 @@ import AddCourseModal from "../components/AddCourseModal.vue";
 import { Attraction } from "@/features/attraction";
 import { Container, Draggable } from "vue3-smooth-dnd";
 import { DropResult } from "smooth-dnd";
+import { contentTypeMap } from "@/util/code";
+import { contentTypeColorMap } from "../util/TypeMap";
+import { MenuOutlined } from "@ant-design/icons-vue";
 let map: null = null;
 const isLoadingMap = ref(true);
 const planStore = usePlanStore();
@@ -145,7 +179,7 @@ const addCourses = (attractionList: Attraction[]) => {
         dailyPlanId: currentDailyPlan.dailyPlanId,
         attractionId: attraction.contentId,
         attractionDto: attraction,
-        memo: "메모",
+        memo: "",
       };
       courseList.push(course);
     }
@@ -161,7 +195,6 @@ const onDrop = (dayno: number, dropResult: DropResult) => {
 };
 
 const applyDrag = (arr: Course[], dragResult: DropResult) => {
-  console.log("applyDrag", dragResult);
   const { removedIndex, addedIndex, payload } = dragResult;
   if (removedIndex === null && addedIndex === null) return arr;
   const result = [...arr];
@@ -207,7 +240,7 @@ const onCloseAddCourseModal = () => {
 }
 
 .plan-main {
-  padding: 2rem;
+  padding: 0 2rem 2rem 2rem;
 }
 
 .sub-title {
@@ -229,7 +262,10 @@ const onCloseAddCourseModal = () => {
     font-weight: 600;
   }
 }
-
+.destination {
+  height: 80vh;
+  overflow-y: scroll;
+}
 .daily-plan {
   .daily-plan-content {
     height: auto;
@@ -237,6 +273,10 @@ const onCloseAddCourseModal = () => {
     -webkit-box-align: center;
     align-items: center;
     margin-top: 2rem;
+    justify-content: space-between;
+    > div {
+      display: flex;
+    }
     .day-count {
       display: flex;
       width: auto;
@@ -284,36 +324,30 @@ const onCloseAddCourseModal = () => {
       }
     }
   }
-  .btn-wrap {
+}
+.course-item {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid $gray-5;
+  cursor: pointer;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 0px 5px 0px,
+    rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+  border-radius: 0.7rem;
+  background-color: white;
+  margin: 0.5rem 0;
+  transition: 0.2s linear;
+  &:hover {
+    box-shadow:
+      rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+      rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  }
+  .item-content {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 2rem;
-    gap: 2rem;
-    button {
-      border-radius: 12px;
-      background: linear-gradient(145deg, #ffffff, #e6e6e6);
-      box-shadow:
-        7px 7px 11px #dbdbdb,
-        -7px -7px 11px #ffffff;
-      border: none;
-      padding: 1rem;
-      color: $gray-10;
-      &:hover {
-        border-radius: 12px;
-        background: #ffffff;
-        box-shadow:
-          7px 7px 11px #dbdbdb,
-          -7px -7px 11px #ffffff;
-      }
-      &:active {
-        border-radius: 14px;
-        background: linear-gradient(145deg, #e6e6e6, #ffffff);
-        box-shadow:
-          8px 8px 17px #dbdbdb,
-          -8px -8px 17px #ffffff;
-      }
-    }
+    flex-direction: column;
+    gap: 1rem;
+    width: 80%;
   }
 }
 </style>

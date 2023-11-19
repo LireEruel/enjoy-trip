@@ -27,7 +27,6 @@
     </div>
     <div v-show="step == 2" class="range-selecter">
       <a-range-picker v-model:value="selectedRange" />
-
       <h2 class="content-title">이번 여행의 이름이 무엇인가요?</h2>
       <a-input v-model:value="addPlanState.title"></a-input>
     </div>

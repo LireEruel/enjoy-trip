@@ -77,8 +77,9 @@
 <script setup lang="ts">
 import { Attraction } from "@/features/attraction";
 import { onMounted, ref } from "vue";
-import { CONTENT_TYPE, contentTypeMap } from "@/util/code";
+import { contentTypeMap } from "@/util/code";
 import { requestAttractionList } from "@/features/attraction/api";
+import { contentTypeColorMap } from "../util/TypeMap";
 const { open, sidoCode, gugunCode } = defineProps<{
   open: boolean;
   sidoCode: number;
@@ -95,16 +96,7 @@ const attractionList = ref<PlanAttraction[]>([]);
 const page = ref(1);
 const totalAttractionCount = ref(0);
 const currentAttractionCount = ref(0);
-const contentTypeColorMap = new Map<number, string>([
-  [CONTENT_TYPE.관광지, "blue"],
-  [CONTENT_TYPE.문화시설, "purple"],
-  [CONTENT_TYPE.축제공연행사, "cyan"],
-  [CONTENT_TYPE.여행코스, "pink"],
-  [CONTENT_TYPE.레포츠, "pink"],
-  [CONTENT_TYPE.숙박, "orange"],
-  [CONTENT_TYPE.쇼핑, "red"],
-  [CONTENT_TYPE.음식점, "green"],
-]);
+
 const reset = () => {
   inputText.value = "";
   selectTags.value = [true, false, false, false, false, false, false, false];
