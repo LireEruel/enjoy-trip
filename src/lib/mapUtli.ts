@@ -46,6 +46,7 @@ const addMarker = (latitude: number, longitude: number) => {
     // 마커를 생성합니다
     var marker = new window.kakao.maps.Marker({
       position: markerPosition,
+      text: "텍스트를 표시할 수 있어요!",
     });
     marker.setMap(map);
     return true;

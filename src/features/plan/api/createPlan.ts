@@ -17,5 +17,5 @@ export const requestEditPlanDetails = (
   planMasterId: number,
   params: DetailPlanParam[]
 ) => {
-  return commonAxios.post("/plan/detail/" + planMasterId, params);
+  return commonAxios.put("/plan/master/" + planMasterId, params);
 };

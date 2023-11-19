@@ -163,19 +163,6 @@ const getinitialData = async () => {
   }
 };
 
-watchEffect(() => {
-  if (!isLoadingMap.value) {
-    for (let dailyPlan of dailyPlanList.value) {
-      for (let course of dailyPlan.dailyPlanDetailDtoList) {
-        addMarker(
-          course.attractionDto.latitude,
-          course.attractionDto.longitude
-        );
-      }
-    }
-  }
-});
-
 const setDestination = () => {
   if (planBase && planBase.sidoName) {
     destination += planBase.sidoName;
@@ -190,12 +177,27 @@ const setMiddle = () => {
   const res = keywordSearch(destination);
   if (res) {
     isLoadingMap.value = false;
+    setMarker();
   } else {
     setTimeout(() => {
       setMiddle();
     }, 100);
   }
 };
+
+const setMarker = () => {
+  if (!isLoadingMap.value) {
+    for (let dailyPlan of dailyPlanList.value) {
+      for (let course of dailyPlan.dailyPlanDetailDtoList) {
+        addMarker(
+          course.attractionDto.latitude,
+          course.attractionDto.longitude
+        );
+      }
+    }
+  }
+};
+
 const onClickSaveBtn = async () => {
   const detailPlanPropList: DetailPlanParam[] = [];
   let orderNo;
@@ -233,7 +235,7 @@ const addCourses = (attractionList: Attraction[]) => {
       courseList.push(course);
     }
   }
-  console.log(currentDailyPlan);
+  setMarker();
 };
 
 const deleteItem = (dayNo: number, courseIndex: number) => {
