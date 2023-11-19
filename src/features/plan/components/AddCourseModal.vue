@@ -133,7 +133,7 @@ const getAttractionList = async () => {
       contentTypeId: selectedTags,
       pgno: page.value,
       sidoCode: sidoCode,
-      gugunCode: gugunCode,
+      gugunCode: gugunCode > -1 ? gugunCode : undefined,
       pageSize: 15,
     });
     if (res.list) {

@@ -36,11 +36,26 @@
                         {{ dayjs(dailyPlan.planDate).format("YYYY.MM.DD") }}
                       </div>
                     </div>
+                    <Container
+                      :group-name="'' + dailyPlan.dailyPlanId"
+                      @drop="onDrop(dailyPlan.dayNo, $event)"
+                      :get-child-payload="
+                        (childIndex: number) =>
+                          getChildPayload(index, childIndex)
+                      "
+                    >
+                      <Draggable
+                        v-for="course in dailyPlan.dailyPlanDetailDtoList"
+                        :key="course.attractionId"
+                      >
+                        <div>{{ course.title }}</div>
+                      </Draggable>
+                    </Container>
+
                     <div class="btn-wrap">
                       <button @click="() => onClickAddCourceBtn(index)">
                         장소 추가
                       </button>
-                      <button>메모 추가</button>
                     </div>
                   </div>
                 </div>
@@ -70,7 +85,7 @@ import * as dayjs from "dayjs";
 import AddCourseModal from "../components/AddCourseModal.vue";
 import { Attraction } from "@/features/attraction";
 import { Container, Draggable } from "vue3-smooth-dnd";
-
+import { DropResult } from "smooth-dnd";
 let map: null = null;
 const isLoadingMap = ref(true);
 const planStore = usePlanStore();
@@ -138,6 +153,35 @@ const addCourses = (attractionList: Attraction[]) => {
       courseList.push(course);
     }
   }
+  console.log(currentDailyPlan);
+};
+
+const onDrop = (dayno: number, dropResult: DropResult) => {
+  dailyPlanList.value[dayno - 1].dailyPlanDetailDtoList = applyDrag(
+    dailyPlanList.value[dayno - 1].dailyPlanDetailDtoList,
+    dropResult
+  );
+};
+
+const applyDrag = (arr: Course[], dragResult: DropResult) => {
+  console.log("applyDrag", dragResult);
+  const { removedIndex, addedIndex, payload } = dragResult;
+  if (removedIndex === null && addedIndex === null) return arr;
+  const result = [...arr];
+  let itemToAdd = payload;
+  if (removedIndex !== null) {
+    itemToAdd = result.splice(removedIndex, 1)[0];
+  }
+  if (addedIndex !== null) {
+    result.splice(addedIndex, 0, itemToAdd);
+  }
+  return result;
+};
+
+const getChildPayload = (dailyPlanIndex: number, courseIndex: number) => {
+  return dailyPlanList.value[dailyPlanIndex].dailyPlanDetailDtoList[
+    courseIndex
+  ];
 };
 
 const onClickAddCourceBtn = (dailyPlanId: number) => {
