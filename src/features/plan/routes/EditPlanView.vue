@@ -37,7 +37,7 @@
                       </div>
                     </div>
                     <Container
-                      :group-name="'' + dailyPlan.dailyPlanId"
+                      :group-name="'1'"
                       @drop="onDrop(dailyPlan.dayNo, $event)"
                       :get-child-payload="
                         (childIndex: number) =>
