@@ -11,6 +11,7 @@
     <router-view class="footer" name="footer" />
   </div>
   <chat-window :is-open="isOpenChat" @close-chat="onCloseChat"></chat-window>
+  <add-plan-modal></add-plan-modal>
 </template>
 
 <style lang="scss" scoped>
@@ -33,6 +34,7 @@
 import { RouterView } from "vue-router";
 import { ChatWindow } from "./features/chat";
 import { ref } from "vue";
+import AddPlanModal from "@/features/plan/components/AddPlanModal.vue";
 
 const isOpenChat = ref(false);
 

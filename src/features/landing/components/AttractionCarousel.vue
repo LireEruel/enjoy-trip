@@ -49,6 +49,7 @@
           :height="300"
           :width="300"
           :preview="false"
+          @click="() => goDetail(attraction.contentId)"
         >
           <template #placeholder>
             <a-spin class="card-loading" />
@@ -63,9 +64,10 @@
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
 import { computed, ref, watch } from "vue";
-import { requestAttractionList } from "../api";
+import { requestAttractionList } from "@/features/attraction";
 import { Attraction } from "..";
-import { sidoGugunMap, sidoCodeList } from "../../../util/code";
+import { sidoGugunMap, sidoCodeList } from "@/util/code";
+import { useRouter } from "vue-router";
 
 const modules = [EffectCoverflow, Pagination, Autoplay];
 const bestAttractions = [
@@ -158,16 +160,20 @@ const bestAttractions = [
     isPartenerLove: false,
   },
 ];
+const router = useRouter();
 const attractionList = ref<Attraction[]>(bestAttractions);
 const page = ref(1);
 const sidoList = [{ key: 0, name: "대한민국" }, ...sidoCodeList];
 const selectedSido = ref(0);
 const gugunList = computed(() => {
-  const newGugunList = sidoGugunMap.find(
-    (gugunInfo) => gugunInfo.sidoKey == selectedSido.value
-  )?.gugunList;
-  if (newGugunList) return [{ key: 0, name: "전체" }, ...newGugunList];
-  else return [{ key: 0, name: "전체" }];
+  const gugunMap = sidoGugunMap.get(selectedSido.value);
+  if (gugunMap) {
+    const newGugunList = Array.from(gugunMap).map(([key, name]) => ({
+      key,
+      name,
+    }));
+    return [{ key: 0, name: "전체" }, ...newGugunList];
+  } else return [{ key: 0, name: "전체" }];
 });
 const selectedGugun = ref(0);
 
@@ -193,6 +199,10 @@ const getAttractionList = async () => {
       attractionList.value = res.list;
     }
   } catch (e) {}
+};
+
+const goDetail = (id: number) => {
+  router.push("/attraction/" + id);
 };
 </script>
 

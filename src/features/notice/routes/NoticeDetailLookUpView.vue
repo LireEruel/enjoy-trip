@@ -26,16 +26,16 @@
       </div>
       <a-empty v-else></a-empty>
       <footer>
-        <a href="/notice/list">목록으로</a>
+        <a href="/notice">목록으로</a>
       </footer>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import Swal from "sweetalert2";
-import { requestGetNoticeDetail, requestDeleteNotice } from "../api";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { requestDeleteNotice, requestGetNoticeDetail } from "../api";
 
 const props = defineProps<{ noticeId: number }>();
 const onLoadingNoticeDetail = ref(false);

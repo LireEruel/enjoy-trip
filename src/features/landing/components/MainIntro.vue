@@ -10,8 +10,13 @@
               class="slider-item"
               v-bind:class="{ active: currentId == item.id }"
             >
-              <a-row :gutter="24" class="item-content" align="middle">
-                <a-col class="gutter-row" :span="4">
+              <a-row
+                :gutter="24"
+                class="item-content"
+                align="middle"
+                justify="center"
+              >
+                <a-col class="gutter-row hide-mobile" :span="4">
                   <div class="intro">
                     <a href="#">
                       <h1 class="title">
@@ -44,20 +49,6 @@
               </a-row>
             </li>
           </ul>
-          <!-- <a-row>
-            <a-col :span="24">
-              <div class="controls">
-                <button class="previous" @click="onClickPrevious">
-                  <span class="visually-hidden">Previous</span>
-                  <span class="icon arrow-left" aria-hidden="true"></span>
-                </button>
-                <button class="next" @click="onClickAfter">
-                  <span class="visually-hidden">Next</span>
-                  <span class="icon arrow-right" aria-hidden="true"></span>
-                </button>
-              </div>
-            </a-col>
-          </a-row> -->
         </a-col>
       </a-row>
     </div>
@@ -494,6 +485,12 @@ button {
         }
       }
     }
+  }
+}
+
+@media (max-width: $md) {
+  .hide-mobile {
+    display: none;
   }
 }
 

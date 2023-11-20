@@ -6,11 +6,11 @@
       </div>
       <div class="nav-right">
         <a-menu v-model:selectedKeys="menuKey" class="menu" mode="horizontal">
-          <a-menu-item key="/">
+          <a-menu-item key="/notice">
             <router-link to="/notice"> 공지사항 </router-link>
           </a-menu-item>
-          <a-menu-item key="/#">
-            <router-link to="/#"> MenuItem2 </router-link>
+          <a-menu-item key="/attraction/list">
+            <router-link to="/attraction/list"> 관광지 목록 </router-link>
           </a-menu-item>
         </a-menu>
         <div v-if="userStore.userInfo" class="right-buttons-wrap">
@@ -25,6 +25,19 @@
             :icon="h(UserOutlined)"
             @click="goUserInfo"
           />
+          <a-dropdown :trigger="['click']">
+            <a-button type="primary">생성하기</a-button>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item key="0" @click="openAddPlanModal">
+                  <p>여행 계획 작성</p>
+                </a-menu-item>
+                <a-menu-item key="1">
+                  <p>여행 후기 작성</p>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
         </div>
         <div v-else>
           <a-button class="login-button" @click="goLogin" size="large">
@@ -47,14 +60,16 @@ import {
   BellOutlined,
 } from "@ant-design/icons-vue";
 import { useUserStore } from "@/stores/user";
+import { useCommonStore } from "@/stores/common";
 const router = useRouter();
 
 const goLogin = () => {
-  router.push("login");
+  router.push("/login");
 };
 const userStore = useUserStore();
 const emit = defineEmits(["on-click-chat-btn"]);
 
+const commonStore = useCommonStore();
 const menuKey = ref<string[]>([window.location.pathname]);
 
 const goUserInfo = () => {
@@ -62,6 +77,10 @@ const goUserInfo = () => {
     name: "userInfo",
     params: { cusNo: userStore.userInfo?.cusNo },
   });
+};
+
+const openAddPlanModal = () => {
+  commonStore.isOpenAddPlanModal = true;
 };
 </script>
 
