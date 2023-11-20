@@ -38,18 +38,7 @@ const props = defineProps({ isOpen: { type: Boolean, required: true } });
 const emit = defineEmits(["close-chat"]);
 
 const inputChat = ref("");
-const chatArray = ref<Chat[]>([
-  {
-    senderNo: 4,
-    sendTime: "ss",
-    content: "안녕",
-  },
-  {
-    senderNo: 5,
-    sendTime: "ss",
-    content: "ㅎㅇㅎㅇ",
-  },
-]);
+const chatArray = ref<Chat[]>([]);
 onMounted(() => {
   connect();
 });
@@ -67,9 +56,10 @@ const connect = () => {
   client.current.activate();
 };
 const subscribe = () => {
-  client.current.subscribe(`/sub/1`, (body: any) => {
+  client.current.subscribe(`/sub/chats/1`, (body: any) => {
     const json_body = JSON.parse(body.body);
     chatArray.value = [...chatArray.value, json_body];
+    console.log(body);
   });
 };
 
@@ -84,15 +74,14 @@ const handleSubmit = (e: Event) => {
 };
 
 const publish = (message: string) => {
-  console.log(client.current.connected);
   if (!client.current.connected) return; // 연결되지 않았으면 메시지를 보내지 않는다.
 
   if (userInfo.value?.cusNo)
     client.current.publish({
-      destination: `/pub/chats/messages/1`,
+      destination: `/pub/chats/messages`,
       body: JSON.stringify({
         roomId: 1,
-        senderId: userInfo?.value.cusNo,
+        senderNo: userInfo?.value.cusNo,
         content: message,
       }),
     });
