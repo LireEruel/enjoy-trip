@@ -107,7 +107,7 @@ onMounted(async () => {
     // TODO : 남의 정보 받아옴.
   }
 
-  if (userStore.userInfo?.partnerCusNo) {
+  if (!userStore.userInfo?.partnerCusNo) {
     getInviteKey();
     const res = await requestGetRequestRelationList();
     console.log(res);
