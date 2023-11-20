@@ -1,27 +1,13 @@
-import Stomp from "webstomp-client";
-import SockJS from "sockjs-client";
+import * as StompJs from "@stomp/stompjs";
 
-let connected = false;
-export const connect = () => {
-  const serverURL = `${import.meta.env.VITE_SERVER_URL}/ws`;
-  let socket = new SockJS(serverURL);
-  console.log(socket);
-  const stompClient = Stomp.over(socket);
-  console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
-
-  stompClient.connect(
-    {},
-    (frame) => {
-      connected = true;
-      console.log("소켓 연결 성공", frame);
-      stompClient.subscribe("/send", (res) => {
-        console.log("구독으로 받은 메시지 입니다.", res.body);
-        //recvList.push(JSON.parse(res.body));
-      });
+const client: any = {};
+export const connect = (accessToken: string) => {
+  client.current = new StompJs.Client({
+    brokerURL: process.env.REACT_APP_CHAT_API,
+    connectHeaders: { Authorization: accessToken },
+    onConnect: () => {
+      console.log("success");
     },
-    (error) => {
-      console.log("소켓 연결 실패", error);
-      connected = false;
-    }
-  );
+  });
+  client.current.activate();
 };

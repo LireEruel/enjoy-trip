@@ -44,7 +44,7 @@ const userInfo = userStore.userInfo;
 
 watchEffect(() => {
   if (userInfo) {
-    connect();
+    connect(userInfo.accessToken);
   }
 });
 const onClickChatBtn = () => {
