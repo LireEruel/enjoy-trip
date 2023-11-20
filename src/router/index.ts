@@ -94,7 +94,7 @@ const router = createRouter({
       props: true,
     },
     {
-      path: "/plan/edit",
+      path: "/plan/edit/",
       name: "editPlan",
       components: {
         header: TheHeader,

@@ -36,8 +36,6 @@ export type Course = {
 export type MasterPlan = {
   dailyPlanDtoList: DailyPlan[];
   planMasterId: number;
-  sidoName: string;
-  gugunName: string;
   registerTime: string;
   shareYn: string; // Y or N
   writerName: string;

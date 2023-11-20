@@ -166,11 +166,14 @@ const page = ref(1);
 const sidoList = [{ key: 0, name: "대한민국" }, ...sidoCodeList];
 const selectedSido = ref(0);
 const gugunList = computed(() => {
-  const newGugunList = sidoGugunMap.find(
-    (gugunInfo) => gugunInfo.sidoKey == selectedSido.value
-  )?.gugunList;
-  if (newGugunList) return [{ key: 0, name: "전체" }, ...newGugunList];
-  else return [{ key: 0, name: "전체" }];
+  const gugunMap = sidoGugunMap.get(selectedSido.value);
+  if (gugunMap) {
+    const newGugunList = Array.from(gugunMap).map(([key, name]) => ({
+      key,
+      name,
+    }));
+    return [{ key: 0, name: "전체" }, ...newGugunList];
+  } else return [{ key: 0, name: "전체" }];
 });
 const selectedGugun = ref(0);
 
