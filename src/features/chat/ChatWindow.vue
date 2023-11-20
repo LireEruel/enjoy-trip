@@ -12,12 +12,7 @@
         :bordered="false"
         @keyup.enter="handleSubmit"
       />
-      <a-button
-        shape="circle"
-        :icon="h(SendOutlined)"
-        type="primary"
-        @click="handleSubmit"
-      />
+      <a-button :icon="h(SendOutlined)" type="primary" @click="handleSubmit" />
     </a-input-group>
   </div>
 </template>
