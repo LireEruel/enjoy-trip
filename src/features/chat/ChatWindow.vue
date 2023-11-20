@@ -5,7 +5,7 @@
       <h3>{{ userInfo?.partnerName }}</h3>
       <CloseOutlined @click="emit('close-chat')" />
     </header>
-    <chat-list :data-source="chatList"></chat-list>
+    <chat-list :chat-list="chatArray"></chat-list>
     <a-input-group compact class="input-wrap">
       <a-input
         v-model:value="inputChat"
@@ -29,15 +29,16 @@ import { ChatList } from "./components";
 import { h, onMounted, ref } from "vue";
 import { Chat } from "./types";
 import * as StompJs from "@stomp/stompjs";
+import { MyInfo } from "@/types/user";
 
 const client: any = {};
 const userStore = useUserStore();
-const userInfo = userStore.userInfo;
+const userInfo = ref<undefined | MyInfo>(userStore.userInfo);
 const props = defineProps({ isOpen: { type: Boolean, required: true } });
 const emit = defineEmits(["close-chat"]);
 
 const inputChat = ref("");
-const chatList = ref<Chat[]>([
+const chatArray = ref<Chat[]>([
   {
     senderNo: 4,
     sendTime: "ss",
@@ -54,10 +55,10 @@ onMounted(() => {
 });
 
 const connect = () => {
-  if (userInfo)
+  if (userInfo.value)
     client.current = new StompJs.Client({
       brokerURL: import.meta.env.VITE_SERVER_SOCKET_URL + "/ws",
-      connectHeaders: { Authorization: userInfo.accessToken },
+      connectHeaders: { Authorization: userInfo.value?.accessToken },
       onConnect: () => {
         console.log("success");
         subscribe();
@@ -68,7 +69,7 @@ const connect = () => {
 const subscribe = () => {
   client.current.subscribe(`/sub/1`, (body: any) => {
     const json_body = JSON.parse(body.body);
-    chatList.value = [...chatList.value, json_body];
+    chatArray.value = [...chatArray.value, json_body];
   });
 };
 
@@ -86,14 +87,15 @@ const publish = (message: string) => {
   console.log(client.current.connected);
   if (!client.current.connected) return; // 연결되지 않았으면 메시지를 보내지 않는다.
 
-  client.current.publish({
-    destination: `/pub/chats/messages/1`,
-    body: JSON.stringify({
-      roomId: 1,
-      senderId: userInfo?.cusNo,
-      content: message,
-    }),
-  });
+  if (userInfo.value?.cusNo)
+    client.current.publish({
+      destination: `/pub/chats/messages/1`,
+      body: JSON.stringify({
+        roomId: 1,
+        senderId: userInfo?.value.cusNo,
+        content: message,
+      }),
+    });
   inputChat.value = "";
 };
 </script>

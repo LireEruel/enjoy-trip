@@ -1,6 +1,6 @@
 <template>
   <div class="chat-list">
-    <div v-for="(chat, index) in props.dataSource" :key="index">
+    <div v-for="(chat, index) in props.chatList" :key="index">
       <chat-list-my-chat
         v-if="userInfo?.cusNo == chat.senderNo"
         :chat="chat"
@@ -15,10 +15,10 @@ import { Chat } from "../types";
 import { ChatListMyChat, ChatListPartnerChat } from "./";
 const userStore = useUserStore();
 const userInfo = userStore.userInfo;
-
 const props = defineProps({
-  dataSource: Array<Chat>,
+  chatList: Array<Chat>,
 });
+console.log(props);
 </script>
 
 <style scoped lang="scss">
