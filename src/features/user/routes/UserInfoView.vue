@@ -22,6 +22,7 @@
           </span>
           <span v-else>
             <a @click="handleCopy" :value="inviteKey">애인 초대키 복사</a>
+            <a @click="onClickSubmitInviteKeyBtn">애인 초대키 입력</a>
           </span>
         </div>
       </div>
@@ -63,7 +64,11 @@
 
 <script setup lang="ts">
 import Swal from "sweetalert2";
-import { requestGetInviteKey } from "../api";
+import {
+  requestGetInviteKey,
+  requestGetRequestRelationList,
+  requestSubmitInviteKey,
+} from "../api";
 import { EffectCoverflow, Pagination } from "swiper/modules";
 import { useUserStore } from "@/stores/user";
 import { MyInfo } from "@/types/user";
@@ -92,7 +97,7 @@ const logout = () => {
   router.push("/");
 };
 
-onMounted(() => {
+onMounted(async () => {
   // 내 정보인지 확인
   isMyInfo.value = userStore.userInfo?.cusNo === cusNo;
   if (isMyInfo.value) {
@@ -101,11 +106,42 @@ onMounted(() => {
   } else {
     // TODO : 남의 정보 받아옴.
   }
+
   if (userStore.userInfo?.partnerCusNo) {
     getInviteKey();
+    const res = await requestGetRequestRelationList();
+    console.log(res);
   }
   getMyPlanList();
 });
+
+const onClickSubmitInviteKeyBtn = () => {
+  Swal.fire({
+    title: "공유받은 초대키를 입력해주세요.",
+    input: "text",
+    inputAttributes: {
+      autocapitalize: "off",
+    },
+    showCancelButton: true,
+    confirmButtonText: "Submit",
+    showLoaderOnConfirm: true,
+    preConfirm: async (key: string) => {
+      try {
+        const res = await requestSubmitInviteKey(key);
+        console.log(res);
+      } catch {
+        Swal.showValidationMessage(`
+        초대키를 다시 확인해주세요.
+      `);
+      }
+    },
+    allowOutsideClick: () => !Swal.isLoading(),
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire("요청 성공!", "애인 등록 요청이 성공하였습니다.", "success");
+    }
+  });
+};
 
 const getInviteKey = async () => {
   try {
