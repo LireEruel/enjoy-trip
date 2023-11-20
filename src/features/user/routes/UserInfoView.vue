@@ -101,7 +101,7 @@ onMounted(() => {
 
 const getInviteKey = async () => {
   try {
-    const res = await requestGetInviteKey(cusNo);
+    const res = await requestGetInviteKey();
     inviteKey.value = res;
   } catch (error) {
     Swal.fire("error", "초대키 조회에 실패하였습니다.", "error");
