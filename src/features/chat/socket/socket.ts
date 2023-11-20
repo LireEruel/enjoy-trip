@@ -3,7 +3,7 @@ import SockJS from "sockjs-client";
 
 let connected = false;
 export const connect = () => {
-  const serverURL = "http://219.255.6.129:23333/ws";
+  const serverURL = `${import.meta.env.VITE_SERVER_URL}/ws`;
   let socket = new SockJS(serverURL);
   console.log(socket);
   const stompClient = Stomp.over(socket);
