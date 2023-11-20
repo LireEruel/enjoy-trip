@@ -1,7 +1,6 @@
 <template>
   <div v-show="props.isOpen" class="chat-window">
     <header>
-      <div />
       <h3>{{ userInfo?.partnerName }}</h3>
       <CloseOutlined @click="emit('close-chat')" />
     </header>
@@ -112,7 +111,9 @@ header {
   justify-content: space-between;
   align-items: center;
   height: 50px;
-  background-color: $blue-1;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
   padding: 0 1em;
   h3 {
     font-size: 1rem;
