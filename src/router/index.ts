@@ -94,13 +94,14 @@ const router = createRouter({
       props: true,
     },
     {
-      path: "/plan/edit",
+      path: "/plan/edit/:planMasterId",
       name: "editPlan",
       components: {
         header: TheHeader,
         body: EditPlanView,
         footer: TheFooter,
       },
+      props: true,
     },
   ],
 });

@@ -35,7 +35,7 @@ import { sidoGugunMap, sidoCodeList } from "@/util/code";
 import { Attraction } from "../types";
 import { requestAttractionList } from "../api";
 import AttractionList from "../components/AttractionList.vue";
-const bestAttractions = [
+const bestAttractions: Attraction[] = [
   {
     contentId: 317503,
     contentTypeId: 12,
@@ -46,6 +46,8 @@ const bestAttractions = [
     addr2: "",
     isMyLove: false,
     isPartenerLove: false,
+    latitude: 0,
+    longitude: 0,
   },
   {
     contentId: 572968,
@@ -57,6 +59,8 @@ const bestAttractions = [
     addr2: "",
     isMyLove: false,
     isPartenerLove: false,
+    latitude: 0,
+    longitude: 0,
   },
   {
     contentId: 2606216,
@@ -68,6 +72,8 @@ const bestAttractions = [
     addr2: "",
     isMyLove: false,
     isPartenerLove: false,
+    latitude: 0,
+    longitude: 0,
   },
   {
     contentId: 2613675,
@@ -79,6 +85,8 @@ const bestAttractions = [
     addr2: "",
     isMyLove: false,
     isPartenerLove: false,
+    latitude: 0,
+    longitude: 0,
   },
   {
     contentId: 2616157,
@@ -90,6 +98,8 @@ const bestAttractions = [
     addr2: "",
     isMyLove: false,
     isPartenerLove: false,
+    latitude: 0,
+    longitude: 0,
   },
   {
     contentId: 2633924,
@@ -101,6 +111,8 @@ const bestAttractions = [
     addr2: "",
     isMyLove: false,
     isPartenerLove: false,
+    latitude: 0,
+    longitude: 0,
   },
   {
     contentId: 2758192,
@@ -112,6 +124,8 @@ const bestAttractions = [
     addr2: "",
     isMyLove: false,
     isPartenerLove: false,
+    latitude: 0,
+    longitude: 0,
   },
   {
     contentId: 2841245,
@@ -123,15 +137,20 @@ const bestAttractions = [
     addr2: "",
     isMyLove: false,
     isPartenerLove: false,
+    latitude: 0,
+    longitude: 0,
   },
 ];
 const sidoList = [{ key: 0, name: "대한민국" }, ...sidoCodeList];
 const gugunList = computed(() => {
-  const newGugunList = sidoGugunMap.find(
-    (gugunInfo) => gugunInfo.sidoKey == selectedSido.value
-  )?.gugunList;
-  if (newGugunList) return [{ key: 0, name: "전체" }, ...newGugunList];
-  else return [{ key: 0, name: "전체" }];
+  const gugunMap = sidoGugunMap.get(selectedSido.value);
+  if (gugunMap) {
+    const newGugunList = Array.from(gugunMap).map(([key, name]) => ({
+      key,
+      name,
+    }));
+    return [{ key: 0, name: "전체" }, ...newGugunList];
+  } else return [{ key: 0, name: "전체" }];
 });
 
 const selectedSido = ref(0);

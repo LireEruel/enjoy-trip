@@ -45,13 +45,12 @@
 <script setup lang="ts">
 import { useCommonStore } from "@/stores/common";
 import { computed, onMounted, ref } from "vue";
-import { MasterPlanProp, PlanBase } from "../types";
+import { MasterPlanProp } from "../types";
 import { sidoGugunMap, sidoCodeList } from "@/util/code";
 import { LeftOutlined } from "@ant-design/icons-vue";
 import type { Dayjs } from "dayjs";
 import { requestCreateMasterPlan } from "../api";
 import { useRouter } from "vue-router";
-import { usePlanStore } from "@/stores/plan";
 
 const router = useRouter();
 const commonStore = useCommonStore();
@@ -59,7 +58,6 @@ const step = ref(0);
 type RangeValue = [Dayjs, Dayjs];
 const selectedRange = ref<RangeValue>();
 const isLoading = ref(false);
-const planStore = usePlanStore();
 const addPlanState = ref<MasterPlanProp>({
   title: "",
   sidoCode: -1,
@@ -73,11 +71,16 @@ onMounted(() => {
 });
 
 const gugunList = computed(() => {
-  const newGugunList = sidoGugunMap.find(
-    (gugunInfo) => gugunInfo.sidoKey == addPlanState.value.sidoCode
-  )?.gugunList;
-  if (newGugunList) return [{ key: 0, name: "전체" }, ...newGugunList];
-  else return [{ key: 0, name: "전체" }];
+  if (addPlanState.value.sidoCode) {
+    const gugunMap = sidoGugunMap.get(addPlanState.value.sidoCode);
+    if (gugunMap) {
+      const newGugunList = Array.from(gugunMap).map(([key, name]) => ({
+        key,
+        name,
+      }));
+      return [{ key: 0, name: "전체" }, ...newGugunList];
+    } else return [{ key: 0, name: "전체" }];
+  }
 });
 
 const onSelectedSido = (key: number) => {
@@ -123,22 +126,10 @@ const createMasterPlan = async () => {
     isLoading.value = true;
     const res = await requestCreateMasterPlan(addPlanState.value);
 
-    const planBase: PlanBase = Object.assign({}, addPlanState.value, {
-      planMasterId: res.planMasterId,
-    });
-    const sidoName = sidoCodeList.find(
-      (code) => code.key == addPlanState.value.sidoCode
-    )?.name;
-    const gugunName = gugunList.value.find(
-      (code) => code.key == addPlanState.value.gugunCode
-    )?.name;
-    planBase.sidoName = sidoName;
-    planBase.gugunName = gugunName;
-    planStore.currentPlan = planBase;
-
     commonStore.isOpenAddPlanModal = false;
     router.push({
       name: "editPlan",
+      params: { planMasterId: res.planMasterId },
     });
   } finally {
     isLoading.value = false;

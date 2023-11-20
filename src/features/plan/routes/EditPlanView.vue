@@ -8,8 +8,8 @@
           </a-spin>
           <div class="right-side">
             <a-page-header
-              :title="planBase?.title"
-              :sub-title="`${planBase?.startDate} - ${planBase?.endDate}`"
+              :title="masterPlan?.title"
+              :sub-title="`${masterPlan?.startDate} - ${masterPlan?.endDate}`"
               @back="() => null"
             >
               <template #extra>
@@ -112,8 +112,8 @@
     <AddCourseModal
       v-if="isOpenAddCourseModal"
       :open="isOpenAddCourseModal"
-      :sido-code="planBase?.sidoCode ? planBase?.sidoCode : -1"
-      :gugun-code="planBase?.gugunCode ? planBase?.gugunCode : -1"
+      :sido-code="masterPlan?.sidoCode ? masterPlan?.sidoCode : -1"
+      :gugun-code="masterPlan?.gugunCode ? masterPlan?.gugunCode : -1"
       @onClose="onCloseAddCourseModal"
       @addCourses="addCourses"
     />
@@ -122,52 +122,52 @@
 
 <script setup lang="ts">
 import { keywordSearch, mountMap, addMarker } from "@/lib/mapUtli.js";
-import { onMounted, ref, h, watchEffect } from "vue";
+import { onMounted, ref, h } from "vue";
 import { requestEditPlanDetails, requestGetMasterPlan } from "../api";
-import { usePlanStore } from "@/stores/plan";
 import { Course, DetailPlanParam, MasterPlan, DailyPlan } from "..";
 import * as dayjs from "dayjs";
 import AddCourseModal from "../components/AddCourseModal.vue";
 import { Attraction } from "@/features/attraction";
 import { Container, Draggable } from "vue3-smooth-dnd";
 import { DropResult } from "smooth-dnd";
-import { contentTypeMap } from "@/util/code";
+import { contentTypeMap, sidoCodeNameMap, sidoGugunMap } from "@/util/code";
 import { contentTypeColorMap } from "../util/TypeMap";
 import { DeleteOutlined } from "@ant-design/icons-vue";
 const isLoadingMap = ref(true);
-const planStore = usePlanStore();
-const planBase = planStore.currentPlan;
 const dailyPlanList = ref<DailyPlan[]>([]);
 const isOpenAddCourseModal = ref(false);
 const selectedDayIndex = ref(-1);
-const MasterPlan = ref<MasterPlan | null>(null);
+const masterPlan = ref<MasterPlan | null>(null);
 
 let destination = "";
+const { planMasterId } = defineProps<{ planMasterId: number }>();
 
 onMounted(() => {
   mountMap(37.566826, 126.9786567, 2);
   setMiddle();
   getinitialData();
-  setDestination();
 });
 
 const getinitialData = async () => {
   try {
-    if (planBase) {
-      const res = await requestGetMasterPlan(planBase.planMasterId);
-      console.log(res);
-      dailyPlanList.value = res.dailyPlanDtoList;
-    }
+    const res = await requestGetMasterPlan(planMasterId);
+    masterPlan.value = res;
+    dailyPlanList.value = masterPlan.value.dailyPlanDtoList;
+    setDestination();
   } catch (e) {
     console.error(e);
   }
 };
 
 const setDestination = () => {
-  if (planBase && planBase.sidoName) {
-    destination += planBase.sidoName;
-    if (planBase.gugunName) {
-      destination += " " + planBase.gugunName;
+  if (masterPlan.value && masterPlan.value.sidoCode) {
+    destination += sidoCodeNameMap.get(masterPlan.value.sidoCode);
+    if (masterPlan.value.gugunCode) {
+      destination +=
+        " " +
+        sidoGugunMap
+          .get(masterPlan.value.sidoCode)
+          ?.get(masterPlan.value?.gugunCode);
     }
   }
 };
@@ -213,9 +213,9 @@ const onClickSaveBtn = async () => {
       });
     }
   }
-  if (planBase) {
+  if (masterPlan.value) {
     const res = await requestEditPlanDetails(
-      planBase.planMasterId,
+      masterPlan.value?.planMasterId,
       detailPlanPropList
     );
     console.log(res);
@@ -285,7 +285,7 @@ const onCloseAddCourseModal = () => {
   gap: 2%;
   #map {
     width: 40vw;
-    height: 800px;
+    height: 84vh;
     border-radius: 1rem;
   }
 }
@@ -318,7 +318,7 @@ const onCloseAddCourseModal = () => {
   }
 }
 .destination {
-  height: 75vh;
+  height: 73vh;
   overflow-y: scroll;
 }
 .daily-plan {
