@@ -38,7 +38,7 @@
           class="plan-list"
         >
           <swiper-slide v-for="plan in myPlanList" :key="plan.planMasterId">
-            <div class="plan-card">
+            <div class="plan-card" @click="() => goPlanEdit(plan.planMasterId)">
               <div class="first-image transition-all"></div>
               <h3>{{ plan.title }}</h3>
               <p class="day-info">
@@ -74,6 +74,7 @@ import * as dayjs from "dayjs";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { useRouter } from "vue-router";
 
 const modules = [EffectCoverflow, Pagination];
 const userStore = useUserStore();
@@ -82,6 +83,7 @@ const params = defineProps({ cusNo: { type: Number, required: true } });
 const isMyInfo = ref<boolean>(false);
 const inviteKey = ref("");
 const myPlanList = ref<MasterPlan[]>([]);
+const router = useRouter();
 
 const logout = () => {
   userStore.logout();
@@ -118,6 +120,13 @@ const handleCopy = () => {
   navigator.clipboard
     .writeText(inviteKey.value)
     .then(() => Swal.fire("success", "초대키를 복사했습니다", "success"));
+};
+
+const goPlanEdit = (id: number) => {
+  router.push({
+    name: "editPlan",
+    params: { planMasterId: id },
+  });
 };
 </script>
 

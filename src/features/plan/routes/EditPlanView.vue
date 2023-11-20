@@ -146,7 +146,6 @@ onMounted(() => {
   mountMap(37.566826, 126.9786567, 2);
   setMiddle();
   getinitialData();
-  setDestination();
 });
 
 const getinitialData = async () => {
@@ -154,6 +153,7 @@ const getinitialData = async () => {
     const res = await requestGetMasterPlan(planMasterId);
     masterPlan.value = res;
     dailyPlanList.value = masterPlan.value.dailyPlanDtoList;
+    setDestination();
   } catch (e) {
     console.error(e);
   }
@@ -285,7 +285,7 @@ const onCloseAddCourseModal = () => {
   gap: 2%;
   #map {
     width: 40vw;
-    height: 800px;
+    height: 84vh;
     border-radius: 1rem;
   }
 }
@@ -318,7 +318,7 @@ const onCloseAddCourseModal = () => {
   }
 }
 .destination {
-  height: 75vh;
+  height: 73vh;
   overflow-y: scroll;
 }
 .daily-plan {
