@@ -17,7 +17,7 @@
         </p>
         <div class="header-feature-wrap">
           <a> 개인정보 수정</a>
-          <span v-if="userInfo?.partnerCusNo">
+          <span v-if="isCouple">
             <a> 애인 조회</a>
           </span>
           <span v-else>
@@ -27,6 +27,52 @@
         </div>
       </div>
     </header>
+    <section class="relation-section">
+      <div v-if="isCouple">
+        <h2>내 애인</h2>
+        <div class="partner-info-wrap">
+          <a-avatar :size="64">
+            <template #icon><user-outlined /></template>
+          </a-avatar>
+          <p>{{ userInfo?.partnerName }}</p>
+        </div>
+      </div>
+      <div v-else>
+        <div class="relation-info-wrap">
+          <a-alert
+            v-for="relation in relationList"
+            :key="relation.relationId"
+            type="success"
+            show-icon
+          >
+            <template #icon><smile-outlined /></template>
+            <template #message>
+              <p>
+                <span>{{ relation.userName }}</span
+                >님께서 애인 신청을 보내셨습니다.
+              </p>
+            </template>
+            <template #action>
+              <a-space>
+                <a-button
+                  size="small"
+                  danger
+                  @click="() => relationApproval(relation.relationId, true)"
+                  >수락</a-button
+                >
+                <a-button
+                  @click="() => relationApproval(relation.relationId, false)"
+                  size="small"
+                  type="primary"
+                  ghost
+                  >거절</a-button
+                >
+              </a-space>
+            </template>
+          </a-alert>
+        </div>
+      </div>
+    </section>
     <section class="my-plan-section">
       <h2>내 여행 계획</h2>
       <!-- TODO: 여행 계획 생성 버튼 추가 -->
@@ -72,16 +118,18 @@ import {
 import { EffectCoverflow, Pagination } from "swiper/modules";
 import { useUserStore } from "@/stores/user";
 import { MyInfo } from "@/types/user";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { requestGetPersonalPlan } from "@/features/plan/api";
 import { MasterPlan } from "@/features/plan";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import * as dayjs from "dayjs";
+import { SmileOutlined, UserOutlined } from "@ant-design/icons-vue";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { useRouter } from "vue-router";
+import { Relation, requestRelationApproval } from "..";
 
 const modules = [EffectCoverflow, Pagination];
 const userStore = useUserStore();
@@ -96,6 +144,9 @@ const logout = () => {
   userStore.logout();
   router.push("/");
 };
+const isCouple = computed(() => (userInfo.value?.partnerCusNo ? true : false));
+
+const relationList = ref<Relation[]>([]);
 
 onMounted(async () => {
   // 내 정보인지 확인
@@ -106,11 +157,11 @@ onMounted(async () => {
   } else {
     // TODO : 남의 정보 받아옴.
   }
-
-  if (!userStore.userInfo?.partnerCusNo) {
+  if (!isCouple.value) {
     getInviteKey();
     const res = await requestGetRequestRelationList();
-    console.log(res);
+    // TODO 관계 조회 API 수정시 주석 제거
+    relationList.value = res;
   }
   getMyPlanList();
 });
@@ -157,7 +208,7 @@ const getMyPlanList = async () => {
     const res = await requestGetPersonalPlan(cusNo);
     myPlanList.value = res.list;
   } catch (error) {
-    Swal.fire("error", "초대키 조회에 실패하였습니다.", "error");
+    Swal.fire("error", "여행 일정 조회에 실패하였습니다.", "error");
   }
 };
 
@@ -172,6 +223,15 @@ const goPlanEdit = (id: number) => {
     name: "editPlan",
     params: { planMasterId: id },
   });
+};
+
+const relationApproval = async (relationId: number, isApproval: boolean) => {
+  try {
+    const res = await requestRelationApproval(isApproval, relationId);
+    console.log(res);
+  } catch (e) {
+    Swal.fire("error");
+  }
 };
 </script>
 
@@ -228,9 +288,33 @@ header {
     }
   }
 }
+.relation-section {
+  padding: 5rem 20%;
+  .partner-info-wrap {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 3rem;
+    p {
+      font-size: 1.5rem;
+    }
+  }
+  .relation-info-wrap {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    margin: auto;
+    gap: 2rem;
+    span {
+      color: $primary;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+  }
+}
 
 .my-plan-section {
-  padding: 8rem 20%;
+  padding: 0 20% 8rem;
   h2 {
     padding: 1rem 0;
     margin-bottom: 2rem;
