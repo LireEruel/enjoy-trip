@@ -1,3 +1,4 @@
+import { useUserStore } from "@/stores/user";
 import { notification } from "ant-design-vue";
 import axios from "axios";
 
@@ -9,26 +10,13 @@ const commonAxios = axios.create({
 });
 
 commonAxios.interceptors.request.use(function (config): any {
+  const userStore = useUserStore();
   if (typeof window === undefined) {
     return;
   }
-
-  // const cookies: Record<string, string> = cookie.parse(document?.cookie ?? '');
-
-  // if (!cookies['access_token']) {
-  //     const controller = new AbortController();
-
-  //     const cfg = {
-  //         ...config,
-  //         signal: controller.signal,
-  //     };
-
-  //     return cfg;
-  // }
-
   config.headers = Object.assign({}, config.headers, {
     "Content-Type": "application/json",
-    // 'access_token': cookies['access_token'],
+    Authorization: userStore.userInfo?.accessToken,
   });
 
   return config;

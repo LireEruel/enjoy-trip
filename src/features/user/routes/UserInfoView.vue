@@ -79,18 +79,19 @@ import { useRouter } from "vue-router";
 const modules = [EffectCoverflow, Pagination];
 const userStore = useUserStore();
 const userInfo = ref<MyInfo | undefined>(undefined);
-const params = defineProps({ cusNo: { type: Number, required: true } });
+const params = defineProps({ cusNo: { type: String, required: true } });
 const isMyInfo = ref<boolean>(false);
 const inviteKey = ref("");
 const myPlanList = ref<MasterPlan[]>([]);
 const router = useRouter();
-
+const cusNo = +params.cusNo;
 const logout = () => {
   userStore.logout();
+  router.push("/");
 };
 
 onMounted(() => {
-  isMyInfo.value = userStore.userInfo?.cusNo === +params.cusNo;
+  isMyInfo.value = userStore.userInfo?.cusNo === cusNo;
   if (isMyInfo.value) {
     userInfo.value = userStore.userInfo;
   }
@@ -100,7 +101,7 @@ onMounted(() => {
 
 const getInviteKey = async () => {
   try {
-    const res = await requestGetInviteKey(params.cusNo);
+    const res = await requestGetInviteKey(cusNo);
     inviteKey.value = res;
   } catch (error) {
     Swal.fire("error", "초대키 조회에 실패하였습니다.", "error");
@@ -109,7 +110,7 @@ const getInviteKey = async () => {
 
 const getMyPlanList = async () => {
   try {
-    const res = await requestGetPersonalPlan(params.cusNo);
+    const res = await requestGetPersonalPlan(cusNo);
     myPlanList.value = res.list;
   } catch (error) {
     Swal.fire("error", "초대키 조회에 실패하였습니다.", "error");
