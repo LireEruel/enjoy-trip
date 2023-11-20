@@ -5,10 +5,19 @@
       <h3>{{ userInfo?.partnerName }}</h3>
       <CloseOutlined @click="emit('close-chat')" />
     </header>
-    <chat-list :data-source="dataSource"></chat-list>
+    <chat-list :data-source="chatList"></chat-list>
     <a-input-group compact class="input-wrap">
-      <a-input v-model:value="inputChat" :bordered="false" />
-      <a-button shape="circle" :icon="h(SendOutlined)" type="primary" />
+      <a-input
+        v-model:value="inputChat"
+        :bordered="false"
+        @keyup.enter="handleSubmit"
+      />
+      <a-button
+        shape="circle"
+        :icon="h(SendOutlined)"
+        type="primary"
+        @click="handleSubmit"
+      />
     </a-input-group>
   </div>
 </template>
@@ -17,11 +26,18 @@
 import { useUserStore } from "@/stores/user";
 import { CloseOutlined, SendOutlined } from "@ant-design/icons-vue";
 import { ChatList } from "./components";
-import { h, ref } from "vue";
+import { h, onMounted, ref } from "vue";
 import { Chat } from "./types";
+import * as StompJs from "@stomp/stompjs";
+
+const client: any = {};
+const userStore = useUserStore();
+const userInfo = userStore.userInfo;
 const props = defineProps({ isOpen: { type: Boolean, required: true } });
 const emit = defineEmits(["close-chat"]);
-const dataSource = ref<Chat[]>([
+
+const inputChat = ref("");
+const chatList = ref<Chat[]>([
   {
     senderNo: 4,
     sendTime: "ss",
@@ -33,10 +49,53 @@ const dataSource = ref<Chat[]>([
     content: "ㅎㅇㅎㅇ",
   },
 ]);
-const inputChat = ref("");
+onMounted(() => {
+  connect();
+});
 
-const userStore = useUserStore();
-const userInfo = userStore.userInfo;
+const connect = () => {
+  if (userInfo)
+    client.current = new StompJs.Client({
+      brokerURL: import.meta.env.VITE_SERVER_SOCKET_URL + "/ws",
+      connectHeaders: { Authorization: userInfo.accessToken },
+      onConnect: () => {
+        console.log("success");
+        subscribe();
+      },
+    });
+  client.current.activate();
+};
+const subscribe = () => {
+  client.current.subscribe(`/sub/1`, (body: any) => {
+    const json_body = JSON.parse(body.body);
+    chatList.value = [...chatList.value, json_body];
+  });
+};
+
+const handleSubmit = (e: Event) => {
+  // 보내기 버튼 눌렀을 때 publish
+  e.preventDefault();
+  if (inputChat.value.length == 0) {
+    alert("메세지를 입력해 주세요");
+    return;
+  }
+  publish(inputChat.value);
+};
+
+const publish = (message: string) => {
+  console.log(client.current.connected);
+  if (!client.current.connected) return; // 연결되지 않았으면 메시지를 보내지 않는다.
+
+  client.current.publish({
+    destination: `/pub/chats/messages/1`,
+    body: JSON.stringify({
+      roomId: 1,
+      senderId: userInfo?.cusNo,
+      content: message,
+    }),
+  });
+  inputChat.value = "";
+};
 </script>
 
 <style scoped lang="scss">

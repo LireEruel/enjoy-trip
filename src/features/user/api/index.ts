@@ -1,1 +1,1 @@
-export * from "./detail";
+export * from "./inviteKey";
