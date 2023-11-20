@@ -7,6 +7,7 @@ const cancelTokenSource = axios.CancelToken.source();
 const commonAxios = axios.create({
   cancelToken: cancelTokenSource.token,
   baseURL: "http://219.255.6.129:23333",
+  //baseURL: "http://localhost:80",
 });
 
 commonAxios.interceptors.request.use(function (config): any {

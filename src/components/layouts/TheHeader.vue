@@ -14,6 +14,11 @@
           </a-menu-item>
         </a-menu>
         <div v-if="userStore.userInfo" class="right-buttons-wrap">
+          <a-button
+            shape="circle"
+            :icon="h(MessageOutlined)"
+            @click="emit('on-click-chat-btn')"
+          />
           <a-button shape="circle" :icon="h(BellOutlined)" />
           <a-button
             shape="circle"
@@ -49,7 +54,11 @@ import { ref } from "vue";
 import { RouterLink } from "vue-router";
 import { useRouter } from "vue-router";
 import { h } from "vue";
-import { UserOutlined, BellOutlined } from "@ant-design/icons-vue";
+import {
+  MessageOutlined,
+  UserOutlined,
+  BellOutlined,
+} from "@ant-design/icons-vue";
 import { useUserStore } from "@/stores/user";
 import { useCommonStore } from "@/stores/common";
 const router = useRouter();
@@ -58,6 +67,8 @@ const goLogin = () => {
   router.push("/login");
 };
 const userStore = useUserStore();
+const emit = defineEmits(["on-click-chat-btn"]);
+
 const commonStore = useCommonStore();
 const menuKey = ref<string[]>([window.location.pathname]);
 
