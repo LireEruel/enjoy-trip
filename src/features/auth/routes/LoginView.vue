@@ -67,6 +67,7 @@ const onSubmitLoginForm = async () => {
       userStore.userInfo = res;
       router.push("/");
     });
+    console.log(res);
   } catch (e) {
     console.error(e);
   } finally {

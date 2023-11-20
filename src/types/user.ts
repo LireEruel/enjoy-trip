@@ -6,6 +6,10 @@ export type User = {
 
 export type MyInfo = {
   partnerCusNo: number;
-  partnerName: string;
   authCode: string; // 관리자 유무
+  accessToken: string;
+  partenerCusNo: number;
+  partnerName: string;
+  refreshToken: string;
+  roomId: number;
 } & User;
