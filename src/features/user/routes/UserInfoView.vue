@@ -17,7 +17,7 @@
         </p>
         <div class="header-feature-wrap">
           <a> 개인정보 수정</a>
-          <span v-if="!userInfo?.partnerCusNo">
+          <span v-if="userInfo?.partnerCusNo">
             <a> 애인 조회</a>
           </span>
           <span v-else>
@@ -182,6 +182,7 @@ header {
     }
     .header-feature-wrap {
       display: flex;
+      align-items: center;
       gap: 1em;
       a {
         @include more-button(0.9em);
