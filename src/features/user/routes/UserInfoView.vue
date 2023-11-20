@@ -91,11 +91,17 @@ const logout = () => {
 };
 
 onMounted(() => {
+  // 내 정보인지 확인
   isMyInfo.value = userStore.userInfo?.cusNo === cusNo;
   if (isMyInfo.value) {
+    // 내 정보라면 내 정보 그냥 받음
     userInfo.value = userStore.userInfo;
+  } else {
+    // TODO : 남의 정보 받아옴.
   }
-  getInviteKey();
+  if (!userStore.userInfo?.partnerCusNo) {
+    getInviteKey();
+  }
   getMyPlanList();
 });
 
