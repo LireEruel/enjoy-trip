@@ -87,6 +87,7 @@ const router = useRouter();
 
 const logout = () => {
   userStore.logout();
+  router.push("/");
 };
 
 onMounted(() => {

@@ -14,33 +14,7 @@
       @turnToSignUp="turnToSignUp"
     ></login-form>
 
-    <div id="slider">
-      <div id="login-text">
-        <h1>Good to see you again</h1>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-      </div>
-
-      <div id="sign-up-text">
-        <h1>Welcome to the thing</h1>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-      </div>
-    </div>
+    <div id="slider"></div>
   </section>
 </template>
 
@@ -93,6 +67,7 @@ const onSubmitLoginForm = async () => {
       userStore.userInfo = res;
       router.push("/");
     });
+    console.log(res);
   } catch (e) {
     console.error(e);
   } finally {
@@ -183,23 +158,12 @@ $root-height: calc(100vh - 110px);
   left: 0;
   width: 50%;
   height: calc(100% - 40px);
-  background-image: url(https://images.unsplash.com/photo-1533299346856-b1a85808f2ec?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1489&q=80);
+  background-image: url("../asset/SliderBackground.jpg");
   background-attachment: fixed;
   background-size: 100vw;
+  background-position: bottom;
   transition: left 300ms ease;
   clip-path: inset(0);
-
-  &:before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background-color: blue;
-    opacity: 0.5;
-  }
 
   & div {
     color: white;

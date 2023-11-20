@@ -24,11 +24,11 @@
       <a-input-password v-model:value="props.loginFormState.userPass" />
     </a-form-item>
 
-    <a-form-item name="remember">
+    <!-- <a-form-item name="remember">
       <a-checkbox v-model:checked="props.loginFormState.remember"
         >로그인 상태 유지하기</a-checkbox
       >
-    </a-form-item>
+    </a-form-item> -->
 
     <a-form-item>
       <a-button
