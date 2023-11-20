@@ -28,7 +28,7 @@
     </header>
     <section class="my-plan-section">
       <h2>내 여행 계획</h2>
-      <div>
+      <div v-if="myPlanList.length > 0">
         <swiper
           :grabCursor="true"
           :slidesPerView="4"
@@ -55,6 +55,7 @@
           </swiper-slide>
         </swiper>
       </div>
+      <a-empty v-else />
     </section>
   </div>
 </template>
@@ -99,7 +100,7 @@ onMounted(() => {
   } else {
     // TODO : 남의 정보 받아옴.
   }
-  if (!userStore.userInfo?.partnerCusNo) {
+  if (userStore.userInfo?.partnerCusNo) {
     getInviteKey();
   }
   getMyPlanList();
