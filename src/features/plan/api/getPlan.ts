@@ -6,3 +6,9 @@ export const requestGetPersonalPlan = (
 ): Promise<{ list: MasterPlan[]; pgno: number; totalCount: number }> => {
   return commonAxios.get("/plan/personal/" + cusNo);
 };
+
+export const requestGetMasterPlan = (
+  planMasterId: number
+): Promise<MasterPlan> => {
+  return commonAxios.get("/plan/master/" + planMasterId);
+};

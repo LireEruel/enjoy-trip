@@ -4,13 +4,14 @@
     :centered="true"
     @cancel="onCloseModal"
     title="후기를 작성할 일정을 선택해주세요."
+    @ok="goEditReview"
   >
     <a-list :data-source="planList">
       <template #renderItem="{ item }">
         <a-list-item
           class="list-item"
           @click="() => selectPlan(item.planMasterId)"
-          v-bind:class="{ selected: item.planMasterId == selectedPlan }"
+          v-bind:class="{ selected: item.planMasterId == selectedPlanId }"
         >
           <a-list-item-meta>
             <template #title>
@@ -43,7 +44,10 @@ import { MasterPlan, requestGetPersonalPlan } from "..";
 import { useUserStore } from "@/stores/user";
 import dayjs from "dayjs";
 import { sidoCodeNameMap, sidoGugunMap } from "@/util/code";
+import { useRouter } from "vue-router";
+import Swal from "sweetalert2";
 
+const router = useRouter();
 const commonStore = useCommonStore();
 const userStore = useUserStore();
 const userInfo = userStore.userInfo;
@@ -55,7 +59,7 @@ onMounted(() => {
   getPlanList();
 });
 
-const selectedPlan = ref(-1);
+const selectedPlanId = ref(-1);
 
 const getPlanList = async () => {
   if (userInfo?.cusNo) {
@@ -65,8 +69,20 @@ const getPlanList = async () => {
 };
 
 const selectPlan = (planId: number) => {
-  selectedPlan.value = planId;
-  console.log(selectedPlan.value);
+  selectedPlanId.value = planId;
+  console.log(selectedPlanId.value);
+};
+
+const goEditReview = () => {
+  if (selectedPlanId.value !== -1) {
+    router.push({
+      name: "editReview",
+      params: { planMasterId: selectedPlanId.value },
+    });
+    commonStore.isOpenAddReviewModal = false;
+  } else {
+    Swal.fire("error", "후기를 작성할 여행 계획을 선택해주세요", "error");
+  }
 };
 </script>
 

@@ -1,9 +1,5 @@
-import {
-  requestCreateMasterPlan,
-  requestGetMasterPlan,
-  requestEditPlanDetails,
-} from "./createPlan";
-import { requestGetPersonalPlan } from "./getPlan";
+import { requestCreateMasterPlan, requestEditPlanDetails } from "./createPlan";
+import { requestGetPersonalPlan, requestGetMasterPlan } from "./getPlan";
 export {
   requestCreateMasterPlan,
   requestGetMasterPlan,
