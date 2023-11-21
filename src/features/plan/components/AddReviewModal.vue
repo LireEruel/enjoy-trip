@@ -7,7 +7,11 @@
   >
     <a-list :data-source="planList">
       <template #renderItem="{ item }">
-        <a-list-item>
+        <a-list-item
+          class="list-item"
+          @click="() => selectPlan(item.planMasterId)"
+          v-bind:class="{ selected: item.planMasterId == selectedPlan }"
+        >
           <a-list-item-meta>
             <template #title>
               <a-tag color="green">
@@ -51,13 +55,30 @@ onMounted(() => {
   getPlanList();
 });
 
+const selectedPlan = ref(-1);
+
 const getPlanList = async () => {
   if (userInfo?.cusNo) {
     const res = await requestGetPersonalPlan(userInfo?.cusNo);
     planList.value = res.list;
-    console.log(planList.value);
   }
+};
+
+const selectPlan = (planId: number) => {
+  selectedPlan.value = planId;
+  console.log(selectedPlan.value);
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.list-item {
+  cursor: pointer;
+  &:hover {
+    background-color: $primary-1;
+  }
+}
+
+.selected {
+  background-color: $primary-2 !important;
+}
+</style>
