@@ -32,7 +32,7 @@
                 <a-menu-item key="0" @click="openAddPlanModal">
                   <p>여행 계획 작성</p>
                 </a-menu-item>
-                <a-menu-item key="1">
+                <a-menu-item key="1" @click="openAddReviewModal">
                   <p>여행 후기 작성</p>
                 </a-menu-item>
               </a-menu>
@@ -81,6 +81,9 @@ const goUserInfo = () => {
 
 const openAddPlanModal = () => {
   commonStore.isOpenAddPlanModal = true;
+};
+const openAddReviewModal = () => {
+  commonStore.isOpenAddReviewModal = true;
 };
 </script>
 
