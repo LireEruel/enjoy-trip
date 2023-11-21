@@ -150,7 +150,7 @@ onMounted(() => {
 
 const getinitialData = async () => {
   try {
-    const res = await requestGetMasterPlan(planMasterId);
+    const res = await requestGetMasterPlan(planMasterId, false);
     masterPlan.value = res;
     dailyPlanList.value = masterPlan.value.dailyPlanDtoList;
     setDestination();
@@ -162,7 +162,7 @@ const getinitialData = async () => {
 const setDestination = () => {
   if (masterPlan.value && masterPlan.value.sidoCode) {
     destination += sidoCodeNameMap.get(masterPlan.value.sidoCode);
-    if (masterPlan.value.gugunCode) {
+    if (masterPlan.value.gugunCode && masterPlan.value.gugunCode > -1) {
       destination +=
         " " +
         sidoGugunMap
@@ -231,6 +231,7 @@ const addCourses = (attractionList: Attraction[]) => {
         attractionId: attraction.contentId,
         attractionDto: attraction,
         memo: "",
+        reviewContent: "",
       };
       courseList.push(course);
     }

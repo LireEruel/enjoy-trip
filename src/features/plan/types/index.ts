@@ -30,6 +30,7 @@ export type Course = {
   attractionDto: Attraction;
   reviewId?: number;
   memo: string;
+  reviewContent: string;
   orderNo?: number;
 };
 
@@ -47,4 +48,11 @@ export type DetailPlanParam = {
   attractionId: number;
   memo: string;
   orderNo: number;
+};
+
+export type EditReviewParam = {
+  dailyPlanId: number;
+  reviewContent: string;
+  dailyPlanDetailId: number;
+  fileIdList: number[];
 };
