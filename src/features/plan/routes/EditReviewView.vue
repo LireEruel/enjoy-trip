@@ -96,9 +96,8 @@ import Swal from "sweetalert2";
 const { planMasterId } = defineProps<{ planMasterId: number }>();
 const masterPlanInfo = ref<MasterPlan | null>(null);
 const activeKey = ref(1);
-onMounted(async () => {
-  masterPlanInfo.value = await requestGetMasterPlan(planMasterId, false);
-});
+masterPlanInfo.value = await requestGetMasterPlan(planMasterId, false);
+
 const serverUrl = import.meta.env.VITE_SERVER_URL + "/file/upload/review";
 
 const editReview = async () => {
