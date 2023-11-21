@@ -49,3 +49,10 @@ export type DetailPlanParam = {
   memo: string;
   orderNo: number;
 };
+
+export type EditReviewParam = {
+  dailyPlanId: number;
+  reviewContent: string;
+  dailyPlanDetailId: number;
+  fileIdList: number[];
+};

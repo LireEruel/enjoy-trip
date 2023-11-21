@@ -12,7 +12,7 @@
       <div class="actions-wrap">
         <a-button shape="circle" :icon="h(ShareAltOutlined)" />
         <a-button shape="circle" :icon="h(HeartOutlined)" />
-        <a-button type="primary">저장</a-button>
+        <a-button @click="editReview" type="primary">저장</a-button>
       </div>
     </div>
     <a-tabs v-model:activeKey="activeKey" class="tabs">
@@ -45,7 +45,7 @@
               </a-col>
               <a-col :span="11">
                 <h3>인증 사진 업로드</h3>
-                <a-upload>
+                <a-upload list-type="picture-card" :action="serverUrl">
                   <plus-outlined />
                   <div style="margin-top: 8px">Upload</div>
                 </a-upload>
@@ -77,18 +77,55 @@
 
 <script setup lang="ts">
 import dayjs from "dayjs";
-import { MasterPlan, requestGetMasterPlan } from "..";
+import {
+  Course,
+  DailyPlan,
+  EditReviewParam,
+  MasterPlan,
+  requestEditReview,
+  requestGetMasterPlan,
+} from "..";
 import { onMounted, ref, h } from "vue";
-import { ShareAltOutlined, HeartOutlined } from "@ant-design/icons-vue";
+import {
+  ShareAltOutlined,
+  HeartOutlined,
+  PlusOutlined,
+} from "@ant-design/icons-vue";
+import Swal from "sweetalert2";
 
 const { planMasterId } = defineProps<{ planMasterId: number }>();
 const masterPlanInfo = ref<MasterPlan | null>(null);
 const activeKey = ref(1);
 onMounted(async () => {
-  console.log(planMasterId);
   masterPlanInfo.value = await requestGetMasterPlan(planMasterId, false);
-  console.log();
 });
+const serverUrl = import.meta.env.VITE_SERVER_URL + "/file/upload/review";
+
+const uploadFile = (e: any) => {
+  console.log(e);
+};
+
+const editReview = async () => {
+  const editReviewParam: EditReviewParam[] = [];
+  masterPlanInfo.value?.dailyPlanDtoList.forEach((dailyPlan: DailyPlan) => {
+    dailyPlan.dailyPlanDetailDtoList.forEach((course: Course) => {
+      if (course.dailyPlanDetailId)
+        editReviewParam.push({
+          dailyPlanId: dailyPlan.dailyPlanId,
+          reviewContent: course.reviewContent,
+          fileIdList: [],
+          dailyPlanDetailId: course.dailyPlanDetailId,
+        });
+    });
+  });
+
+  try {
+    await requestEditReview(planMasterId, editReviewParam);
+    Swal.fire("success", "여행 후기 저장 성공", "success");
+  } catch {
+    Swal.fire("error", "여행 후기 에러", "error");
+  }
+};
 </script>
 
 <style scoped lang="scss">
