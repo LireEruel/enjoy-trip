@@ -1,7 +1,7 @@
 <template>
   <div class="root" v-if="masterPlanInfo !== null">
     <div class="header">
-      <div></div>
+      <div class="dummy" />
       <div class="title">
         <h1>{{ masterPlanInfo.title }}</h1>
         <p>
@@ -10,8 +10,9 @@
         </p>
       </div>
       <div class="actions-wrap">
-        <ShareAltOutlined />
-        <HeartOutlined />
+        <a-button shape="circle" :icon="h(ShareAltOutlined)" />
+        <a-button shape="circle" :icon="h(HeartOutlined)" />
+        <a-button type="primary">저장</a-button>
       </div>
     </div>
     <a-tabs v-model:activeKey="activeKey" class="tabs">
@@ -77,7 +78,8 @@
 <script setup lang="ts">
 import dayjs from "dayjs";
 import { MasterPlan, requestGetMasterPlan } from "..";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, h } from "vue";
+import { ShareAltOutlined, HeartOutlined } from "@ant-design/icons-vue";
 
 const { planMasterId } = defineProps<{ planMasterId: number }>();
 const masterPlanInfo = ref<MasterPlan | null>(null);
@@ -92,21 +94,32 @@ onMounted(async () => {
 <style scoped lang="scss">
 .header {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  align-items: center;
+  max-width: 1200px;
+  width: 100%;
+  margin: 2rem auto 0;
   .title {
     display: flex;
     align-items: center;
     flex-direction: column;
     gap: 1rem;
+    text-wrap: nowrap;
+
     h1 {
       font-size: 2rem;
       font-weight: bold;
     }
   }
+  .dummy {
+    width: 100%;
+  }
 
   .actions-wrap {
     display: flex;
     gap: 2rem;
+    width: 100%;
+    justify-content: end;
   }
 }
 
