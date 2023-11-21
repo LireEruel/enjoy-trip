@@ -8,7 +8,12 @@ export const requestGetPersonalPlan = (
 };
 
 export const requestGetMasterPlan = (
-  planMasterId: number
+  planMasterId: number,
+  isReview: boolean | undefined
 ): Promise<MasterPlan> => {
-  return commonAxios.get("/plan/master/" + planMasterId);
+  return commonAxios.get("/plan/master/" + planMasterId, {
+    params: {
+      isReview: isReview,
+    },
+  });
 };
