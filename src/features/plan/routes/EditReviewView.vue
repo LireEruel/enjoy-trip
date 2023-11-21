@@ -38,6 +38,19 @@
               </a-image>
               <p>{{ course.attractionDto.description }}</p>
             </div>
+            <div>
+              <a-upload>
+                <plus-outlined />
+                <div style="margin-top: 8px">Upload</div>
+              </a-upload>
+              <QuillEditor
+                theme="snow"
+                v-model:content="course.reviewContent"
+                contentType="html"
+                ref="editorElem"
+              >
+              </QuillEditor>
+            </div>
           </div>
         </div>
         <div v-else>

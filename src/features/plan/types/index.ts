@@ -30,6 +30,7 @@ export type Course = {
   attractionDto: Attraction;
   reviewId?: number;
   memo: string;
+  reviewContent: string;
   orderNo?: number;
 };
 
