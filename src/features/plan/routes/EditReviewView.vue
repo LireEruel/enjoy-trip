@@ -14,10 +14,14 @@
         <HeartOutlined />
       </div>
     </div>
-    <a-tabs v-model:activeKey="activeKey">
-      <a-tab-pane v-for="i in 10" :key="i" :tab="`Tab-${i}`"
-        >Content of tab {{ i + 1 }}</a-tab-pane
+    <a-tabs v-model:activeKey="activeKey" class="tabs">
+      <a-tab-pane
+        v-for="dailyPlan in masterPlanInfo.dailyPlanDtoList"
+        :key="dailyPlan.dailyPlanId"
+        :tab="`Day ${dailyPlan.dayNo}`"
       >
+        <p>{{ dailyPlan.dailyPlanId }}</p>
+      </a-tab-pane>
     </a-tabs>
   </div>
   <div v-else>
@@ -58,5 +62,10 @@ onMounted(async () => {
     display: flex;
     gap: 2rem;
   }
+}
+
+.tabs {
+  max-width: 1200px;
+  margin: 2rem auto;
 }
 </style>
