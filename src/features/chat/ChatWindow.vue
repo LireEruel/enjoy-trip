@@ -1,5 +1,5 @@
 <template>
-  <div v-show="props.isOpen" class="chat-window">
+  <div v-if="userInfo" v-show="props.isOpen" class="chat-window">
     <header>
       <div />
       <h3>{{ userInfo?.partnerName }}</h3>
@@ -51,7 +51,9 @@ const chatArray = ref<Chat[]>([
   },
 ]);
 onMounted(() => {
-  connect();
+  if (userInfo.value) {
+    connect();
+  }
 });
 
 const connect = () => {
