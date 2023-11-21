@@ -18,7 +18,7 @@
               <a-tag color="green">
                 {{ sidoCodeNameMap.get(item.sidoCode) }}
               </a-tag>
-              <a-tag color="cyan" v-if="item.gugunCode">
+              <a-tag color="cyan" v-if="item.gugunCode > 0">
                 {{ sidoGugunMap.get(item.sidoCode)?.get(item.gugunCode) }}
               </a-tag>
               <div>{{ item.title }}</div>
