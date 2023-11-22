@@ -195,6 +195,7 @@ const getAttractionList = async () => {
         pgno: page.value,
         sidoCode: selectedSido.value,
         gugunCode: selectedGugun.value,
+        pageSize: 15,
       });
       attractionList.value = res.list;
     }

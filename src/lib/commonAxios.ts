@@ -40,7 +40,7 @@ commonAxios.interceptors.response.use(
         description: errorCode,
       });
       localStorage.clear();
-      window.location.replace("/");
+      //window.location.replace("/");
     } else {
       notification.error({
         key: "error-notification",
