@@ -15,6 +15,7 @@
         <a-button @click="editReview" type="primary">저장</a-button>
       </div>
     </div>
+
     <a-tabs v-model:activeKey="activeKey" class="tabs">
       <a-tab-pane
         v-for="dailyPlan in masterPlanInfo.dailyPlanDtoList"
@@ -45,7 +46,16 @@
               </a-col>
               <a-col :span="11">
                 <h3>인증 사진 업로드</h3>
-                <a-upload list-type="picture-card" :action="serverUrl">
+                <a-upload
+                  v-model:file-list="course.fileList"
+                  list-type="picture-card"
+                  :action="serverUrl"
+                  :headers="{
+                    Authorization: userInfo?.accessToken,
+                  }"
+                  @change="(event: any) => onChangeFile(event, course)"
+                  @remove="removeFile"
+                >
                   <plus-outlined />
                   <div style="margin-top: 8px">Upload</div>
                 </a-upload>
@@ -81,9 +91,11 @@ import {
   Course,
   DailyPlan,
   EditReviewParam,
+  FileInfo,
   MasterPlan,
   requestEditReview,
   requestGetMasterPlan,
+  requestRemoveFile,
 } from "..";
 import { onMounted, ref, h } from "vue";
 import {
@@ -92,13 +104,16 @@ import {
   PlusOutlined,
 } from "@ant-design/icons-vue";
 import Swal from "sweetalert2";
+import { useUserStore } from "@/stores/user";
 
 const { planMasterId } = defineProps<{ planMasterId: number }>();
 const masterPlanInfo = ref<MasterPlan | null>(null);
 const activeKey = ref(1);
-masterPlanInfo.value = await requestGetMasterPlan(planMasterId, false);
-
-const serverUrl = import.meta.env.VITE_SERVER_URL + "/file/upload/review";
+const userInfo = useUserStore().userInfo;
+onMounted(async () => {
+  masterPlanInfo.value = await requestGetMasterPlan(planMasterId, false);
+});
+const serverUrl = import.meta.env.VITE_SERVER_URL + "/file/upload";
 
 const editReview = async () => {
   const editReviewParam: EditReviewParam[] = [];
@@ -108,7 +123,7 @@ const editReview = async () => {
         editReviewParam.push({
           dailyPlanId: dailyPlan.dailyPlanId,
           reviewContent: course.reviewContent,
-          fileIdList: [],
+          fileIdList: course.fileIdList,
           dailyPlanDetailId: course.dailyPlanDetailId,
         });
     });
@@ -120,6 +135,16 @@ const editReview = async () => {
   } catch {
     Swal.fire("error", "여행 후기 에러", "error");
   }
+};
+
+const onChangeFile = (event: any, course: Course) => {
+  course.fileIdList = event.fileList.map((file: any) => {
+    return file.response?.fileId;
+  });
+};
+
+const removeFile = (file: FileInfo) => {
+  requestRemoveFile(file.fileId);
 };
 </script>
 
