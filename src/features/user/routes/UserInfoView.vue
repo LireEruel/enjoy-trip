@@ -87,6 +87,32 @@
         >
           <swiper-slide v-for="plan in myPlanList" :key="plan.planMasterId">
             <div class="plan-card" @click="() => goPlanEdit(plan.planMasterId)">
+              <a-dropdown>
+                <a class="dropdown" @click.stop>
+                  <EllipsisOutlined />
+                </a>
+                <template #overlay>
+                  <a-menu>
+                    <a-menu-item v-if="dayjs(plan.endDate).isBefore(dayjs())">
+                      <a href="javascript:;">후기 작성</a>
+                    </a-menu-item>
+
+                    <a-menu-item>
+                      <p @click="() => onClickDeletePlan(plan.planMasterId)">
+                        삭제
+                      </p>
+                    </a-menu-item>
+                    <a-menu-item>
+                      <a href="javascript:;">공유하기</a>
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+              <a-switch
+                class="view-switch"
+                :checked="plan.shareYn"
+                @click="onChangeShareYn"
+              ></a-switch>
               <div class="first-image transition-all"></div>
               <h3>{{ plan.title }}</h3>
               <p class="day-info">
@@ -120,10 +146,14 @@ import { useUserStore } from "@/stores/user";
 import { MyInfo } from "@/types/user";
 import { computed, onMounted, ref } from "vue";
 import { requestGetPersonalPlan } from "@/features/plan/api";
-import { MasterPlan } from "@/features/plan";
+import { MasterPlan, deletePlan } from "@/features/plan";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import * as dayjs from "dayjs";
-import { SmileOutlined, UserOutlined } from "@ant-design/icons-vue";
+import {
+  SmileOutlined,
+  UserOutlined,
+  EllipsisOutlined,
+} from "@ant-design/icons-vue";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
@@ -233,6 +263,21 @@ const relationApproval = async (relationId: number, isApproval: boolean) => {
     Swal.fire("error");
   }
 };
+
+const onChangeShareYn = (planId: number, e: Event) => {
+  console.log(planId);
+  e.stopPropagation();
+};
+
+const onClickDeletePlan = async (planMasterId: number) => {
+  try {
+    const res = await deletePlan(planMasterId);
+    getMyPlanList();
+    Swal.fire("success", res, "success");
+  } catch (e: any) {
+    Swal.fire("error", e, "error");
+  }
+};
 </script>
 
 <style scoped lang="scss">
@@ -323,6 +368,23 @@ header {
 .plan-list {
   height: 20rem;
   .plan-card {
+    .dropdown {
+      display: none;
+      position: absolute;
+      right: 10px;
+      top: 5px;
+      color: white;
+      z-index: 2;
+      font-size: 1.8rem;
+    }
+    .view-switch {
+      position: absolute;
+      z-index: 2;
+      top: 10rem;
+      right: 10px;
+      background-color: black;
+      display: none;
+    }
     .first-image {
       height: 10rem;
       object-fit: cover;
@@ -338,6 +400,30 @@ header {
     }
     .day-info {
       font-size: 0.9rem;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100%;
+      height: 12rem;
+      background-color: $gray-10;
+      border-radius: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.3s ease; /* 트랜지션 적용 */
+    }
+    &:hover {
+      &::after {
+        opacity: 0.3;
+      }
+
+      .dropdown {
+        display: block;
+      }
+      .view-switch {
+        display: block;
+      }
     }
   }
 }
