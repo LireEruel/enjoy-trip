@@ -83,8 +83,6 @@ const reviewTotalCount = ref(0);
 const inputReview = ref("");
 const reviewList = ref<AttractionReview[]>([]);
 
-let map: null = null;
-
 onMounted(async () => {
   getAttraction();
   getReviews();
@@ -97,7 +95,6 @@ const getAttraction = async () => {
     currentAttraction.value = res;
     try {
       mountMap(
-        map,
         currentAttraction.value.latitude,
         currentAttraction.value.longitude,
         currentAttraction.value.mlevel
