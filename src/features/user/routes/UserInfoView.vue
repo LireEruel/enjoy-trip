@@ -102,7 +102,11 @@
                         삭제
                       </p>
                     </a-menu-item>
-                    <a-menu-item>
+                    <a-menu-item
+                      v-if="
+                        userInfo?.partnerCusNo && userInfo?.partnerCusNo > 0
+                      "
+                    >
                       <a href="javascript:;">공유하기</a>
                     </a-menu-item>
                   </a-menu>
@@ -329,6 +333,10 @@ header {
       gap: 1em;
       a {
         @include more-button(0.9em);
+      }
+      span {
+        display: flex;
+        gap: 1em;
       }
     }
   }
