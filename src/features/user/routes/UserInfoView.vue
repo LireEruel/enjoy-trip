@@ -15,8 +15,8 @@
             height="70"
           />
         </p>
-        <div class="header-feature-wrap">
-          <a> 개인정보 수정</a>
+        <div class="header-feature-wrap" v-if="isMyInfo">
+          <a @click="openEditUserInfoModal"> 개인정보 수정</a>
           <span v-if="isCouple">
             <a> 애인 조회</a>
           </span>
@@ -34,7 +34,7 @@
           <a-avatar :size="64">
             <template #icon><user-outlined /></template>
           </a-avatar>
-          <p>{{ userInfo?.partnerName }}</p>
+          <p>{{ userInfo && "partner" in userInfo }}</p>
         </div>
       </div>
       <div v-else>
@@ -104,7 +104,9 @@
                     </a-menu-item>
                     <a-menu-item
                       v-if="
-                        userInfo?.partnerCusNo && userInfo?.partnerCusNo > 0
+                        userInfo &&
+                        'partnerCusNo' in userInfo &&
+                        userInfo?.partnerCusNo > 0
                       "
                     >
                       <a href="javascript:;">공유하기</a>
@@ -135,6 +137,12 @@
       </div>
       <a-empty v-else />
     </section>
+    <edit-user-info-modal
+      :user-info="userInfo"
+      :open="isOpenEditUserInfoModal"
+      @close="closeEditUserInfoModal"
+      @submit="changeUserInfo"
+    ></edit-user-info-modal>
   </div>
 </template>
 
@@ -147,8 +155,8 @@ import {
 } from "../api";
 import { EffectCoverflow, Pagination } from "swiper/modules";
 import { useUserStore } from "@/stores/user";
-import { MyInfo } from "@/types/user";
-import { computed, onMounted, ref } from "vue";
+import { MyInfo, User } from "@/types/user";
+import { computed, ref } from "vue";
 import { requestGetPersonalPlan } from "@/features/plan/api";
 import { MasterPlan, deletePlan } from "@/features/plan";
 import { Swiper, SwiperSlide } from "swiper/vue";
@@ -163,34 +171,39 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { useRouter } from "vue-router";
-import { Relation, requestRelationApproval } from "..";
+import {
+  EditUserInfoParam,
+  Relation,
+  getUserInfo,
+  requestEditUser,
+  requestRelationApproval,
+} from "..";
+import { EditUserInfoModal } from "../components";
 
 const modules = [EffectCoverflow, Pagination];
 const userStore = useUserStore();
-const userInfo = ref<MyInfo | undefined>(undefined);
+const userInfo = ref<MyInfo | User>();
 const params = defineProps({ cusNo: { type: String, required: true } });
 const isMyInfo = ref<boolean>(false);
 const inviteKey = ref("");
 const myPlanList = ref<MasterPlan[]>([]);
 const router = useRouter();
 const cusNo = +params.cusNo;
+const isOpenEditUserInfoModal = ref(false);
 const logout = () => {
   userStore.logout();
   router.push("/");
 };
-const isCouple = computed(() => (userInfo.value?.partnerCusNo ? true : false));
+const isCouple = computed(() =>
+  userInfo.value && "partnerCusNo" in userInfo.value ? true : false
+);
 
 const relationList = ref<Relation[]>([]);
-
-onMounted(async () => {
-  // 내 정보인지 확인
+const preSetting = async () => {
   isMyInfo.value = userStore.userInfo?.cusNo === cusNo;
-  if (isMyInfo.value) {
-    // 내 정보라면 내 정보 그냥 받음
-    userInfo.value = userStore.userInfo;
-  } else {
-    // TODO : 남의 정보 받아옴.
-  }
+
+  userInfo.value = await getUserInfo(cusNo);
+
   if (!isCouple.value) {
     getInviteKey();
     const res = await requestGetRequestRelationList();
@@ -198,7 +211,19 @@ onMounted(async () => {
     relationList.value = res;
   }
   getMyPlanList();
-});
+};
+preSetting();
+
+const changeUserInfo = async (params: EditUserInfoParam) => {
+  try {
+    const res = await requestEditUser(params);
+    userInfo.value = await getUserInfo(cusNo);
+    closeEditUserInfoModal();
+    Swal.fire("success", res, "success");
+  } catch (error: any) {
+    Swal.fire("error", error, "error");
+  }
+};
 
 const onClickSubmitInviteKeyBtn = () => {
   Swal.fire({
@@ -281,6 +306,14 @@ const onClickDeletePlan = async (planMasterId: number) => {
   } catch (e: any) {
     Swal.fire("error", e, "error");
   }
+};
+
+const openEditUserInfoModal = () => {
+  isOpenEditUserInfoModal.value = true;
+};
+
+const closeEditUserInfoModal = () => {
+  isOpenEditUserInfoModal.value = false;
 };
 </script>
 

@@ -7,3 +7,12 @@ export type Relation = {
   acceptDate: string | null;
   anniversaryDate: string | null;
 };
+
+export type EditUserInfoParam = {
+  cusNo: number;
+  userPass: String;
+  userName: String;
+  emailId: String;
+  emailDomain: String;
+  profileImg: number;
+};
