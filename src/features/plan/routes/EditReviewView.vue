@@ -101,10 +101,6 @@ onMounted(async () => {
 });
 const serverUrl = import.meta.env.VITE_SERVER_URL + "/file/upload/review";
 
-const uploadFile = (e: any) => {
-  console.log(e);
-};
-
 const editReview = async () => {
   const editReviewParam: EditReviewParam[] = [];
   masterPlanInfo.value?.dailyPlanDtoList.forEach((dailyPlan: DailyPlan) => {
