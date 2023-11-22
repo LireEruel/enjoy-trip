@@ -40,10 +40,7 @@ commonAxios.interceptors.response.use(
         description: errorCode,
       });
       localStorage.clear();
-      const router = useRouter();
-      router.push({
-        name: "home",
-      });
+      window.location.replace("/");
     } else {
       notification.error({
         key: "error-notification",
