@@ -150,7 +150,10 @@
           class="plan-list"
         >
           <swiper-slide v-for="plan in myReviewList" :key="plan.planMasterId">
-            <div class="plan-card" @click="() => goPlanEdit(plan.planMasterId)">
+            <div
+              class="plan-card"
+              @click="() => goReviewDetail(plan.planMasterId)"
+            >
               <a-dropdown>
                 <a class="dropdown" @click.stop>
                   <EllipsisOutlined />
@@ -158,18 +161,12 @@
                 <template #overlay>
                   <a-menu>
                     <a-menu-item>
+                      <p @click="() => goReviewEdit(plan.planMasterId)">수정</p>
+                    </a-menu-item>
+                    <a-menu-item>
                       <p @click="() => onClickDeletePlan(plan.planMasterId)">
                         삭제
                       </p>
-                    </a-menu-item>
-                    <a-menu-item
-                      v-if="
-                        userInfo &&
-                        'partnerCusNo' in userInfo &&
-                        userInfo?.partnerCusNo > 0
-                      "
-                    >
-                      <a href="javascript:;">공유하기</a>
                     </a-menu-item>
                   </a-menu>
                 </template>
@@ -355,6 +352,18 @@ const goPlanEdit = (id: number) => {
   });
 };
 
+const goReviewEdit = (id: number) => {
+  router.push({
+    name: "editReview",
+    params: { planMasterId: id },
+  });
+};
+const goReviewDetail = (id: number) => {
+  router.push({
+    name: "planReview",
+    params: { planMasterId: id },
+  });
+};
 const relationApproval = async (relationId: number, isApproval: boolean) => {
   try {
     const res = await requestRelationApproval(isApproval, relationId);
@@ -373,6 +382,7 @@ const onClickDeletePlan = async (planMasterId: number) => {
   try {
     const res = await deletePlan(planMasterId);
     getMyPlanList();
+    getMyReviewList();
     Swal.fire("success", res, "success");
   } catch (e: any) {
     Swal.fire("error", e, "error");
