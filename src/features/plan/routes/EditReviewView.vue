@@ -99,7 +99,7 @@ const activeKey = ref(1);
 onMounted(async () => {
   masterPlanInfo.value = await requestGetMasterPlan(planMasterId, false);
 });
-const serverUrl = import.meta.env.VITE_SERVER_URL + "/file/upload/review";
+const serverUrl = import.meta.env.VITE_SERVER_URL + "/file/upload";
 
 const editReview = async () => {
   const editReviewParam: EditReviewParam[] = [];
