@@ -63,7 +63,7 @@ const selectedPlanId = ref(-1);
 
 const getPlanList = async () => {
   if (userInfo?.cusNo) {
-    const res = await requestGetPersonalPlan(userInfo?.cusNo);
+    const res = await requestGetPersonalPlan(userInfo?.cusNo, false);
     planList.value = res.list;
   }
 };

@@ -137,6 +137,66 @@
       </div>
       <a-empty v-else />
     </section>
+    <section class="my-plan-section">
+      <h2>내 여행 후기</h2>
+      <!-- TODO: 여행 계획 생성 버튼 추가 -->
+      <div v-if="myPlanList.length > 0">
+        <swiper
+          :grabCursor="true"
+          :slidesPerView="4"
+          :space-between="50"
+          :modules="modules"
+          :pagination="{ clickable: true }"
+          class="plan-list"
+        >
+          <swiper-slide v-for="plan in myReviewList" :key="plan.planMasterId">
+            <div class="plan-card" @click="() => goPlanEdit(plan.planMasterId)">
+              <a-dropdown>
+                <a class="dropdown" @click.stop>
+                  <EllipsisOutlined />
+                </a>
+                <template #overlay>
+                  <a-menu>
+                    <a-menu-item>
+                      <p @click="() => onClickDeletePlan(plan.planMasterId)">
+                        삭제
+                      </p>
+                    </a-menu-item>
+                    <a-menu-item
+                      v-if="
+                        userInfo &&
+                        'partnerCusNo' in userInfo &&
+                        userInfo?.partnerCusNo > 0
+                      "
+                    >
+                      <a href="javascript:;">공유하기</a>
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+              <a-switch
+                class="view-switch"
+                :checked="plan.shareYn"
+                @click="onChangeShareYn"
+              ></a-switch>
+              <div class="first-image transition-all"></div>
+              <h3>{{ plan.title }}</h3>
+              <p class="day-info">
+                <span>{{ dayjs(plan.startDate).format("DD MMM YYYY") }}</span>
+                •
+                <span
+                  >{{
+                    dayjs(plan.endDate).diff(dayjs(plan.startDate), "day") + 1
+                  }}
+                  days</span
+                >
+              </p>
+            </div>
+          </swiper-slide>
+        </swiper>
+      </div>
+      <a-empty v-else />
+    </section>
     <edit-user-info-modal
       :user-info="userInfo"
       :open="isOpenEditUserInfoModal"
@@ -187,6 +247,7 @@ const params = defineProps({ cusNo: { type: String, required: true } });
 const isMyInfo = ref<boolean>(false);
 const inviteKey = ref("");
 const myPlanList = ref<MasterPlan[]>([]);
+const myReviewList = ref<MasterPlan[]>([]);
 const router = useRouter();
 const cusNo = +params.cusNo;
 const isOpenEditUserInfoModal = ref(false);
@@ -211,6 +272,7 @@ const preSetting = async () => {
     relationList.value = res;
   }
   getMyPlanList();
+  getMyReviewList();
 };
 preSetting();
 
@@ -264,8 +326,17 @@ const getInviteKey = async () => {
 
 const getMyPlanList = async () => {
   try {
-    const res = await requestGetPersonalPlan(cusNo);
+    const res = await requestGetPersonalPlan(cusNo, false);
     myPlanList.value = res.list;
+  } catch (error) {
+    Swal.fire("error", "여행 일정 조회에 실패하였습니다.", "error");
+  }
+};
+
+const getMyReviewList = async () => {
+  try {
+    const res = await requestGetPersonalPlan(cusNo, true);
+    myReviewList.value = res.list;
   } catch (error) {
     Swal.fire("error", "여행 일정 조회에 실패하였습니다.", "error");
   }
@@ -400,7 +471,7 @@ header {
 }
 
 .my-plan-section {
-  padding: 0 20% 8rem;
+  padding: 0 20% 4rem;
   h2 {
     padding: 1rem 0;
     margin-bottom: 2rem;
