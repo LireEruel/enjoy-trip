@@ -10,6 +10,6 @@ export const requestCreateMasterPlan = (
 export const requestEditPlanDetails = (
   planMasterId: number,
   params: DetailPlanParam[]
-) => {
+): Promise<string> => {
   return commonAxios.put("/plan/master/" + planMasterId, params);
 };

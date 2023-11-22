@@ -136,13 +136,14 @@ import { contentTypeMap, sidoCodeNameMap, sidoGugunMap } from "@/util/code";
 import { contentTypeColorMap } from "../util/TypeMap";
 import { DeleteOutlined } from "@ant-design/icons-vue";
 import Swal from "sweetalert2";
-import router from "@/router";
 import { useUserStore } from "@/stores/user";
+import { useRouter } from "vue-router";
 const isLoadingMap = ref(true);
 const dailyPlanList = ref<DailyPlan[]>([]);
 const isOpenAddCourseModal = ref(false);
 const selectedDayIndex = ref(-1);
 const masterPlan = ref<MasterPlan | null>(null);
+const router = useRouter();
 const userInfo = useUserStore().userInfo;
 
 let destination = "";
@@ -225,7 +226,14 @@ const onClickSaveBtn = async () => {
         masterPlan.value?.planMasterId,
         detailPlanPropList
       );
-      Swal.fire("success", res, "success");
+      Swal.fire("success", res, "success").then(() => {
+        router.push({
+          name: "userInfo",
+          params: {
+            cusNo: userInfo?.cusNo,
+          },
+        });
+      });
     } catch (e: any) {
       Swal.fire("error", e, "error");
     }
