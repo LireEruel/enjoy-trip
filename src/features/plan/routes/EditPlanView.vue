@@ -9,7 +9,9 @@
           <div class="right-side">
             <a-page-header
               :title="masterPlan?.title"
-              :sub-title="`${masterPlan?.startDate} - ${masterPlan?.endDate}`"
+              :sub-title="`${dayjs(masterPlan?.startDate).format(
+                'YYYY.MM.DD'
+              )} -${dayjs(masterPlan?.endDate).format('YYYY.MM.DD')}`"
               @back="() => null"
             >
               <template #extra>
@@ -133,11 +135,16 @@ import { DropResult } from "smooth-dnd";
 import { contentTypeMap, sidoCodeNameMap, sidoGugunMap } from "@/util/code";
 import { contentTypeColorMap } from "../util/TypeMap";
 import { DeleteOutlined } from "@ant-design/icons-vue";
+import Swal from "sweetalert2";
+import { useUserStore } from "@/stores/user";
+import { useRouter } from "vue-router";
 const isLoadingMap = ref(true);
 const dailyPlanList = ref<DailyPlan[]>([]);
 const isOpenAddCourseModal = ref(false);
 const selectedDayIndex = ref(-1);
 const masterPlan = ref<MasterPlan | null>(null);
+const router = useRouter();
+const userInfo = useUserStore().userInfo;
 
 let destination = "";
 const { planMasterId } = defineProps<{ planMasterId: number }>();
@@ -214,11 +221,22 @@ const onClickSaveBtn = async () => {
     }
   }
   if (masterPlan.value) {
-    const res = await requestEditPlanDetails(
-      masterPlan.value?.planMasterId,
-      detailPlanPropList
-    );
-    console.log(res);
+    try {
+      const res = await requestEditPlanDetails(
+        masterPlan.value?.planMasterId,
+        detailPlanPropList
+      );
+      Swal.fire("success", res, "success").then(() => {
+        router.push({
+          name: "userInfo",
+          params: {
+            cusNo: userInfo?.cusNo,
+          },
+        });
+      });
+    } catch (e: any) {
+      Swal.fire("error", e, "error");
+    }
   }
 };
 const addCourses = (attractionList: Attraction[]) => {
