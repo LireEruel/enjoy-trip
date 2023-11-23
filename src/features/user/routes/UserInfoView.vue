@@ -138,7 +138,7 @@
     <section class="my-plan-section">
       <h2>내 여행 후기</h2>
       <!-- TODO: 여행 계획 생성 버튼 추가 -->
-      <div v-if="myPlanList.length > 0">
+      <div v-if="myReviewList.length > 0">
         <swiper
           :grabCursor="true"
           :slidesPerView="4"
