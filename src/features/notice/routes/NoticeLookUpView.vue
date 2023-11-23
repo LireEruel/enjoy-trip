@@ -13,11 +13,8 @@
       </div>
     </section>
     <section class="option-section">
-      <router-link
-        v-if="isMaster"
-        :to="{ name: 'noticeWrite', params: { noticeId: 0 } }"
-      >
-        <a-button type="primary">공지사항 작성</a-button>
+      <router-link :to="{ name: 'noticeWrite', params: { noticeId: 0 } }">
+        <a-button v-if="isAdmin" type="primary">공지사항 작성</a-button>
       </router-link>
       <a-input-search
         v-model:value="searchText"
@@ -30,7 +27,7 @@
     <section class="notice-list">
       <div class="table-container">
         <a-table
-          :columns="columns"
+          :columns="isAdmin ? adminColumns : columns"
           :dataSource="dataSource"
           :loading="onLoadingNoticeList"
           :pagination="false"
@@ -77,7 +74,8 @@ const pageNum = ref(1);
 const totalNoticeCount = ref(0);
 const currentNoticeCount = ref(0);
 const router = useRouter();
-const isMaster = useUserStore().userInfo?.authCode == "ADMIN";
+const userStore = useUserStore();
+const isAdmin = userStore.userInfo?.authCode === "ADMIN" ? true : false;
 
 const getNoticeList = async () => {
   onLoadingNoticeList.value = true;
@@ -117,14 +115,41 @@ const columns = [
     width: "10%",
   },
   {
+    title: "제목",
+    dataIndex: "title",
+  },
+  {
+    title: "작성일",
+    dataIndex: "registerTime",
+    sorter: true,
+    width: "20%",
+  },
+];
+
+const adminColumns = [
+  {
+    title: "번호",
+    dataIndex: "noticeId",
+    sorter: true,
+    width: "10%",
+  },
+  {
+    title: "제목",
+    dataIndex: "title",
+  },
+  {
     title: "작성일",
     dataIndex: "registerTime",
     sorter: true,
     width: "20%",
   },
   {
-    title: "제목",
-    dataIndex: "title",
+    title: "상태",
+    dataIndex: "status",
+  },
+  {
+    title: "노출여부",
+    dataIndex: "viewYn",
   },
 ];
 </script>
