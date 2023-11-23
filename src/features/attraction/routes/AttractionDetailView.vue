@@ -177,11 +177,15 @@ const postReview = async () => {
   justify-content: center;
   padding-bottom: 5%;
   flex-direction: column;
+  align-items: center;
 }
 .back {
   text-decoration: none;
   color: #06c;
   font-size: 1.3rem;
+  position: absolute;
+  left: 5rem;
+  top: 7rem;
   &::before {
     float: left;
     width: 1rem;
@@ -202,6 +206,7 @@ const postReview = async () => {
 }
 .site-content {
   width: 1200px;
+
   header {
     padding-top: 5rem;
     h1 {
