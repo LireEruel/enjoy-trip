@@ -14,15 +14,28 @@
         <a-button shape="circle" :icon="h(HeartOutlined)" />
       </div>
     </div>
-    <Flipbook
-      class="flipbook"
-      :pages="pages"
-      :n-polygons="6"
-      :clickToZoom="false"
-      @flip-left-end="onChangePage"
-      @flip-right-end="onChangePage"
-    >
-    </Flipbook>
+    <a-row>
+      <a-col :span="15">
+        <Flipbook
+          class="flipbook"
+          :pages="pages"
+          :n-polygons="6"
+          :clickToZoom="false"
+          @flip-left-end="onChangePage"
+          @flip-right-end="onChangePage"
+        >
+        </Flipbook
+      ></a-col>
+      <a-col :span="8">
+        <div>
+          <p class="day-index">Day {{ currentCourse?.dayNo }}</p>
+          <h2>
+            {{ currentCourse?.attractionTitle }}
+          </h2>
+          <p class="content" v-html="currentCourse?.reviewContent"></p>
+        </div>
+      </a-col>
+    </a-row>
   </div>
   <div v-else>
     <a-skeleton></a-skeleton>
@@ -32,7 +45,7 @@
 <script setup lang="ts">
 import dayjs from "dayjs";
 import Flipbook from "flipbook-vue";
-import { onMounted, ref, h } from "vue";
+import { onMounted, ref, h, computed } from "vue";
 import { PlanReviewDetailInfo, requestGetReviewDetail } from "..";
 import { ShareAltOutlined, HeartOutlined } from "@ant-design/icons-vue";
 const pages = ref<string[]>([]);
@@ -42,14 +55,17 @@ const planMasterId = +props.planMasterId;
 const masterPlanInfo = ref<PlanReviewDetailInfo | null>(null);
 const currentPage = ref(0);
 
+const currentCourse = computed(() => {
+  return masterPlanInfo.value?.reviewList[currentPage.value];
+});
+
 onMounted(async () => {
   masterPlanInfo.value = await requestGetReviewDetail(planMasterId);
   pages.value = masterPlanInfo.value.reviewList.map((review) => review.imgUrl);
-  console.log(pages.value);
 });
 
 const onChangePage = (page: number) => {
-  currentPage.value = Math.floor(page / 2);
+  currentPage.value = page;
 };
 </script>
 
@@ -60,7 +76,7 @@ const onChangePage = (page: number) => {
   align-items: center;
   max-width: 1200px;
   width: 100%;
-  margin: 2rem auto 0;
+  margin: 2rem auto;
   .title {
     display: flex;
     align-items: center;
@@ -84,10 +100,32 @@ const onChangePage = (page: number) => {
     justify-content: end;
   }
 }
+section {
+  display: flex;
+}
 .flipbook {
-  width: 70vw;
-  height: 90vh;
+  width: 100%;
+  height: 70vh;
   margin: 0 auto;
   overflow: hidden;
+}
+
+.day-index {
+  color: $geekblue-8;
+  font-size: 2rem;
+  font-style: oblique;
+  margin: 2rem 0;
+  font-family: "Prata", serif;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+.content {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  letter-spacing: 1px;
 }
 </style>

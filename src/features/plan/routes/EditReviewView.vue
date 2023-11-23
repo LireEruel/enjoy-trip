@@ -110,6 +110,7 @@ const { planMasterId } = defineProps<{ planMasterId: number }>();
 const masterPlanInfo = ref<MasterPlan | null>(null);
 const activeKey = ref(1);
 const userInfo = useUserStore().userInfo;
+
 onMounted(async () => {
   masterPlanInfo.value = await requestGetMasterPlan(planMasterId, true);
 });
