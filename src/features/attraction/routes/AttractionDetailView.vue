@@ -129,7 +129,7 @@ const getAttraction = async () => {
     }
   } catch (error) {
     Swal.fire("error", "관광지 조회에 실패하였습니다.", "error").then(() => {
-      router.push("/Attraction");
+      router.push("/attraction/list");
     });
   } finally {
     onLoadingAttractionDetail.value = false;
