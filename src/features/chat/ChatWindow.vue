@@ -35,7 +35,6 @@ const emit = defineEmits(["close-chat"]);
 const inputChat = ref("");
 const chatArray = ref<Chat[]>([]);
 onMounted(() => {
-
   if (userInfo.value) {
     connect();
     getMessages();
@@ -71,7 +70,6 @@ const handleSubmit = (e: Event) => {
   // 보내기 버튼 눌렀을 때 publish
   e.preventDefault();
   if (inputChat.value.length == 0) {
-    alert("메세지를 입력해 주세요");
     return;
   }
   publish(inputChat.value);
