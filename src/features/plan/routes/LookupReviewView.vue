@@ -33,26 +33,19 @@
 import dayjs from "dayjs";
 import Flipbook from "flipbook-vue";
 import { onMounted, ref, h } from "vue";
-import { MasterPlan, requestGetMasterPlan } from "..";
+import { PlanReviewDetailInfo, requestGetReviewDetail } from "..";
 import { ShareAltOutlined, HeartOutlined } from "@ant-design/icons-vue";
-const pages = ref([
-  "",
-  "http://219.255.6.129:23333/static/231122/1d4c8dbd-107c-413d-81b4-65da75b45886.jpg",
-  "http://219.255.6.129:23333/static/231122/1d4c8dbd-107c-413d-81b4-65da75b45886.jpg",
-  "http://219.255.6.129:23333/static/231122/815ee898-b577-46d4-bebb-089ff0f161b6.jpg",
-  "http://219.255.6.129:23333/static/231122/815ee898-b577-46d4-bebb-089ff0f161b6.jpg",
-  "http://219.255.6.129:23333/static/231122/e7a48472-cd5f-4bbe-9df8-415a466ab289.jpg",
-  "http://219.255.6.129:23333/static/231122/e7a48472-cd5f-4bbe-9df8-415a466ab289.jpg",
-]);
+const pages = ref<string[]>([]);
 
 const props = defineProps<{ planMasterId: string }>();
 const planMasterId = +props.planMasterId;
-const masterPlanInfo = ref<MasterPlan | null>(null);
+const masterPlanInfo = ref<PlanReviewDetailInfo | null>(null);
 const currentPage = ref(0);
 
 onMounted(async () => {
-  masterPlanInfo.value = await requestGetMasterPlan(planMasterId, true);
-  console.log(masterPlanInfo.value);
+  masterPlanInfo.value = await requestGetReviewDetail(planMasterId);
+  pages.value = masterPlanInfo.value.reviewList.map((review) => review.imgUrl);
+  console.log(pages.value);
 });
 
 const onChangePage = (page: number) => {

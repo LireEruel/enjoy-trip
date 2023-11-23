@@ -111,7 +111,7 @@ const masterPlanInfo = ref<MasterPlan | null>(null);
 const activeKey = ref(1);
 const userInfo = useUserStore().userInfo;
 onMounted(async () => {
-  masterPlanInfo.value = await requestGetMasterPlan(planMasterId, false);
+  masterPlanInfo.value = await requestGetMasterPlan(planMasterId, true);
 });
 const serverUrl = import.meta.env.VITE_SERVER_URL + "/file/upload";
 

@@ -68,3 +68,26 @@ export type EditReviewParam = {
   dailyPlanDetailId: number;
   fileIdList: number[];
 };
+
+export type ReviewPageInfo = {
+  dayNo: number;
+  reviewContent: string;
+  attractionId: number;
+  attractionTypeId: number;
+  attractionTitle: string;
+  imgUrl: string;
+};
+
+export type PlanReviewDetailInfo = {
+  planMasterId: number;
+  writerNo: number;
+  writerName: string;
+  title: string;
+  sidoCode: number;
+  gugunCode: number;
+  startDate: string;
+  endDate: string;
+  registerTime: string;
+  shareYn: string;
+  reviewList: ReviewPageInfo[];
+};
