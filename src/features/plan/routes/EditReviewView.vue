@@ -179,7 +179,13 @@ const removeFile = (file: FileInfo) => {
     justify-content: end;
   }
 }
-
+.card-loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .tabs {
   max-width: 1200px;
   margin: 2rem auto;
