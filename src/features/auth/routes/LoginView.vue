@@ -89,6 +89,12 @@ const onSubmitSignUpFrom = async () => {
   try {
     await requestSignUp(submitData);
     Swal.fire("Success!", "Welcome our service!", "success").then(() => {
+      signUpFormState.value.email = "";
+      signUpFormState.value.isValidId = false;
+      signUpFormState.value.userId = "";
+      signUpFormState.value.userName = "";
+      signUpFormState.value.userPass = "";
+      signUpFormState.value.userPassComfirm = "";
       turnToLogin();
     });
   } catch (e) {
