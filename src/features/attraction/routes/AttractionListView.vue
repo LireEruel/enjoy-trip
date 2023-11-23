@@ -35,6 +35,7 @@ import { sidoGugunMap, sidoCodeList } from "@/util/code";
 import { Attraction } from "../types";
 import { requestAttractionList } from "../api";
 import AttractionList from "../components/AttractionList.vue";
+import { throttle } from "lodash";
 const bestAttractions: Attraction[] = [
   {
     contentId: 317503,
@@ -188,7 +189,9 @@ watch(selectedGugun, async () => {
 });
 
 onMounted(() => {
-  window.addEventListener("scroll", handleScroll, { passive: true });
+  window.addEventListener("scroll", throttle(handleScroll, 300), {
+    passive: true,
+  });
 });
 
 onUnmounted(() => {
@@ -223,7 +226,7 @@ const getAttractionList = async () => {
 
 function handleScroll() {
   const { scrollTop, offsetHeight, scrollHeight } = document.documentElement;
-  if (scrollTop + offsetHeight >= scrollHeight - 100) {
+  if (scrollTop + offsetHeight >= scrollHeight - 300) {
     // 페이지 끝에 거의 다다랐는지 확인
     getAttractionList();
   }

@@ -19,6 +19,7 @@
           :ellipsis="{ rows: 2, expandable: false, symbol: 'more' }"
           :content="attraction.description"
         />
+        <HeartOutlined class="like-button" />
       </template>
     </a-card-meta>
   </a-card>
@@ -26,7 +27,7 @@
 
 <script setup lang="ts">
 import { Attraction } from "../types";
-
+import { HeartOutlined } from "@ant-design/icons-vue";
 const { attraction } = defineProps<{ attraction: Attraction }>();
 </script>
 
@@ -41,5 +42,13 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.like-button {
+  position: absolute;
+  top: 73%;
+  right: 3%;
+  font-size: 1.5rem;
+  color: $magenta-6;
 }
 </style>
