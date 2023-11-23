@@ -17,8 +17,10 @@
         type="primary"
         class="submit-btn"
         size="large"
-        >등록</a-button
       >
+        <span v-if="props.noticeId > 0">수정</span>
+        <span v-else>등록</span>
+      </a-button>
       <div class="options-wrap">
         <a-range-picker v-model:value="selectedRange" show-time />
 

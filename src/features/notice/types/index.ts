@@ -7,6 +7,7 @@ type Notice = {
   endTime: string;
   registerTime: string;
   viewYn: string;
+  status: string;
 };
 
 type NoticeListInfo = {
