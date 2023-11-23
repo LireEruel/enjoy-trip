@@ -15,8 +15,8 @@
 import { computed, ref } from "vue";
 import FavoriteIcon from "./FavoriteIcon.vue";
 
-const props = defineProps<{ favorited: boolean }>();
-const emit = defineEmits(["toggle-favorite"]);
+const props = defineProps<{ favorited: boolean | undefined }>();
+const emit = defineEmits(["toggle"]);
 const favorited = ref<boolean>(props.favorited);
 const animating = ref(false);
 
@@ -29,7 +29,7 @@ const iconClasses = computed(() => {
 
 const toggle = () => {
   // Only animate on favoriting.
-  emit("toggle-favorite", !favorited.value);
+  emit("toggle", !favorited.value);
   if (!favorited.value) {
     animating.value = true;
   }

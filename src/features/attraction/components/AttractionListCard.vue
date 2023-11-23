@@ -19,7 +19,11 @@
           :ellipsis="{ rows: 2, expandable: false, symbol: 'more' }"
           :content="attraction.description"
         />
-        <ToggleFavorite :favorited="attraction.isMyLove" class="like-button" />
+        <ToggleFavorite
+          :favorited="attraction.isMyLove"
+          @toggle="onClickFavoriteBtn"
+          class="like-button"
+        />
       </template>
     </a-card-meta>
   </a-card>
@@ -28,7 +32,16 @@
 <script setup lang="ts">
 import { ToggleFavorite } from "@/components";
 import { Attraction } from "../types";
+import { toggleLike } from "@/features/like";
 const { attraction } = defineProps<{ attraction: Attraction }>();
+
+const onClickFavoriteBtn = (value: boolean) => {
+  toggleLike({
+    contentId: attraction.contentId,
+    contentType: "attraction",
+    status: value ? "Y" : "N",
+  });
+};
 </script>
 
 <style scoped lang="scss">
