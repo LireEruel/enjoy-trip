@@ -21,9 +21,9 @@
 
           <p>{{ currentAttraction.description }}</p>
 
-          <div id="map"></div>
+          <div id="map" v-if="!props.isModal"></div>
         </div>
-        <section class="review-section">
+        <section v-if="!props.isModal" class="review-section">
           <h3>
             여행지 후기 <span>{{ reviewTotalCount }}</span>
           </h3>
@@ -89,7 +89,10 @@ import { AttractionDetail, AttractionReview } from "../types";
 import { mountMap, addMarker } from "@/lib/mapUtli.js";
 import { AttractionComment } from "../components";
 
-const props = defineProps<{ contentId: number }>();
+const props = defineProps<{
+  contentId: number;
+  isModal: undefined | boolean;
+}>();
 const onLoadingAttractionDetail = ref(false);
 const currentAttraction = ref<null | AttractionDetail>(null);
 const router = useRouter();
@@ -173,6 +176,7 @@ const postReview = async () => {
   display: flex;
   justify-content: center;
   padding-bottom: 5%;
+  flex-direction: column;
 }
 .back {
   text-decoration: none;

@@ -250,6 +250,8 @@ const addCourses = (attractionList: Attraction[]) => {
         attractionDto: attraction,
         memo: "",
         reviewContent: "",
+        fileIdList: [],
+        fileList: [],
       };
       courseList.push(course);
     }
