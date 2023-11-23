@@ -13,16 +13,30 @@
         </template>
       </a-image>
     </template>
-    <a-card-meta :title="attraction.title">
+    <a-card-meta>
+      <template #title>
+        <div class="card-title">
+          <a-tooltip v-if="attraction.isPartenerLove" placement="top">
+            <template #title>
+              <p>
+                <span class="partner-name">{{ partnerName }}</span
+                >님이 좋아해요
+              </p>
+            </template>
+            <p>{{ attraction.title }}</p>
+          </a-tooltip>
+          <p v-else>{{ attraction.title }}</p>
+          <ToggleFavorite
+            :favorited="attraction.isMyLove"
+            @toggle="onClickFavoriteBtn"
+            class="like-button"
+          />
+        </div>
+      </template>
       <template #description>
         <a-typography-paragraph
           :ellipsis="{ rows: 2, expandable: false, symbol: 'more' }"
           :content="attraction.description"
-        />
-        <ToggleFavorite
-          :favorited="attraction.isMyLove"
-          @toggle="onClickFavoriteBtn"
-          class="like-button"
         />
       </template>
     </a-card-meta>
@@ -33,7 +47,11 @@
 import { ToggleFavorite } from "@/components";
 import { Attraction } from "../types";
 import { toggleLike } from "@/features/like";
+import { useUserStore } from "@/stores/user";
+
 const { attraction } = defineProps<{ attraction: Attraction }>();
+
+const partnerName = useUserStore().userInfo?.userName;
 
 const onClickFavoriteBtn = (value: boolean) => {
   toggleLike({
@@ -56,10 +74,19 @@ img {
   justify-content: center;
   align-items: center;
 }
-
-.like-button {
-  position: absolute;
-  top: 73%;
-  right: 3%;
+.partner-name {
+  color: $primary;
+}
+.card-title {
+  display: flex;
+  justify-content: space-between;
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    .partner-like {
+      font-size: 1.3rem;
+    }
+  }
 }
 </style>

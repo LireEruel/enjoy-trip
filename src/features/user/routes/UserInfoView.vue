@@ -34,16 +34,7 @@
       </div>
     </header>
     <section class="relation-section">
-      <div v-if="isCouple">
-        <h2>내 애인</h2>
-        <div class="partner-info-wrap">
-          <a-avatar :size="64">
-            <template #icon><user-outlined /></template>
-          </a-avatar>
-          <p>{{ userInfo && "partner" in userInfo }}</p>
-        </div>
-      </div>
-      <div v-else>
+      <div v-if="!isCouple">
         <div class="relation-info-wrap">
           <a-alert
             v-for="relation in relationList"
@@ -220,11 +211,7 @@ import { requestGetPersonalPlan } from "@/features/plan/api";
 import { MasterPlan, deletePlan } from "@/features/plan";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import * as dayjs from "dayjs";
-import {
-  SmileOutlined,
-  UserOutlined,
-  EllipsisOutlined,
-} from "@ant-design/icons-vue";
+import { SmileOutlined, EllipsisOutlined } from "@ant-design/icons-vue";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
@@ -253,9 +240,9 @@ const logout = () => {
   userStore.logout();
   router.push("/");
 };
-const isCouple = computed(() =>
-  userInfo.value && "partnerCusNo" in userInfo.value ? true : false
-);
+const isCouple = computed(() => {
+  return userInfo.value && "partnerCusNo" in userInfo.value ? true : false;
+});
 
 const relationList = ref<Relation[]>([]);
 const preSetting = async () => {
@@ -451,16 +438,7 @@ header {
   }
 }
 .relation-section {
-  padding: 5rem 20%;
-  .partner-info-wrap {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    margin-top: 3rem;
-    p {
-      font-size: 1.5rem;
-    }
-  }
+  padding: 3rem 20%;
   .relation-info-wrap {
     display: flex;
     flex-direction: column;
