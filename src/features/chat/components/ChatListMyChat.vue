@@ -14,11 +14,15 @@ const props = defineProps<{ chat: Chat }>();
   display: flex;
   justify-content: flex-end;
   p {
-    background-color: #1890ff;
-    padding: 1rem;
-    border-radius: 1rem 1rem 0 1rem;
-    display: flex;
-    display: inline-block;
+    display: block;
+    overflow: hidden;
+    position: relative;
+    padding: 8px 12px;
+    word-wrap: break-word;
+    word-break: break-word;
+    color: white;
+    border-radius: 1rem;
+    background-color: $primary;
   }
 }
 </style>

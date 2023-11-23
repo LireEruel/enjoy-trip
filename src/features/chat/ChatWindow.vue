@@ -1,7 +1,6 @@
 <template>
   <div v-if="userInfo" v-show="props.isOpen" class="chat-window">
     <header>
-      <div />
       <h3>{{ userInfo?.partnerName }}</h3>
       <CloseOutlined @click="emit('close-chat')" />
     </header>
@@ -12,12 +11,7 @@
         :bordered="false"
         @keyup.enter="handleSubmit"
       />
-      <a-button
-        shape="circle"
-        :icon="h(SendOutlined)"
-        type="primary"
-        @click="handleSubmit"
-      />
+      <a-button :icon="h(SendOutlined)" type="primary" @click="handleSubmit" />
     </a-input-group>
   </div>
 </template>
@@ -30,6 +24,7 @@ import { h, onMounted, ref } from "vue";
 import { Chat } from "./types";
 import * as StompJs from "@stomp/stompjs";
 import { MyInfo } from "@/types/user";
+import { requestGetMessage } from "./api";
 
 const client: any = {};
 const userStore = useUserStore();
@@ -38,23 +33,19 @@ const props = defineProps({ isOpen: { type: Boolean, required: true } });
 const emit = defineEmits(["close-chat"]);
 
 const inputChat = ref("");
-const chatArray = ref<Chat[]>([
-  {
-    senderNo: 4,
-    sendTime: "ss",
-    content: "안녕",
-  },
-  {
-    senderNo: 5,
-    sendTime: "ss",
-    content: "ㅎㅇㅎㅇ",
-  },
-]);
+const chatArray = ref<Chat[]>([]);
 onMounted(() => {
+
   if (userInfo.value) {
     connect();
+    getMessages();
   }
 });
+
+const getMessages = async () => {
+  const res = await requestGetMessage();
+  console.log(res);
+};
 
 const connect = () => {
   if (userInfo.value)
@@ -69,9 +60,10 @@ const connect = () => {
   client.current.activate();
 };
 const subscribe = () => {
-  client.current.subscribe(`/sub/1`, (body: any) => {
+  client.current.subscribe(`/sub/chats/1`, (body: any) => {
     const json_body = JSON.parse(body.body);
     chatArray.value = [...chatArray.value, json_body];
+    console.log(body);
   });
 };
 
@@ -86,15 +78,14 @@ const handleSubmit = (e: Event) => {
 };
 
 const publish = (message: string) => {
-  console.log(client.current.connected);
   if (!client.current.connected) return; // 연결되지 않았으면 메시지를 보내지 않는다.
 
   if (userInfo.value?.cusNo)
     client.current.publish({
-      destination: `/pub/chats/messages/1`,
+      destination: `/pub/chats/messages`,
       body: JSON.stringify({
         roomId: 1,
-        senderId: userInfo?.value.cusNo,
+        senderNo: userInfo?.value.cusNo,
         content: message,
       }),
     });
@@ -123,7 +114,9 @@ header {
   justify-content: space-between;
   align-items: center;
   height: 50px;
-  background-color: $blue-1;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
   padding: 0 1em;
   h3 {
     font-size: 1rem;
