@@ -6,6 +6,7 @@ import {
 import LoginViewVue from "@/features/auth/routes/LoginView.vue";
 import { LandingView } from "@/features/landing";
 import { NoticeLookupView, NoticeDetailLookUpView } from "@/features/notice";
+import { LookupReviewView } from "@/features/plan";
 import { UserInfoView } from "@/features/user";
 
 export const publicRoutes = [
@@ -71,6 +72,16 @@ export const publicRoutes = [
     components: {
       header: TheHeader,
       body: AttractionDetailView,
+      footer: TheFooter,
+    },
+    props: true,
+  },
+  {
+    path: "/review/:planMasterId",
+    name: "planReview",
+    components: {
+      header: TheHeader,
+      body: LookupReviewView,
       footer: TheFooter,
     },
     props: true,

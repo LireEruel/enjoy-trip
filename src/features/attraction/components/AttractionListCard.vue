@@ -13,7 +13,26 @@
         </template>
       </a-image>
     </template>
-    <a-card-meta :title="attraction.title">
+    <a-card-meta>
+      <template #title>
+        <div class="card-title">
+          <a-tooltip v-if="attraction.isPartenerLike > 0" placement="top">
+            <template #title>
+              <p>
+                <span class="primary-text">{{ partnerName }}</span
+                >님이 좋아해요
+              </p>
+            </template>
+            <p class="primary-text">{{ attraction.title }}</p>
+          </a-tooltip>
+          <p v-else>{{ attraction.title }}</p>
+          <ToggleFavorite
+            :favorited="attraction.isMyLike > 0"
+            @toggle="onClickFavoriteBtn"
+            class="like-button"
+          />
+        </div>
+      </template>
       <template #description>
         <a-typography-paragraph
           :ellipsis="{ rows: 2, expandable: false, symbol: 'more' }"
@@ -25,9 +44,26 @@
 </template>
 
 <script setup lang="ts">
+import { ToggleFavorite } from "@/components";
 import { Attraction } from "../types";
+import { toggleLike } from "@/features/like";
+import { useUserStore } from "@/stores/user";
+import { onMounted } from "vue";
 
 const { attraction } = defineProps<{ attraction: Attraction }>();
+
+const partnerName = useUserStore().userInfo?.userName;
+onMounted(() => {
+  console.log(attraction.isPartenerLike);
+});
+
+const onClickFavoriteBtn = (value: boolean) => {
+  toggleLike({
+    contentId: attraction.contentId,
+    contentType: "attraction",
+    status: value ? "Y" : "N",
+  });
+};
 </script>
 
 <style scoped lang="scss">
@@ -41,5 +77,20 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.primary-text {
+  color: $primary;
+}
+.card-title {
+  display: flex;
+  justify-content: space-between;
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    .partner-like {
+      font-size: 1.3rem;
+    }
+  }
 }
 </style>

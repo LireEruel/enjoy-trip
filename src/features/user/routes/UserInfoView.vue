@@ -7,7 +7,8 @@
       </nav>
       <div class="header-content">
         <p class="greeting">
-          {{ userInfo?.userName }} 님, 안녕하세요.
+          {{ userInfo?.userName }}
+          {{ isMyInfo ? "님, 안녕하세요." : "님의 추억" }}
           <img
             src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Blue%20Heart.png"
             alt="Blue Heart"
@@ -18,26 +19,23 @@
         <div class="header-feature-wrap" v-if="isMyInfo">
           <a @click="openEditUserInfoModal"> 개인정보 수정</a>
           <span v-if="isCouple">
-            <a> 애인 조회</a>
+            <a @click="goPartnerPage"> 애인 조회</a>
           </span>
           <span v-else>
-            <a @click="handleCopy" :value="inviteKey">애인 초대키 복사</a>
+            <a
+              @click="handleCopy"
+              :value="
+                userInfo && 'inviteKey' in userInfo ? userInfo.inviteKey : ''
+              "
+              >애인 초대키 복사</a
+            >
             <a @click="onClickSubmitInviteKeyBtn">애인 초대키 입력</a>
           </span>
         </div>
       </div>
     </header>
     <section class="relation-section">
-      <div v-if="isCouple">
-        <h2>내 애인</h2>
-        <div class="partner-info-wrap">
-          <a-avatar :size="64">
-            <template #icon><user-outlined /></template>
-          </a-avatar>
-          <p>{{ userInfo && "partner" in userInfo }}</p>
-        </div>
-      </div>
-      <div v-else>
+      <div v-if="!isCouple">
         <div class="relation-info-wrap">
           <a-alert
             v-for="relation in relationList"
@@ -137,6 +135,63 @@
       </div>
       <a-empty v-else />
     </section>
+    <section class="my-plan-section">
+      <h2>내 여행 후기</h2>
+      <!-- TODO: 여행 계획 생성 버튼 추가 -->
+      <div v-if="myPlanList.length > 0">
+        <swiper
+          :grabCursor="true"
+          :slidesPerView="4"
+          :space-between="50"
+          :modules="modules"
+          :pagination="{ clickable: true }"
+          class="plan-list"
+        >
+          <swiper-slide v-for="plan in myReviewList" :key="plan.planMasterId">
+            <div
+              class="plan-card"
+              @click="() => goReviewDetail(plan.planMasterId)"
+            >
+              <a-dropdown>
+                <a class="dropdown" @click.stop>
+                  <EllipsisOutlined />
+                </a>
+                <template #overlay>
+                  <a-menu>
+                    <a-menu-item>
+                      <p @click="() => goReviewEdit(plan.planMasterId)">수정</p>
+                    </a-menu-item>
+                    <a-menu-item>
+                      <p @click="() => onClickDeletePlan(plan.planMasterId)">
+                        삭제
+                      </p>
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+              <a-switch
+                class="view-switch"
+                :checked="plan.shareYn"
+                @click="onChangeShareYn"
+              ></a-switch>
+              <div class="first-image transition-all"></div>
+              <h3>{{ plan.title }}</h3>
+              <p class="day-info">
+                <span>{{ dayjs(plan.startDate).format("DD MMM YYYY") }}</span>
+                •
+                <span
+                  >{{
+                    dayjs(plan.endDate).diff(dayjs(plan.startDate), "day") + 1
+                  }}
+                  days</span
+                >
+              </p>
+            </div>
+          </swiper-slide>
+        </swiper>
+      </div>
+      <a-empty v-else />
+    </section>
     <edit-user-info-modal
       :user-info="userInfo"
       :open="isOpenEditUserInfoModal"
@@ -148,29 +203,21 @@
 
 <script setup lang="ts">
 import Swal from "sweetalert2";
-import {
-  requestGetInviteKey,
-  requestGetRequestRelationList,
-  requestSubmitInviteKey,
-} from "../api";
+import { requestGetRequestRelationList, requestSubmitInviteKey } from "../api";
 import { EffectCoverflow, Pagination } from "swiper/modules";
 import { useUserStore } from "@/stores/user";
 import { MyInfo, User } from "@/types/user";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { requestGetPersonalPlan } from "@/features/plan/api";
 import { MasterPlan, deletePlan } from "@/features/plan";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import * as dayjs from "dayjs";
-import {
-  SmileOutlined,
-  UserOutlined,
-  EllipsisOutlined,
-} from "@ant-design/icons-vue";
+import { SmileOutlined, EllipsisOutlined } from "@ant-design/icons-vue";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import {
   EditUserInfoParam,
   Relation,
@@ -185,32 +232,37 @@ const userStore = useUserStore();
 const userInfo = ref<MyInfo | User>();
 const params = defineProps({ cusNo: { type: String, required: true } });
 const isMyInfo = ref<boolean>(false);
-const inviteKey = ref("");
 const myPlanList = ref<MasterPlan[]>([]);
+const myReviewList = ref<MasterPlan[]>([]);
 const router = useRouter();
 const cusNo = +params.cusNo;
 const isOpenEditUserInfoModal = ref(false);
+
 const logout = () => {
   userStore.logout();
   router.push("/");
 };
-const isCouple = computed(() =>
-  userInfo.value && "partnerCusNo" in userInfo.value ? true : false
-);
+const isCouple = computed(() => {
+  return userInfo.value && "partnerCusNo" in userInfo.value ? true : false;
+});
+
+const goPartnerPage = () => {
+  if (userInfo.value && "partnerCusNo" in userInfo.value) {
+    window.location.href = "/user/detail/" + userInfo.value.partnerCusNo;
+  }
+};
 
 const relationList = ref<Relation[]>([]);
 const preSetting = async () => {
   isMyInfo.value = userStore.userInfo?.cusNo === cusNo;
-
   userInfo.value = await getUserInfo(cusNo);
-
   if (!isCouple.value) {
-    getInviteKey();
     const res = await requestGetRequestRelationList();
     // TODO 관계 조회 API 수정시 주석 제거
     relationList.value = res;
   }
   getMyPlanList();
+  getMyReviewList();
 };
 preSetting();
 
@@ -253,28 +305,34 @@ const onClickSubmitInviteKeyBtn = () => {
   });
 };
 
-const getInviteKey = async () => {
-  try {
-    const res = await requestGetInviteKey();
-    inviteKey.value = res;
-  } catch (error) {
-    Swal.fire("error", "초대키 조회에 실패하였습니다.", "error");
-  }
-};
-
 const getMyPlanList = async () => {
   try {
-    const res = await requestGetPersonalPlan(cusNo);
+    const res = await requestGetPersonalPlan(cusNo, false);
     myPlanList.value = res.list;
   } catch (error) {
     Swal.fire("error", "여행 일정 조회에 실패하였습니다.", "error");
   }
 };
 
+const getMyReviewList = async () => {
+  try {
+    const res = await requestGetPersonalPlan(cusNo, true);
+    myReviewList.value = res.list;
+  } catch (error) {
+    Swal.fire("error", "여행 일정 조회에 실패하였습니다.", "error");
+  }
+};
+
 const handleCopy = () => {
-  navigator.clipboard
-    .writeText(inviteKey.value)
-    .then(() => Swal.fire("success", "초대키를 복사했습니다", "success"));
+  if (
+    userInfo.value &&
+    "inviteKey" in userInfo.value &&
+    typeof userInfo.value.inviteKey == "string"
+  ) {
+    navigator.clipboard
+      .writeText(userInfo.value.inviteKey)
+      .then(() => Swal.fire("success", "초대키를 복사했습니다", "success"));
+  }
 };
 
 const goPlanEdit = (id: number) => {
@@ -284,6 +342,18 @@ const goPlanEdit = (id: number) => {
   });
 };
 
+const goReviewEdit = (id: number) => {
+  router.push({
+    name: "editReview",
+    params: { planMasterId: id },
+  });
+};
+const goReviewDetail = (id: number) => {
+  router.push({
+    name: "planReview",
+    params: { planMasterId: id },
+  });
+};
 const relationApproval = async (relationId: number, isApproval: boolean) => {
   try {
     const res = await requestRelationApproval(isApproval, relationId);
@@ -302,6 +372,7 @@ const onClickDeletePlan = async (planMasterId: number) => {
   try {
     const res = await deletePlan(planMasterId);
     getMyPlanList();
+    getMyReviewList();
     Swal.fire("success", res, "success");
   } catch (e: any) {
     Swal.fire("error", e, "error");
@@ -375,16 +446,7 @@ header {
   }
 }
 .relation-section {
-  padding: 5rem 20%;
-  .partner-info-wrap {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    margin-top: 3rem;
-    p {
-      font-size: 1.5rem;
-    }
-  }
+  padding: 3rem 20%;
   .relation-info-wrap {
     display: flex;
     flex-direction: column;
@@ -400,7 +462,7 @@ header {
 }
 
 .my-plan-section {
-  padding: 0 20% 8rem;
+  padding: 0 20% 4rem;
   h2 {
     padding: 1rem 0;
     margin-bottom: 2rem;

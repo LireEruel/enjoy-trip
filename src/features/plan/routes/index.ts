@@ -1,3 +1,4 @@
 import EditPlanView from "./EditPlanView.vue";
 import EditReviewView from "./EditReviewView.vue";
-export { EditPlanView, EditReviewView };
+import LookupReviewView from "./LookupReviewView.vue";
+export { EditPlanView, EditReviewView, LookupReviewView };

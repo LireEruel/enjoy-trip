@@ -13,7 +13,10 @@
       </div>
     </section>
     <section class="option-section">
-      <router-link :to="{ name: 'noticeWrite', params: { noticeId: 0 } }">
+      <router-link
+        v-if="isMaster"
+        :to="{ name: 'noticeWrite', params: { noticeId: 0 } }"
+      >
         <a-button type="primary">공지사항 작성</a-button>
       </router-link>
       <a-input-search
@@ -65,6 +68,7 @@ import { onMounted, ref } from "vue";
 import { requestGetNoticeList } from "../api/list";
 import { DownOutlined } from "@ant-design/icons-vue";
 import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/user";
 
 const dataSource = ref<Array<Notice>>([]);
 const onLoadingNoticeList = ref<Boolean>(false);
@@ -73,6 +77,7 @@ const pageNum = ref(1);
 const totalNoticeCount = ref(0);
 const currentNoticeCount = ref(0);
 const router = useRouter();
+const isMaster = useUserStore().userInfo?.authCode == "ADMIN";
 
 const getNoticeList = async () => {
   onLoadingNoticeList.value = true;

@@ -5,8 +5,8 @@ export type Attraction = {
   firstImage: string;
   addr1: string;
   addr2: string;
-  isMyLove: boolean;
-  isPartenerLove: boolean;
+  isMyLike: number;
+  isPartenerLike: number;
   description?: string;
   latitude: number;
   longitude: number;
@@ -19,8 +19,8 @@ export type AttractionDetail = {
   firstImage: string;
   addr1: string;
   addr2: string;
-  isMyLove: boolean;
-  isPartenerLove: boolean;
+  isMyLike: boolean;
+  isPartenerLike: boolean;
   description: string;
   latitude: number;
   longitude: number;

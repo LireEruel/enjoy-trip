@@ -19,7 +19,12 @@
           :key="sido.key"
           class="select-option"
           @click="() => onSelectedSido(sido.key)"
-          :type="sido.key === addPlanState.sidoCode ? 'primary' : 'default'"
+          :type="
+            (step == 0 && sido.key === addPlanState.sidoCode) ||
+            (step == 1 && sido.key === addPlanState.gugunCode)
+              ? 'primary'
+              : 'default'
+          "
         >
           {{ sido.name }}
         </a-button>
