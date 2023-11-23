@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { requestAttractionList } from "@/features/attraction";
 import { Attraction } from "..";
 import { sidoGugunMap, sidoCodeList } from "@/util/code";
@@ -96,6 +96,10 @@ watch(selectedGugun, async () => {
   await getAttractionList();
 });
 
+onMounted(() => {
+  getAttractionList();
+});
+
 const getAttractionList = async () => {
   try {
     const res = await requestAttractionList({
@@ -104,7 +108,7 @@ const getAttractionList = async () => {
       gugunCode: selectedGugun.value,
       pageSize: 15,
     });
-    attractionList.value = [...res.list];
+    attractionList.value = res.list;
   } catch (e) {
     console.error(e);
   }
