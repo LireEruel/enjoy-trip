@@ -191,9 +191,11 @@ const removeFile = (file: FileInfo) => {
   margin: 2rem auto;
 }
 .course-index {
-  font-size: 1.5rem;
+  color: $geekblue-8;
+  font-size: 2rem;
   font-style: oblique;
   margin: 2rem 0;
+  font-family: "Prata", serif;
 }
 .course-info {
   display: flex;
