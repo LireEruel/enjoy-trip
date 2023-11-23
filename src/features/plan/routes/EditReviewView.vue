@@ -138,8 +138,13 @@ const editReview = async () => {
 };
 
 const onChangeFile = (event: any, course: Course) => {
+  console.log(event);
   course.fileIdList = event.fileList.map((file: any) => {
-    return file.response?.fileId;
+    if ("response" in file) {
+      return file.response.fileId;
+    } else {
+      return file.fileId;
+    }
   });
 };
 
