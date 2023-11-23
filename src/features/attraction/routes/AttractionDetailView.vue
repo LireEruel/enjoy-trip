@@ -29,8 +29,16 @@
           </h3>
           <a-divider></a-divider>
           <div class="input-wrap">
-            <a-input class="input-comment" :value="inputReview"></a-input>
-            <a-button class="submit-btn" type="primary" size="large"
+            <a-input class="input-title" v-model:value="inputTitle"></a-input>
+            <a-input
+              class="input-comment"
+              v-model:value="inputReview"
+            ></a-input>
+            <a-button
+              class="submit-btn"
+              type="primary"
+              size="large"
+              @click="postReview"
               >등록</a-button
             >
           </div>
@@ -67,6 +75,7 @@ import { useRouter } from "vue-router";
 import {
   requestGetAttractionDetail,
   requestAttractionReviewList,
+  requestAttractionComment,
 } from "../api";
 import { AttractionDetail, AttractionReview } from "../types";
 import { mountMap, addMarker } from "@/lib/mapUtli.js";
@@ -80,6 +89,7 @@ const reviewPageSize = 5;
 const reviewPageNum = ref(1);
 const reviewTotalCount = ref(0);
 
+const inputTitle = ref("");
 const inputReview = ref("");
 const reviewList = ref<AttractionReview[]>([]);
 
@@ -127,6 +137,22 @@ const getReviews = async () => {
     reviewTotalCount.value = res.totalCount;
   } catch (e) {
     console.error(e);
+  }
+};
+
+const postReview = async () => {
+  if (currentAttraction.value) {
+    try {
+      const res = await requestAttractionComment(
+        currentAttraction.value?.contentId,
+        inputTitle.value,
+        inputReview.value,
+        4
+      );
+      console.log(res);
+    } catch (e) {
+      console.log(e);
+    }
   }
 };
 </script>
