@@ -29,11 +29,19 @@
           </h3>
           <a-divider></a-divider>
           <div class="input-wrap">
-            <a-input class="input-title" v-model:value="inputTitle"></a-input>
-            <a-input
-              class="input-comment"
-              v-model:value="inputReview"
-            ></a-input>
+            <div class="inputs">
+              <a-input
+                class="input-title"
+                v-model:value="inputTitle"
+                placeholder="여행지 후기의 제목을 작성해주세요"
+              ></a-input>
+              <a-textarea
+                v-model:value="inputReview"
+                placeholder="여행지 후기를 작성해주세요"
+                :auto-size="{ minRows: 2, maxRows: 5 }"
+              />
+            </div>
+
             <a-button
               class="submit-btn"
               type="primary"
@@ -225,9 +233,12 @@ p {
     background-color: $gray-2;
     display: flex;
     gap: 0.7rem;
-    height: 4rem;
-    button {
-      height: 4rem;
+    align-items: flex-end;
+    .inputs {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 1rem;
     }
   }
 }
