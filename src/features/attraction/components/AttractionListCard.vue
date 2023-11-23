@@ -19,15 +19,15 @@
           :ellipsis="{ rows: 2, expandable: false, symbol: 'more' }"
           :content="attraction.description"
         />
-        <HeartOutlined class="like-button" />
+        <ToggleFavorite :favorited="attraction.isMyLove" class="like-button" />
       </template>
     </a-card-meta>
   </a-card>
 </template>
 
 <script setup lang="ts">
+import { ToggleFavorite } from "@/components";
 import { Attraction } from "../types";
-import { HeartOutlined } from "@ant-design/icons-vue";
 const { attraction } = defineProps<{ attraction: Attraction }>();
 </script>
 
@@ -48,7 +48,5 @@ img {
   position: absolute;
   top: 73%;
   right: 3%;
-  font-size: 1.5rem;
-  color: $magenta-6;
 }
 </style>
