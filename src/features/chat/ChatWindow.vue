@@ -1,5 +1,5 @@
 <template>
-  <div v-show="props.isOpen" class="chat-window">
+  <div v-if="userInfo" v-show="props.isOpen" class="chat-window">
     <header>
       <h3>{{ userInfo?.partnerName }}</h3>
       <CloseOutlined @click="emit('close-chat')" />
@@ -35,8 +35,11 @@ const emit = defineEmits(["close-chat"]);
 const inputChat = ref("");
 const chatArray = ref<Chat[]>([]);
 onMounted(() => {
-  connect();
-  getMessages();
+
+  if (userInfo.value) {
+    connect();
+    getMessages();
+  }
 });
 
 const getMessages = async () => {

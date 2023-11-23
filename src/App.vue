@@ -12,7 +12,24 @@
   </div>
   <chat-window :is-open="isOpenChat" @close-chat="onCloseChat"></chat-window>
   <add-plan-modal></add-plan-modal>
+  <add-review-modal></add-review-modal>
 </template>
+
+<script setup lang="ts">
+import { RouterView } from "vue-router";
+import { ChatWindow } from "./features/chat";
+import { ref } from "vue";
+import AddPlanModal from "@/features/plan/components/AddPlanModal.vue";
+import AddReviewModal from "./features/plan/components/AddReviewModal.vue";
+
+const isOpenChat = ref(false);
+const onClickChatBtn = () => {
+  isOpenChat.value = !isOpenChat.value;
+};
+const onCloseChat = () => {
+  isOpenChat.value = false;
+};
+</script>
 
 <style lang="scss" scoped>
 .app {
@@ -29,20 +46,3 @@
   min-width: 600px;
 }
 </style>
-
-<script setup lang="ts">
-import { RouterView } from "vue-router";
-import { ChatWindow } from "./features/chat";
-import { ref } from "vue";
-import AddPlanModal from "@/features/plan/components/AddPlanModal.vue";
-
-const isOpenChat = ref(false);
-
-const onClickChatBtn = () => {
-  isOpenChat.value = !isOpenChat.value;
-};
-
-const onCloseChat = () => {
-  isOpenChat.value = false;
-};
-</script>

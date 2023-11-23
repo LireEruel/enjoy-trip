@@ -1,6 +1,6 @@
 import { TheFooter, TheHeader } from "@/components/layouts";
 import { NoticeWriteView } from "@/features/notice";
-import { EditPlanView } from "@/features/plan";
+import { EditPlanView, EditReviewView } from "@/features/plan";
 
 export const protectedRoutes = [
   {
@@ -19,6 +19,16 @@ export const protectedRoutes = [
     components: {
       header: TheHeader,
       body: EditPlanView,
+      footer: TheFooter,
+    },
+    props: true,
+  },
+  {
+    path: "/review/edit/:planMasterId",
+    name: "editReview",
+    components: {
+      header: TheHeader,
+      body: EditReviewView,
       footer: TheFooter,
     },
     props: true,

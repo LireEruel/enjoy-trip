@@ -7,15 +7,9 @@ export const requestCreateMasterPlan = (
   return commonAxios.post("/plan/master", params);
 };
 
-export const requestGetMasterPlan = (
-  planMasterId: number
-): Promise<MasterPlan> => {
-  return commonAxios.get("/plan/master/" + planMasterId);
-};
-
 export const requestEditPlanDetails = (
   planMasterId: number,
   params: DetailPlanParam[]
-) => {
+): Promise<string> => {
   return commonAxios.put("/plan/master/" + planMasterId, params);
 };
