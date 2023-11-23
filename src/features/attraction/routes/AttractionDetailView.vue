@@ -21,16 +21,32 @@
 
           <p>{{ currentAttraction.description }}</p>
 
-          <div id="map"></div>
+          <div id="map" v-if="!props.isModal"></div>
         </div>
-        <section class="review-section">
+        <section v-if="!props.isModal" class="review-section">
           <h3>
             여행지 후기 <span>{{ reviewTotalCount }}</span>
           </h3>
           <a-divider></a-divider>
           <div class="input-wrap">
-            <a-input class="input-comment" :value="inputReview"></a-input>
-            <a-button class="submit-btn" type="primary" size="large"
+            <div class="inputs">
+              <a-input
+                class="input-title"
+                v-model:value="inputTitle"
+                placeholder="여행지 후기의 제목을 작성해주세요"
+              ></a-input>
+              <a-textarea
+                v-model:value="inputReview"
+                placeholder="여행지 후기를 작성해주세요"
+                :auto-size="{ minRows: 2, maxRows: 5 }"
+              />
+            </div>
+
+            <a-button
+              class="submit-btn"
+              type="primary"
+              size="large"
+              @click="postReview"
               >등록</a-button
             >
           </div>
@@ -67,12 +83,16 @@ import { useRouter } from "vue-router";
 import {
   requestGetAttractionDetail,
   requestAttractionReviewList,
+  requestAttractionComment,
 } from "../api";
 import { AttractionDetail, AttractionReview } from "../types";
 import { mountMap, addMarker } from "@/lib/mapUtli.js";
 import { AttractionComment } from "../components";
 
-const props = defineProps<{ contentId: number }>();
+const props = defineProps<{
+  contentId: number;
+  isModal: undefined | boolean;
+}>();
 const onLoadingAttractionDetail = ref(false);
 const currentAttraction = ref<null | AttractionDetail>(null);
 const router = useRouter();
@@ -80,10 +100,9 @@ const reviewPageSize = 5;
 const reviewPageNum = ref(1);
 const reviewTotalCount = ref(0);
 
+const inputTitle = ref("");
 const inputReview = ref("");
 const reviewList = ref<AttractionReview[]>([]);
-
-let map: null = null;
 
 onMounted(async () => {
   getAttraction();
@@ -97,7 +116,6 @@ const getAttraction = async () => {
     currentAttraction.value = res;
     try {
       mountMap(
-        map,
         currentAttraction.value.latitude,
         currentAttraction.value.longitude,
         currentAttraction.value.mlevel
@@ -132,6 +150,22 @@ const getReviews = async () => {
     console.error(e);
   }
 };
+
+const postReview = async () => {
+  if (currentAttraction.value) {
+    try {
+      const res = await requestAttractionComment(
+        currentAttraction.value?.contentId,
+        inputTitle.value,
+        inputReview.value,
+        4
+      );
+      console.log(res);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+};
 </script>
 
 <style scoped lang="scss">
@@ -142,11 +176,16 @@ const getReviews = async () => {
   display: flex;
   justify-content: center;
   padding-bottom: 5%;
+  flex-direction: column;
+  align-items: center;
 }
 .back {
   text-decoration: none;
   color: #06c;
   font-size: 1.3rem;
+  position: absolute;
+  left: 5rem;
+  top: 7rem;
   &::before {
     float: left;
     width: 1rem;
@@ -167,6 +206,7 @@ const getReviews = async () => {
 }
 .site-content {
   width: 1200px;
+
   header {
     padding-top: 5rem;
     h1 {
@@ -202,9 +242,12 @@ p {
     background-color: $gray-2;
     display: flex;
     gap: 0.7rem;
-    height: 4rem;
-    button {
-      height: 4rem;
+    align-items: flex-end;
+    .inputs {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 1rem;
     }
   }
 }

@@ -79,8 +79,8 @@ const bestAttractions = [
       "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=7d02d9fc-a52c-4b5d-8597-3949c183c46b",
     addr1: "경상북도 경주시 분황로 94-11",
     addr2: "",
-    isMyLove: false,
-    isPartenerLove: false,
+    isMyLike: false,
+    isPartenerLike: false,
   },
   {
     contentId: 572968,
@@ -90,8 +90,8 @@ const bestAttractions = [
       "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=793ac091-5507-46fb-88d2-af06966935ab",
     addr1: "제주특별자치도 서귀포시 표선면 가시리 산62",
     addr2: "",
-    isMyLove: false,
-    isPartenerLove: false,
+    isMyLike: false,
+    isPartenerLike: false,
   },
   {
     contentId: 2606216,
@@ -101,8 +101,8 @@ const bestAttractions = [
       "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=a48f007b-043f-4cbc-a706-330ae504b6f1",
     addr1: "경상남도 사천시 사천대로 18",
     addr2: "",
-    isMyLove: false,
-    isPartenerLove: false,
+    isMyLike: false,
+    isPartenerLike: false,
   },
   {
     contentId: 2613675,
@@ -112,8 +112,8 @@ const bestAttractions = [
       "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=b0e65522-46b5-4539-b7ba-d60a5fcb85bf",
     addr1: "강원도 횡성군 우천면 한우로두곡5길 186",
     addr2: "",
-    isMyLove: false,
-    isPartenerLove: false,
+    isMyLike: false,
+    isPartenerLike: false,
   },
   {
     contentId: 2616157,
@@ -123,8 +123,8 @@ const bestAttractions = [
       "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=dea9e449-3e78-4845-a6a5-6fe0993fe136",
     addr1: "경상북도 울릉군 서면 남서리",
     addr2: "",
-    isMyLove: false,
-    isPartenerLove: false,
+    isMyLike: false,
+    isPartenerLike: false,
   },
   {
     contentId: 2633924,
@@ -134,8 +134,8 @@ const bestAttractions = [
       "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=31e178a8-756b-4685-8e2e-bd133c15f9f3",
     addr1: "경기도 시흥시 해송십리로 61 (정왕동)",
     addr2: "",
-    isMyLove: false,
-    isPartenerLove: false,
+    isMyLike: false,
+    isPartenerLike: false,
   },
   {
     contentId: 2758192,
@@ -145,8 +145,8 @@ const bestAttractions = [
       "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=a4aadc1e-2cf6-43c8-91bc-e27a75472dcc",
     addr1: "서울특별시 송파구 올림픽로 424 (방이동)",
     addr2: "",
-    isMyLove: false,
-    isPartenerLove: false,
+    isMyLike: false,
+    isPartenerLike: false,
   },
   {
     contentId: 2841245,
@@ -156,8 +156,8 @@ const bestAttractions = [
       "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=29abbebf-86df-49e8-971e-78bac9b33efa",
     addr1: "경기도 연천군 중면 삼곶리422",
     addr2: "",
-    isMyLove: false,
-    isPartenerLove: false,
+    isMyLike: false,
+    isPartenerLike: false,
   },
 ];
 const router = useRouter();
@@ -195,6 +195,7 @@ const getAttractionList = async () => {
         pgno: page.value,
         sidoCode: selectedSido.value,
         gugunCode: selectedGugun.value,
+        pageSize: 15,
       });
       attractionList.value = res.list;
     }

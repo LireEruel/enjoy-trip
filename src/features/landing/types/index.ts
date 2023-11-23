@@ -5,8 +5,8 @@ export type Attraction = {
   firstImage: string;
   addr1: string;
   addr2: string;
-  isMyLove: boolean;
-  isPartenerLove: boolean;
+  isMyLike: boolean;
+  isPartenerLike: boolean;
 };
 
 export type GetAttractionListProp = {

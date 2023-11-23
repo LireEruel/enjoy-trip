@@ -32,6 +32,18 @@ export type Course = {
   memo: string;
   reviewContent: string;
   orderNo?: number;
+  fileIdList: number[];
+  fileList: FileInfo[];
+};
+
+export type FileInfo = {
+  boardId: number;
+  boardType: string;
+  fileId: number;
+  filepath: string;
+  orderNo: number;
+  originFileName: string;
+  tempFileName: string;
 };
 
 export type MasterPlan = {
@@ -48,4 +60,11 @@ export type DetailPlanParam = {
   attractionId: number;
   memo: string;
   orderNo: number;
+};
+
+export type EditReviewParam = {
+  dailyPlanId: number;
+  reviewContent: string;
+  dailyPlanDetailId: number;
+  fileIdList: number[];
 };

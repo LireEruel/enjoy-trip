@@ -12,9 +12,10 @@
       <div class="actions-wrap">
         <a-button shape="circle" :icon="h(ShareAltOutlined)" />
         <a-button shape="circle" :icon="h(HeartOutlined)" />
-        <a-button type="primary">저장</a-button>
+        <a-button @click="editReview" type="primary">저장</a-button>
       </div>
     </div>
+
     <a-tabs v-model:activeKey="activeKey" class="tabs">
       <a-tab-pane
         v-for="dailyPlan in masterPlanInfo.dailyPlanDtoList"
@@ -45,7 +46,16 @@
               </a-col>
               <a-col :span="11">
                 <h3>인증 사진 업로드</h3>
-                <a-upload>
+                <a-upload
+                  v-model:file-list="course.fileList"
+                  list-type="picture-card"
+                  :action="serverUrl"
+                  :headers="{
+                    Authorization: userInfo?.accessToken,
+                  }"
+                  @change="(event: any) => onChangeFile(event, course)"
+                  @remove="removeFile"
+                >
                   <plus-outlined />
                   <div style="margin-top: 8px">Upload</div>
                 </a-upload>
@@ -77,18 +87,65 @@
 
 <script setup lang="ts">
 import dayjs from "dayjs";
-import { MasterPlan, requestGetMasterPlan } from "..";
+import {
+  Course,
+  DailyPlan,
+  EditReviewParam,
+  FileInfo,
+  MasterPlan,
+  requestEditReview,
+  requestGetMasterPlan,
+  requestRemoveFile,
+} from "..";
 import { onMounted, ref, h } from "vue";
-import { ShareAltOutlined, HeartOutlined } from "@ant-design/icons-vue";
+import {
+  ShareAltOutlined,
+  HeartOutlined,
+  PlusOutlined,
+} from "@ant-design/icons-vue";
+import Swal from "sweetalert2";
+import { useUserStore } from "@/stores/user";
 
 const { planMasterId } = defineProps<{ planMasterId: number }>();
 const masterPlanInfo = ref<MasterPlan | null>(null);
 const activeKey = ref(1);
+const userInfo = useUserStore().userInfo;
 onMounted(async () => {
-  console.log(planMasterId);
   masterPlanInfo.value = await requestGetMasterPlan(planMasterId, false);
-  console.log();
 });
+const serverUrl = import.meta.env.VITE_SERVER_URL + "/file/upload";
+
+const editReview = async () => {
+  const editReviewParam: EditReviewParam[] = [];
+  masterPlanInfo.value?.dailyPlanDtoList.forEach((dailyPlan: DailyPlan) => {
+    dailyPlan.dailyPlanDetailDtoList.forEach((course: Course) => {
+      if (course.dailyPlanDetailId)
+        editReviewParam.push({
+          dailyPlanId: dailyPlan.dailyPlanId,
+          reviewContent: course.reviewContent,
+          fileIdList: course.fileIdList,
+          dailyPlanDetailId: course.dailyPlanDetailId,
+        });
+    });
+  });
+
+  try {
+    await requestEditReview(planMasterId, editReviewParam);
+    Swal.fire("success", "여행 후기 저장 성공", "success");
+  } catch {
+    Swal.fire("error", "여행 후기 에러", "error");
+  }
+};
+
+const onChangeFile = (event: any, course: Course) => {
+  course.fileIdList = event.fileList.map((file: any) => {
+    return file.response?.fileId;
+  });
+};
+
+const removeFile = (file: FileInfo) => {
+  requestRemoveFile(file.fileId);
+};
 </script>
 
 <style scoped lang="scss">
@@ -122,7 +179,13 @@ onMounted(async () => {
     justify-content: end;
   }
 }
-
+.card-loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .tabs {
   max-width: 1200px;
   margin: 2rem auto;

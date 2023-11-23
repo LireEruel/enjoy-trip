@@ -4,7 +4,7 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 
 const cancelTokenSource = axios.CancelToken.source();
-const router = useRouter();
+
 const commonAxios = axios.create({
   cancelToken: cancelTokenSource.token,
   baseURL: "http://219.255.6.129:23333",
@@ -40,9 +40,7 @@ commonAxios.interceptors.response.use(
         description: errorCode,
       });
       localStorage.clear();
-      router.push({
-        name: "home",
-      });
+      //window.location.replace("/");
     } else {
       notification.error({
         key: "error-notification",

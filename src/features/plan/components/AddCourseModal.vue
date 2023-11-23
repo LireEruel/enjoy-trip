@@ -36,6 +36,7 @@
               :height="70"
               :width="70"
               :preview="false"
+              @click.stop="() => openDetailAttraction(attraction)"
             >
               <template #placeholder>
                 <a-spin class="card-loading" />
@@ -71,6 +72,16 @@
         + 더보기</a-button
       >
     </div>
+    <a-modal
+      v-model:open="isOpenDetailModal"
+      v-if="selectedAttraction != null"
+      width="1000px"
+    >
+      <attraction-detail-view
+        :contentId="selectedAttraction.contentId"
+        :isModal="true"
+      ></attraction-detail-view>
+    </a-modal>
   </a-modal>
 </template>
 
@@ -80,6 +91,7 @@ import { onMounted, ref, watchEffect } from "vue";
 import { contentTypeMap } from "@/util/code";
 import { requestAttractionList } from "@/features/attraction/api";
 import { contentTypeColorMap } from "../util/TypeMap";
+import AttractionDetailView from "@/features/attraction/routes/AttractionDetailView.vue";
 
 type PlanAttraction = {
   selected?: boolean;
@@ -97,6 +109,9 @@ const { open, sidoCode, gugunCode } = defineProps<{
   sidoCode: number;
   gugunCode: number;
 }>();
+
+const selectedAttraction = ref<Attraction | null>();
+const isOpenDetailModal = ref(false);
 
 // watchEffect(() => {
 //   console.log(open);
@@ -119,18 +134,14 @@ watchEffect(() => {
   }
 });
 
-// const reset = () => {
-//   inputText.value = "";
-//   selectTags.value = [true, false, false, false, false, false, false, false];
-//   attractionList.value = [];
-//   page.value = 1;
-//   totalAttractionCount.value = 0;
-//   currentAttractionCount.value = 0;
-// };
-
 const onSearch = () => {
   resetPagination();
   inputText.value = "";
+};
+
+const openDetailAttraction = (targetAttraction: Attraction) => {
+  selectedAttraction.value = targetAttraction;
+  isOpenDetailModal.value = true;
 };
 
 const getAttractionList = async () => {
@@ -235,7 +246,13 @@ const onOkModal = () => {
     }
   }
 }
-
+.card-loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .load-more {
   width: 30%;
 }

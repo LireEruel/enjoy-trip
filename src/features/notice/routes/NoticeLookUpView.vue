@@ -65,7 +65,7 @@ import { onMounted, ref } from "vue";
 import { requestGetNoticeList } from "../api/list";
 import { DownOutlined } from "@ant-design/icons-vue";
 import { useRouter } from "vue-router";
-import { useUserStore } from "../../../stores/user";
+import { useUserStore } from "@/stores/user";
 
 const dataSource = ref<Array<Notice>>([]);
 const onLoadingNoticeList = ref<Boolean>(false);

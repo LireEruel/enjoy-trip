@@ -27,5 +27,7 @@ console.log(props);
   gap: 2%;
   flex-direction: column;
   padding: 2%;
+  height: 70%;
+  overflow-y: scroll;
 }
 </style>

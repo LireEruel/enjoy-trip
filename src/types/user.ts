@@ -1,7 +1,9 @@
 export type User = {
   cusNo: number;
   userName: string;
-  email: string;
+  emailId: string;
+  emailDomain: string;
+  profileImg: null | string;
 };
 
 export type MyInfo = {
