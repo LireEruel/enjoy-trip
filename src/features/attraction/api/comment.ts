@@ -1,3 +1,4 @@
+import commonAxios from "@/lib/commonAxios";
 import fileAxios from "@/lib/fileAxios";
 
 export const requestAttractionComment = (
@@ -12,4 +13,7 @@ export const requestAttractionComment = (
     content: content,
     rating: rating,
   });
+};
+export const requestDeleteAttractionComment = (reviewId: number) => {
+  commonAxios.delete("/board/review/" + reviewId);
 };
