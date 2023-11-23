@@ -21,7 +21,13 @@
             <a> 애인 조회</a>
           </span>
           <span v-else>
-            <a @click="handleCopy" :value="inviteKey">애인 초대키 복사</a>
+            <a
+              @click="handleCopy"
+              :value="
+                userInfo && 'inviteKey' in userInfo ? userInfo.inviteKey : ''
+              "
+              >애인 초대키 복사</a
+            >
             <a @click="onClickSubmitInviteKeyBtn">애인 초대키 입력</a>
           </span>
         </div>
@@ -205,11 +211,7 @@
 
 <script setup lang="ts">
 import Swal from "sweetalert2";
-import {
-  requestGetInviteKey,
-  requestGetRequestRelationList,
-  requestSubmitInviteKey,
-} from "../api";
+import { requestGetRequestRelationList, requestSubmitInviteKey } from "../api";
 import { EffectCoverflow, Pagination } from "swiper/modules";
 import { useUserStore } from "@/stores/user";
 import { MyInfo, User } from "@/types/user";
@@ -242,7 +244,6 @@ const userStore = useUserStore();
 const userInfo = ref<MyInfo | User>();
 const params = defineProps({ cusNo: { type: String, required: true } });
 const isMyInfo = ref<boolean>(false);
-const inviteKey = ref("");
 const myPlanList = ref<MasterPlan[]>([]);
 const myReviewList = ref<MasterPlan[]>([]);
 const router = useRouter();
@@ -259,11 +260,8 @@ const isCouple = computed(() =>
 const relationList = ref<Relation[]>([]);
 const preSetting = async () => {
   isMyInfo.value = userStore.userInfo?.cusNo === cusNo;
-
   userInfo.value = await getUserInfo(cusNo);
-
   if (!isCouple.value) {
-    getInviteKey();
     const res = await requestGetRequestRelationList();
     // TODO 관계 조회 API 수정시 주석 제거
     relationList.value = res;
@@ -312,15 +310,6 @@ const onClickSubmitInviteKeyBtn = () => {
   });
 };
 
-const getInviteKey = async () => {
-  try {
-    const res = await requestGetInviteKey();
-    inviteKey.value = res;
-  } catch (error) {
-    Swal.fire("error", "초대키 조회에 실패하였습니다.", "error");
-  }
-};
-
 const getMyPlanList = async () => {
   try {
     const res = await requestGetPersonalPlan(cusNo, false);
@@ -340,9 +329,15 @@ const getMyReviewList = async () => {
 };
 
 const handleCopy = () => {
-  navigator.clipboard
-    .writeText(inviteKey.value)
-    .then(() => Swal.fire("success", "초대키를 복사했습니다", "success"));
+  if (
+    userInfo.value &&
+    "inviteKey" in userInfo.value &&
+    typeof userInfo.value.inviteKey == "string"
+  ) {
+    navigator.clipboard
+      .writeText(userInfo.value.inviteKey)
+      .then(() => Swal.fire("success", "초대키를 복사했습니다", "success"));
+  }
 };
 
 const goPlanEdit = (id: number) => {
