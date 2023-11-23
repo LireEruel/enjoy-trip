@@ -207,7 +207,7 @@ import { requestGetRequestRelationList, requestSubmitInviteKey } from "../api";
 import { EffectCoverflow, Pagination } from "swiper/modules";
 import { useUserStore } from "@/stores/user";
 import { MyInfo, User } from "@/types/user";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { requestGetPersonalPlan } from "@/features/plan/api";
 import { MasterPlan, deletePlan } from "@/features/plan";
 import { Swiper, SwiperSlide } from "swiper/vue";
@@ -217,7 +217,7 @@ import { SmileOutlined, EllipsisOutlined } from "@ant-design/icons-vue";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import {
   EditUserInfoParam,
   Relation,
