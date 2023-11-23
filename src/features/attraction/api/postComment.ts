@@ -1,4 +1,4 @@
-import commonAxios from "@/lib/commonAxios";
+import fileAxios from "@/lib/fileAxios";
 
 export const requestAttractionComment = (
   attractionId: number,
@@ -6,7 +6,7 @@ export const requestAttractionComment = (
   content: String,
   rating: number
 ) => {
-  commonAxios.post("/board/review", {
+  fileAxios.post("/board/review", {
     attractionId: attractionId,
     title: title,
     content: content,
