@@ -1,5 +1,5 @@
-import { notification } from "ant-design-vue";
 import { useUserStore } from "@/stores/user";
+import { notification } from "ant-design-vue";
 import axios from "axios";
 
 const cancelTokenSource = axios.CancelToken.source();
@@ -31,7 +31,6 @@ fileAxios.interceptors.request.use(function (config): any {
 
   config.headers = Object.assign({}, config.headers, {
     "Content-Type": "multipart/form-data",
-    // 'access_token': cookies['access_token'],
     Authorization: userStore.userInfo?.accessToken,
   });
 

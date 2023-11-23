@@ -66,7 +66,14 @@
             </template>
             <template #renderItem="{ item }">
               <a-list-item>
-                <attraction-comment :review="item"></attraction-comment>
+                <div class="comment-wrap">
+                  <attraction-comment :review="item"></attraction-comment>
+                  <a-button
+                    danger
+                    :icon="h(CloseOutlined)"
+                    @click="() => deleteReview(item.reviewId)"
+                  />
+                </div>
               </a-list-item>
             </template>
           </a-list>
@@ -78,7 +85,7 @@
 </template>
 <script setup lang="ts">
 import Swal from "sweetalert2";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, h } from "vue";
 import { useRouter } from "vue-router";
 import {
   requestGetAttractionDetail,
@@ -88,6 +95,8 @@ import {
 import { AttractionDetail, AttractionReview } from "../types";
 import { mountMap, addMarker } from "@/lib/mapUtli.js";
 import { AttractionComment } from "../components";
+import { CloseOutlined } from "@ant-design/icons-vue";
+import { requestDeleteAttractionComment } from "../api/comment";
 
 const props = defineProps<{
   contentId: number;
@@ -129,7 +138,7 @@ const getAttraction = async () => {
     }
   } catch (error) {
     Swal.fire("error", "관광지 조회에 실패하였습니다.", "error").then(() => {
-      router.push("/Attraction");
+      router.push("/attraction/list");
     });
   } finally {
     onLoadingAttractionDetail.value = false;
@@ -154,13 +163,34 @@ const getReviews = async () => {
 const postReview = async () => {
   if (currentAttraction.value) {
     try {
-      const res = await requestAttractionComment(
+      await requestAttractionComment(
         currentAttraction.value?.contentId,
         inputTitle.value,
         inputReview.value,
         4
       );
-      console.log(res);
+      Swal.fire(
+        "success",
+        "여행지 후기 등록을 성공하였습니다.",
+        "success"
+      ).then(async () => {
+        window.location.reload();
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+};
+
+const deleteReview = async (reviewId: number) => {
+  if (currentAttraction.value) {
+    try {
+      await requestDeleteAttractionComment(reviewId);
+      Swal.fire("success", "여행지 후기를 삭제하였습니다.", "success").then(
+        async () => {
+          window.location.reload();
+        }
+      );
     } catch (e) {
       console.log(e);
     }
@@ -251,7 +281,11 @@ p {
     }
   }
 }
-
+.comment-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
 #map {
   width: 100%;
   height: 400px;

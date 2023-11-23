@@ -2,7 +2,9 @@
   <a-layout id="components-layout">
     <a-layout-header class="default-header">
       <div>
-        <router-link to="/" class="app-logo">Home </router-link>
+        <router-link to="/" class="app-logo">
+          <img :src="logo" />
+        </router-link>
       </div>
       <div class="nav-right">
         <a-menu v-model:selectedKeys="menuKey" class="menu" mode="horizontal">
@@ -61,6 +63,7 @@ import {
 } from "@ant-design/icons-vue";
 import { useUserStore } from "@/stores/user";
 import { useCommonStore } from "@/stores/common";
+import logo from "@/assets/logo.png";
 const router = useRouter();
 
 const goLogin = () => {
@@ -88,6 +91,11 @@ const openAddReviewModal = () => {
 </script>
 
 <style lang="scss" scoped>
+.app-logo {
+  img {
+    height: 100%;
+  }
+}
 #components-layout {
   height: 70px;
   width: 100%;

@@ -1,5 +1,5 @@
 import commonAxios from "@/lib/commonAxios";
-import { DetailPlanParam, MasterPlan, MasterPlanProp } from "../types";
+import { DetailPlanParam, MasterPlanProp } from "../types";
 
 export const requestCreateMasterPlan = (
   params: MasterPlanProp

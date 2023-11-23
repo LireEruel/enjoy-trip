@@ -1,5 +1,5 @@
 import commonAxios from "@/lib/commonAxios";
-import { MasterPlan } from "..";
+import { MasterPlan, PlanReviewDetailInfo, ReviewPageInfo } from "..";
 
 export const requestGetPersonalPlan = (
   cusNo: number,
@@ -26,4 +26,10 @@ export const requestGetMasterPlan = (
       isReview: isReview,
     },
   });
+};
+
+export const requestGetReviewDetail = (
+  planMasterId: number
+): Promise<PlanReviewDetailInfo> => {
+  return commonAxios.get("/plan/master/review/" + planMasterId);
 };

@@ -24,7 +24,6 @@ import { h, onMounted, ref } from "vue";
 import { Chat } from "./types";
 import * as StompJs from "@stomp/stompjs";
 import { MyInfo } from "@/types/user";
-import { requestGetMessage } from "./api";
 
 const client: any = {};
 const userStore = useUserStore();
@@ -37,14 +36,8 @@ const chatArray = ref<Chat[]>([]);
 onMounted(() => {
   if (userInfo.value) {
     connect();
-    getMessages();
   }
 });
-
-const getMessages = async () => {
-  const res = await requestGetMessage();
-  console.log(res);
-};
 
 const connect = () => {
   if (userInfo.value)

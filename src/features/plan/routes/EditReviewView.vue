@@ -110,8 +110,9 @@ const { planMasterId } = defineProps<{ planMasterId: number }>();
 const masterPlanInfo = ref<MasterPlan | null>(null);
 const activeKey = ref(1);
 const userInfo = useUserStore().userInfo;
+
 onMounted(async () => {
-  masterPlanInfo.value = await requestGetMasterPlan(planMasterId, false);
+  masterPlanInfo.value = await requestGetMasterPlan(planMasterId, true);
 });
 const serverUrl = import.meta.env.VITE_SERVER_URL + "/file/upload";
 
@@ -138,8 +139,13 @@ const editReview = async () => {
 };
 
 const onChangeFile = (event: any, course: Course) => {
+  console.log(event);
   course.fileIdList = event.fileList.map((file: any) => {
-    return file.response?.fileId;
+    if ("response" in file) {
+      return file.response.fileId;
+    } else {
+      return file.fileId;
+    }
   });
 };
 
@@ -191,9 +197,11 @@ const removeFile = (file: FileInfo) => {
   margin: 2rem auto;
 }
 .course-index {
-  font-size: 1.5rem;
+  color: $geekblue-8;
+  font-size: 2rem;
   font-style: oblique;
   margin: 2rem 0;
+  font-family: "Prata", serif;
 }
 .course-info {
   display: flex;

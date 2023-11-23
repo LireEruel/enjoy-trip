@@ -91,8 +91,11 @@
                 </a>
                 <template #overlay>
                   <a-menu>
-                    <a-menu-item v-if="dayjs(plan.endDate).isBefore(dayjs())">
-                      <a href="javascript:;">후기 작성</a>
+                    <a-menu-item
+                      v-if="dayjs(plan.endDate).isBefore(dayjs())"
+                      @click="() => goReviewEdit(plan.planMasterId)"
+                    >
+                      <p>후기 작성</p>
                     </a-menu-item>
 
                     <a-menu-item>
@@ -100,22 +103,16 @@
                         삭제
                       </p>
                     </a-menu-item>
-                    <a-menu-item
-                      v-if="
-                        userInfo &&
-                        'partnerCusNo' in userInfo &&
-                        userInfo?.partnerCusNo > 0
-                      "
-                    >
-                      <a href="javascript:;">공유하기</a>
-                    </a-menu-item>
                   </a-menu>
                 </template>
               </a-dropdown>
               <a-switch
                 class="view-switch"
-                :checked="plan.shareYn"
-                @click="onChangeShareYn"
+                v-model:checked="plan.shareYn"
+                @change="
+                  (checked: boolean, event: Event) =>
+                    onChangeShareYn(plan.planMasterId, checked, event)
+                "
               ></a-switch>
               <div class="first-image transition-all"></div>
               <h3>{{ plan.title }}</h3>
@@ -138,7 +135,7 @@
     <section class="my-plan-section">
       <h2>내 여행 후기</h2>
       <!-- TODO: 여행 계획 생성 버튼 추가 -->
-      <div v-if="myPlanList.length > 0">
+      <div v-if="myReviewList.length > 0">
         <swiper
           :grabCursor="true"
           :slidesPerView="4"
@@ -207,9 +204,9 @@ import { requestGetRequestRelationList, requestSubmitInviteKey } from "../api";
 import { EffectCoverflow, Pagination } from "swiper/modules";
 import { useUserStore } from "@/stores/user";
 import { MyInfo, User } from "@/types/user";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { requestGetPersonalPlan } from "@/features/plan/api";
-import { MasterPlan, deletePlan } from "@/features/plan";
+import { MasterPlan, deletePlan, requestEditPlanStatus } from "@/features/plan";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import * as dayjs from "dayjs";
 import { SmileOutlined, EllipsisOutlined } from "@ant-design/icons-vue";
@@ -217,7 +214,7 @@ import { SmileOutlined, EllipsisOutlined } from "@ant-design/icons-vue";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import {
   EditUserInfoParam,
   Relation,
@@ -258,7 +255,6 @@ const preSetting = async () => {
   userInfo.value = await getUserInfo(cusNo);
   if (!isCouple.value) {
     const res = await requestGetRequestRelationList();
-    // TODO 관계 조회 API 수정시 주석 제거
     relationList.value = res;
   }
   getMyPlanList();
@@ -363,9 +359,10 @@ const relationApproval = async (relationId: number, isApproval: boolean) => {
   }
 };
 
-const onChangeShareYn = (planId: number, e: Event) => {
-  console.log(planId);
+const onChangeShareYn = (planId: number, checked: boolean, e: Event) => {
+  console.log(planId, checked, e);
   e.stopPropagation();
+  requestEditPlanStatus(planId, checked ? "Y" : "N", "Y");
 };
 
 const onClickDeletePlan = async (planMasterId: number) => {
