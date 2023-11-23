@@ -91,23 +91,17 @@
                 </a>
                 <template #overlay>
                   <a-menu>
-                    <a-menu-item v-if="dayjs(plan.endDate).isBefore(dayjs())">
-                      <a href="javascript:;">후기 작성</a>
+                    <a-menu-item
+                      v-if="dayjs(plan.endDate).isBefore(dayjs())"
+                      @click="() => goReviewEdit(plan.planMasterId)"
+                    >
+                      <p>후기 작성</p>
                     </a-menu-item>
 
                     <a-menu-item>
                       <p @click="() => onClickDeletePlan(plan.planMasterId)">
                         삭제
                       </p>
-                    </a-menu-item>
-                    <a-menu-item
-                      v-if="
-                        userInfo &&
-                        'partnerCusNo' in userInfo &&
-                        userInfo?.partnerCusNo > 0
-                      "
-                    >
-                      <a href="javascript:;">공유하기</a>
                     </a-menu-item>
                   </a-menu>
                 </template>
