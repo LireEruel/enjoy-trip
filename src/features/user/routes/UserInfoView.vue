@@ -7,7 +7,8 @@
       </nav>
       <div class="header-content">
         <p class="greeting">
-          {{ userInfo?.userName }} 님, 안녕하세요.
+          {{ userInfo?.userName }}
+          {{ isMyInfo ? "님, 안녕하세요." : "님의 추억" }}
           <img
             src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Blue%20Heart.png"
             alt="Blue Heart"
@@ -18,7 +19,7 @@
         <div class="header-feature-wrap" v-if="isMyInfo">
           <a @click="openEditUserInfoModal"> 개인정보 수정</a>
           <span v-if="isCouple">
-            <a> 애인 조회</a>
+            <a @click="goPartnerPage"> 애인 조회</a>
           </span>
           <span v-else>
             <a
@@ -206,7 +207,7 @@ import { requestGetRequestRelationList, requestSubmitInviteKey } from "../api";
 import { EffectCoverflow, Pagination } from "swiper/modules";
 import { useUserStore } from "@/stores/user";
 import { MyInfo, User } from "@/types/user";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { requestGetPersonalPlan } from "@/features/plan/api";
 import { MasterPlan, deletePlan } from "@/features/plan";
 import { Swiper, SwiperSlide } from "swiper/vue";
@@ -216,7 +217,7 @@ import { SmileOutlined, EllipsisOutlined } from "@ant-design/icons-vue";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import {
   EditUserInfoParam,
   Relation,
@@ -236,6 +237,7 @@ const myReviewList = ref<MasterPlan[]>([]);
 const router = useRouter();
 const cusNo = +params.cusNo;
 const isOpenEditUserInfoModal = ref(false);
+
 const logout = () => {
   userStore.logout();
   router.push("/");
@@ -243,6 +245,12 @@ const logout = () => {
 const isCouple = computed(() => {
   return userInfo.value && "partnerCusNo" in userInfo.value ? true : false;
 });
+
+const goPartnerPage = () => {
+  if (userInfo.value && "partnerCusNo" in userInfo.value) {
+    window.location.href = "/user/detail/" + userInfo.value.partnerCusNo;
+  }
+};
 
 const relationList = ref<Relation[]>([]);
 const preSetting = async () => {
