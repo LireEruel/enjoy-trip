@@ -16,8 +16,13 @@
       <a-checkable-tag
         v-for="(tag, index) in tagsData"
         :key="tag"
-        v-model:checked="selectTags[index]"
-        @change="resetPagination"
+        :checked="selectedTagIndex == index"
+        @click="
+          () => {
+            selectedTagIndex = index;
+            resetPagination();
+          }
+        "
       >
         {{ contentTypeMap.get(tag) }}
       </a-checkable-tag>
@@ -87,7 +92,7 @@
 
 <script setup lang="ts">
 import { Attraction } from "@/features/attraction";
-import { onMounted, ref, watchEffect } from "vue";
+import { onMounted, ref } from "vue";
 import { contentTypeMap } from "@/util/code";
 import { requestAttractionList } from "@/features/attraction/api";
 import { contentTypeColorMap } from "../util/TypeMap";
@@ -99,7 +104,7 @@ type PlanAttraction = {
 const emit = defineEmits(["onClose", "addCourses"]);
 const tagsData = ref([...contentTypeMap.keys()]);
 const inputText = ref("");
-const selectTags = ref([true, false, false, false, false, false, false, false]);
+const selectedTagIndex = ref(0);
 const attractionList = ref<PlanAttraction[]>([]);
 const page = ref(1);
 const totalAttractionCount = ref(0);
@@ -127,13 +132,6 @@ onMounted(() => {
   getAttractionList();
 });
 
-watchEffect(() => {
-  const trueIndex = selectTags.value.findIndex((tag) => tag == true);
-  if (trueIndex == -1) {
-    selectTags.value[0] = true;
-  }
-});
-
 const onSearch = () => {
   resetPagination();
   inputText.value = "";
@@ -146,16 +144,10 @@ const openDetailAttraction = (targetAttraction: Attraction) => {
 
 const getAttractionList = async () => {
   try {
-    let selectedTags = selectTags.value
-      .map((isSelected, index) => (isSelected ? tagsData.value[index] : null))
-      .filter((tag) => tag !== null);
-    if (selectedTags.length == 0) {
-      selectedTags = [tagsData.value[0]];
-      selectTags.value[0] = true;
-    }
+    console.log();
     const res = await requestAttractionList({
       title: inputText.value,
-      contentTypeId: selectedTags,
+      contentTypeId: [tagsData.value[selectedTagIndex.value]],
       pgno: page.value,
       sidoCode: sidoCode,
       gugunCode: gugunCode > -1 ? gugunCode : undefined,
