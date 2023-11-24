@@ -38,8 +38,8 @@ h1 {
 .review-wrap {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  width: 1200px;
-  margin: 10rem auto;
+
+  margin: 10rem 5rem;
   gap: 2rem;
   img {
     cursor: pointer;
