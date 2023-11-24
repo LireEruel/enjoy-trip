@@ -114,7 +114,14 @@
                     onChangeShareYn(plan.planMasterId, checked, event)
                 "
               ></a-switch>
-              <div class="first-image transition-all"></div>
+              <img
+                :src="
+                  plan.sidoCode == SIDO_CODE.제주도
+                    ? 'https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcTZMp6qalWyjXYFsy9JnpimDaW_4-ZLq0MO5APHkvYMgSudWWW8W-WwNJb8Sv-hJH3z71SW_7y96n7J3JeSz_neFZK0zOpClZ77NpeMXIM'
+                    : 'https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=a48f007b-043f-4cbc-a706-330ae504b6f1'
+                "
+                class="first-image transition-all"
+              />
               <h3>{{ plan.title }}</h3>
               <p class="day-info">
                 <span>{{ dayjs(plan.startDate).format("DD MMM YYYY") }}</span>
@@ -223,6 +230,7 @@ import {
   requestRelationApproval,
 } from "..";
 import { EditUserInfoModal } from "../components";
+import { SIDO_CODE } from "@/util/code";
 
 const modules = [EffectCoverflow, Pagination];
 const userStore = useUserStore();
@@ -490,10 +498,8 @@ header {
       display: none;
     }
     .first-image {
-      height: 10rem;
-      object-fit: cover;
-      background-image: url(https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=a48f007b-043f-4cbc-a706-330ae504b6f1);
-      padding: 1rem;
+      width: 100%;
+      height: 12rem;
       background-position: center;
       background-size: cover;
       border-radius: 0.5rem;
