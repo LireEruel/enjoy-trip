@@ -240,7 +240,11 @@ const logout = () => {
   router.push("/");
 };
 const isCouple = computed(() => {
-  return userInfo.value && "partnerCusNo" in userInfo.value ? true : false;
+  return userInfo.value &&
+    "partnerCusNo" in userInfo.value &&
+    userInfo.value.partnerCusNo > 0
+    ? true
+    : false;
 });
 
 const goPartnerPage = () => {
