@@ -10,7 +10,7 @@
 
           <div class="meta">
             <span class="register-time">{{ currentNotice.registerTime }}</span>
-            <div class="button-wrap">
+            <div class="button-wrap" v-if="isAdmin">
               <a-button @click="goEditNotice">수정</a-button>
               <a-button
                 :loading="onLoadingDeleteNotice"
@@ -36,12 +36,14 @@ import Swal from "sweetalert2";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { requestDeleteNotice, requestGetNoticeDetail } from "../api";
+import { useUserStore } from "@/stores/user";
 
 const props = defineProps<{ noticeId: number }>();
 const onLoadingNoticeDetail = ref(false);
 const currentNotice = ref<null | Notice>(null);
 const onLoadingDeleteNotice = ref(false);
 const router = useRouter();
+const isAdmin = useUserStore().userInfo?.authCode === "ADMIN" ? true : false;
 const getNotice = async () => {
   onLoadingNoticeDetail.value = true;
   try {
@@ -124,6 +126,7 @@ const goEditNotice = () => {
 footer {
   a {
     text-decoration: none;
+    color: #4096ff;
   }
   a::before {
     float: left;
@@ -135,6 +138,7 @@ footer {
     background-size: 0.33rem 0.14rem;
     background-position: center;
     letter-spacing: -0.1rem;
+    color: #4096ff;
   }
 }
 
