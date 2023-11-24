@@ -3,7 +3,7 @@
     <h1>모두의 추억을 함께 느껴보세요</h1>
 
     <div class="review-wrap">
-      <img :src="Jeju" />
+      <img :src="Jeju" @click="goReview" />
       <img
         src="https://search.pstatic.net/common/?src=http%3A%2F%2Fcafefiles.naver.net%2FMjAxOTAzMjFfMjc0%2FMDAxNTUzMTU4OTc1Nzky.6v90YSFrqvOq-D2VYWzuaDJR7qLK4IIxTeA5brTCToEg.kvGIvrtdZTXRk45eG3vBCXgbM5atFqMMemZjEceF9u4g.JPEG.pumptong%2F20190224_152909.jpg&type=sc960_832"
       />
@@ -18,7 +18,14 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from "vue-router";
 import Jeju from "../assets/imgs/Jeju2.jpg";
+
+const router = useRouter();
+
+const goReview = () => {
+  router.push("/review/37");
+};
 </script>
 
 <style scoped lang="scss">
