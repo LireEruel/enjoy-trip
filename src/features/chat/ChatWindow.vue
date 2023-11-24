@@ -88,7 +88,7 @@ const publish = (message: string) => {
 $blue-1: #e6f4ff;
 .chat-window {
   position: fixed;
-  right: 20px;
+  left: 20px;
   bottom: 20px;
   width: 300px;
   height: 400px;
