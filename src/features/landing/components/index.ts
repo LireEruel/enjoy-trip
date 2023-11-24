@@ -1,3 +1,4 @@
 import MainHeading from "./MainIntro.vue";
 import AttractionCarousel from "./AttractionCarousel.vue";
-export { MainHeading, AttractionCarousel };
+import ReviewSection from "./ReviewSection.vue";
+export { MainHeading, AttractionCarousel, ReviewSection };
