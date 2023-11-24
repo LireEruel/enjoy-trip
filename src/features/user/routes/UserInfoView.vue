@@ -77,7 +77,7 @@
       <div v-if="myPlanList.length > 0">
         <swiper
           :grabCursor="true"
-          :slidesPerView="4"
+          :slidesPerView="3"
           :space-between="50"
           :modules="modules"
           :pagination="{ clickable: true }"
@@ -471,7 +471,7 @@ header {
 }
 
 .my-plan-section {
-  padding: 0 20% 4rem;
+  padding-bottom: 4rem;
   h2 {
     padding: 1rem 0;
     margin-bottom: 2rem;
@@ -479,7 +479,9 @@ header {
 }
 .plan-list {
   height: 20rem;
+  width: 100%;
   .plan-card {
+    width: 100%;
     .dropdown {
       display: none;
       position: absolute;
