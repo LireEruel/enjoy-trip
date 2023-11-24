@@ -70,6 +70,7 @@
                   <attraction-comment :review="item"></attraction-comment>
                   <a-button
                     danger
+                    v-if="item.writerName === userInfo?.userName"
                     :icon="h(CloseOutlined)"
                     @click="() => deleteReview(item.reviewId)"
                   />
@@ -97,11 +98,13 @@ import { mountMap, addMarker } from "@/lib/mapUtli.js";
 import { AttractionComment } from "../components";
 import { CloseOutlined } from "@ant-design/icons-vue";
 import { requestDeleteAttractionComment } from "../api/comment";
+import { useUserStore } from "@/stores/user";
 
 const props = defineProps<{
   contentId: number;
   isModal: undefined | boolean;
 }>();
+const userInfo = useUserStore().userInfo;
 const onLoadingAttractionDetail = ref(false);
 const currentAttraction = ref<null | AttractionDetail>(null);
 const router = useRouter();
@@ -153,6 +156,7 @@ const getReviews = async () => {
       props.contentId
     );
     reviewList.value = res.list;
+    console.log(reviewList.value);
     reviewPageNum.value++;
     reviewTotalCount.value = res.totalCount;
   } catch (e) {
