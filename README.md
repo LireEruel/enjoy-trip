@@ -24,9 +24,9 @@ Spring Boot, Java 11, MySQL 8.0.23
 5. enjoytrip_attraction_detail.sql	
 6. enjoytrip_attraction_description.sql	
 
-## Vue + TypeScript + Ant Design Vue 템플릿 프로젝트
+## 커플래닛
 
-이 프로젝트는 Vue, TypeScript, 그리고 Ant Design Vue를 활용하여 개발된 템플릿 프로젝트입니다.
+이 프로젝트는 Vue, TypeScript, 그리고 Ant Design Vue를 활용하여 개발된 커플을 위한 여행정보 서비스입니다.
 
 ## 시작하기
 
